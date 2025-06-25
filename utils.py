@@ -1,4 +1,5 @@
 from datetime import datetime
+import datetime
 
 def parse_date(input_str):
     try:
@@ -6,3 +7,6 @@ def parse_date(input_str):
     except ValueError:
         print("❌ Invalid date format. Please use DD-MM-YYYY.")
         return None
+
+def get_today_str():
+    return datetime.datetime.now().strftime('%d-%m-%Y')

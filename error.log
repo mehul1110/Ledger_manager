@@ -11,3 +11,43 @@
 2025-06-09 13:54:51.363524 - Error in add_payment: insert_journal_entry() got multiple values for argument 'fd'
 2025-06-13 12:11:41.902406 - Error in add_payment: could not convert string to float: ''
 2025-06-13 12:11:42.077001 - Error in add_payment: could not convert string to float: ''
+2025-06-14 10:12:20.398993 - Error in add_payment: could not convert string to float: ''
+2025-06-16 10:22:01.057878 - Error in add_payment: could not convert string to float: ''
+2025-06-16 10:22:04.213830 - Error in add_payment: could not convert string to float: ''
+2025-06-16 10:22:04.444300 - Error in add_payment: could not convert string to float: ''
+2025-06-16 12:19:23.192392 - Error in add_payment: could not convert string to float: ''
+2025-06-16 12:48:34.592239 - Error in add_payment: can't re-enter readline
+2025-06-17 11:16:47.836718 - Error in add_payment: 1265 (01000): Data truncated for column 'entry_type' at row 1
+2025-06-17 11:17:14.682554 - Error in add_payment: 1265 (01000): Data truncated for column 'entry_type' at row 1
+2025-06-17 11:19:30.147357 - Error in add_payment: 1265 (01000): Data truncated for column 'entry_type' at row 1
+2025-06-17 11:20:31.204834 - Error in add_payment: 1265 (01000): Data truncated for column 'entry_type' at row 1
+2025-06-21 09:05:03.427072 - Error in add_receipt: 1054 (42S22): Unknown column 'cheque_no' in 'field list'
+2025-06-21 09:26:55.118531 - Error in add_payment: 1054 (42S22): Unknown column 'cheque_no' in 'NEW'
+2025-06-21 09:38:57.125342 - Error in add_receipt: 1054 (42S22): Unknown column 'cheque_no' in 'field list'
+2025-06-21 09:40:34.235011 - Error in add_payment: 1054 (42S22): Unknown column 'cheque_no' in 'NEW'
+2025-06-21 09:41:58.848719 - Error in add_payment: Item name must be provided for Property
+2025-06-21 10:10:44.892944 - Error in add_payment: 1054 (42S22): Unknown column 'cheque_no' in 'NEW'
+2025-06-26 01:21:03,527 - INFO - ============================================================
+2025-06-26 01:21:03,528 - INFO - BAHI-KHATA Application Starting
+2025-06-26 01:21:03,528 - INFO - ============================================================
+2025-06-26 01:21:03,528 - INFO - Python version: 3.10.0 (tags/v3.10.0:b494f59, Oct  4 2021, 19:00:18) [MSC v.1929 64 bit (AMD64)]
+2025-06-26 01:21:03,529 - INFO - Working directory: C:\ledger management\db
+2025-06-26 01:21:03,529 - INFO - Script path: C:\ledger management\db\frontend\app.py
+2025-06-26 01:21:03,529 - INFO - Python path: ['C:\\ledger management\\db', 'C:\\ledger management\\db\\frontend', 'C:\\Python310\\python310.zip', 'C:\\Python310\\DLLs', 'C:\\Python310\\lib', 'C:\\Python310', 'C:\\Python310\\lib\\site-packages', 'C:\\Python310\\lib\\site-packages\\win32', 'C:\\Python310\\lib\\site-packages\\win32\\lib', 'C:\\Python310\\lib\\site-packages\\Pythonwin', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db']
+2025-06-26 01:21:03,531 - INFO - ------------------------------------------------------------
+2025-06-26 01:21:03,531 - INFO - Testing critical imports...
+2025-06-26 01:21:03,532 - INFO - ✓ tkinter imported successfully
+2025-06-26 01:21:03,532 - INFO - ✓ PIL/Pillow imported successfully
+2025-06-26 01:21:03,532 - INFO - ✓ mysql.connector imported successfully
+2025-06-26 01:21:03,533 - INFO - ✓ All critical imports successful
+2025-06-26 01:21:03,533 - INFO - ------------------------------------------------------------
+2025-06-26 01:21:03,534 - INFO - Creating Tkinter root window...
+2025-06-26 01:21:04,101 - INFO - ✓ Tkinter root window created successfully
+2025-06-26 01:21:04,102 - INFO - Configuring main window...
+2025-06-26 01:21:04,102 - INFO - ✓ Main window configured and hidden
+2025-06-26 01:21:04,102 - INFO - Attempting to show login dialog...
+2025-06-26 01:21:10,217 - INFO - ✓ Login successful for user: admin (Role: admin)
+2025-06-26 01:21:10,231 - INFO - Creating BookkeepingApp instance...
+2025-06-26 01:21:10,629 - INFO - ✓ BookkeepingApp instance created successfully
+2025-06-26 01:21:10,629 - INFO - Starting main application loop...
+2025-06-26 01:21:14,778 - INFO - Application closed normally

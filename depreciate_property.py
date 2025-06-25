@@ -1,18 +1,20 @@
 from db_connect import get_connection
-from datetime import datetime
+from datetime import datetime, timedelta
 
 def depreciate_property_assets():
     conn = get_connection()
     cursor = conn.cursor()
     try:
-        # Only depreciate non-expendable items
+        # Only depreciate non-expendable items older than 2 years
+        two_years_ago = datetime.today() - timedelta(days=2*365)
         cursor.execute("""
             UPDATE property_details
-            SET new_rate = ROUND(new_rate * (1 - depreciation_rate/100), 2)
+            SET value = ROUND(value * (1 - depreciation_rate/100), 2)
             WHERE description = 'non-expendable'
-        """)
+              AND purchase_date <= %s
+        """, (two_years_ago.date(),))
         conn.commit()
-        print(f"✅ Depreciation applied to all non-expendable property items for FY {get_financial_year()}.")
+        print(f"✅ Depreciation applied to all non-expendable property items older than 2 years for FY {get_financial_year()}.")
     except Exception as e:
         print(f"❌ Error during depreciation: {e}")
         conn.rollback()

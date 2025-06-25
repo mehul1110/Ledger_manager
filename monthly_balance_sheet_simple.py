@@ -18,7 +18,7 @@ def monthly_balance_sheet(year, month):
     cursor.execute("""
         SELECT account_name, amount, narration, mop, cheque_no, entry_date
         FROM journal_entries
-        WHERE entry_type = 'Debit' AND LOWER(account_name) = 'main fund' AND entry_date >= %s AND entry_date < %s
+        WHERE entry_type = 'Bank' AND LOWER(account_name) = 'main fund' AND entry_date >= %s AND entry_date < %s
     """, (first_day, last_day))
     receipts = cursor.fetchall()
     total_receipts = 0
@@ -34,7 +34,7 @@ def monthly_balance_sheet(year, month):
     cursor.execute("""
         SELECT account_name, amount, narration, mop, cheque_no, entry_date
         FROM journal_entries
-        WHERE entry_type = 'Credit' AND LOWER(account_name) = 'main fund' AND entry_date >= %s AND entry_date < %s
+        WHERE entry_type = 'Fund' AND LOWER(account_name) = 'main fund' AND entry_date >= %s AND entry_date < %s
     """, (first_day, last_day))
     payments = cursor.fetchall()
     total_payments = 0
@@ -52,13 +52,13 @@ def monthly_balance_sheet(year, month):
     cursor.execute("""
         SELECT COALESCE(SUM(
             CASE 
-                WHEN description = 'non-expendable' AND DATEDIFF(%s, date) > 730 THEN new_rate
-                WHEN description = 'non-expendable' AND DATEDIFF(%s, date) <= 730 THEN amount
+                WHEN description = 'non-expendable' AND DATEDIFF(%s, purchase_date) > 730 THEN value
+                WHEN description = 'non-expendable' AND DATEDIFF(%s, purchase_date) <= 730 THEN value
                 ELSE 0
             END
         ), 0)
         FROM property_details
-        WHERE description = 'non-expendable' AND date <= %s
+        WHERE description = 'non-expendable' AND purchase_date <= %s
     """, (last_day, last_day, last_day))
     total_property = cursor.fetchone()[0]
     print(f"Cumulative Property asset value (non-expendable, after depreciation if >2 years, till this month): {total_property}")
@@ -77,9 +77,9 @@ def monthly_balance_sheet(year, month):
     # --- Tally Check ---
     net_fund_change = total_receipts - total_payments
     print(f"Net Main Fund Change (Receipts - Payments): {net_fund_change}")
-    # Sum of all main fund entries (debit - credit)
+    # Sum of all main fund entries (Bank - Fund)
     cursor.execute("""
-        SELECT COALESCE(SUM(CASE WHEN entry_type='Debit' THEN amount ELSE 0 END),0) - COALESCE(SUM(CASE WHEN entry_type='Credit' THEN amount ELSE 0 END),0)
+        SELECT COALESCE(SUM(CASE WHEN entry_type='Bank' THEN amount ELSE 0 END),0) - COALESCE(SUM(CASE WHEN entry_type='Fund' THEN amount ELSE 0 END),0)
         FROM journal_entries
         WHERE LOWER(account_name) = 'main fund' AND entry_date >= %s AND entry_date < %s
     """, (first_day, last_day))

@@ -31,7 +31,7 @@ def get_prev_month(year, month):
     else:
         return year, month - 1
 
-def list_sundry_credits():
+def list_sundry_Funds():
     conn = get_connection()
     cursor = conn.cursor()
     fy_start, fy_end = get_financial_year_dates()
@@ -49,7 +49,7 @@ def list_sundry_credits():
     fy_label = "24-25"
     # Find the last used entry id for this financial year
     cursor.execute("""
-        SELECT entry_id FROM sundry_credits WHERE entry_date >= %s AND entry_date <= %s ORDER BY entry_id DESC LIMIT 1
+        SELECT entry_id FROM sundry_Funds WHERE entry_date >= %s AND entry_date <= %s ORDER BY entry_id DESC LIMIT 1
     """, (fy_start, fy_end))
     last_id_row = cursor.fetchone()
     if last_id_row and last_id_row[0]:
@@ -79,7 +79,7 @@ def list_sundry_credits():
 
     # Output
     print(f"\nBrought forward outstanding (from {prev_month_str}): {brought_forward}")
-    print("\nAccounts with outstanding (sundry credit):")
+    print("\nAccounts with outstanding (sundry Fund):")
     for acc in sundry_list:
         print(f"  {acc}")
 
@@ -93,4 +93,4 @@ def list_sundry_credits():
     conn.close()
 
 if __name__ == "__main__":
-    list_sundry_credits()
+    list_sundry_Funds()

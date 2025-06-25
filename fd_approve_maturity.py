@@ -1,8 +1,11 @@
 from db_connect import get_connection
-from journal_utils import insert_journal_entry
 from datetime import date
 
 def approve_fd_maturity():
+    """
+    This function now adds FD maturity transactions to the pending_transactions table
+    for approval through the standard workflow, instead of directly posting to final tables.
+    """
     conn = get_connection()
     cursor = conn.cursor()
     today = date.today()
@@ -27,29 +30,45 @@ def approve_fd_maturity():
         print(f"  Principal: {amount}")
         print(f"  Interest Rate: {interest_rate}%")
         print(f"  Maturity Amount: {maturity_amount}")
-        approve = input("Approve this FD maturity? (y/n): ").strip().lower()
+        approve = input("Submit FD maturity for approval? (y/n): ").strip().lower()
+        
         if approve == 'y':
-            interest_gained = float(maturity_amount) - float(amount)
-            # Insert payment for total maturity amount
-            narration = f"FD matured: Principal + Interest"
+            # Submit the FD maturity transaction to pending_transactions for approval
+            narration = f"FD maturity payment from {bank_account}"
+            
             cursor.execute("""
-                INSERT INTO payments (account_name, amount, mop, cheque_no, narration, date)
-                VALUES (%s, %s, %s, %s, %s, %s)
-            """, (bank_account, maturity_amount, 'Bank Transfer', None, narration, maturity_date))
-            conn.commit()
-            cursor.execute("SELECT payment_id FROM payments ORDER BY id DESC LIMIT 1")
-            payment_id_new = cursor.fetchone()[0]
-            # Only add the interest to main fund as a Debit, and in fd column
-            if interest_gained > 0:
-                narration_interest = f"FD matured: Interest received"
-                insert_journal_entry(conn, 'main fund', 'Debit', 0, narration_interest, 'Bank Transfer', None, maturity_date, fd=interest_gained)
-            # Mark as approved and remove from fd_details
+                INSERT INTO pending_transactions (
+                    transaction_type, account_name, amount, mop, narration, transaction_date, remarks,
+                    author, item_name, description, property_type, fd_duration, fd_interest
+                )
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            """, (
+                'payment',  # transaction_type
+                bank_account,  # account_name
+                float(maturity_amount),  # amount (full maturity amount)
+                'Bank Transfer',  # mop
+                narration,  # narration
+                maturity_date,  # transaction_date
+                f"FD maturity: Original payment ID {payment_id}",  # remarks
+                None,  # author
+                f"FD Maturity {payment_id}",  # item_name
+                f"Principal: {amount}, Interest: {float(maturity_amount) - float(amount)}",  # description
+                'fd_maturity',  # property_type (special marker for FD maturity)
+                None,  # fd_duration
+                None   # fd_interest
+            ))
+            
+            # Update FD status to indicate it's submitted for approval
             cursor.execute("""
-                DELETE FROM fd_details WHERE payment_id = %s
+                UPDATE fd_details 
+                SET status = 'Maturity Submitted' 
+                WHERE payment_id = %s
             """, (payment_id,))
-            print(f"✅ FD {payment_id} maturity approved, posted, and removed from fd_details.")
+            
+            print(f"✅ FD {payment_id} maturity submitted for approval workflow.")
         else:
             print(f"⏸️ FD {payment_id} left pending.")
+    
     conn.commit()
     cursor.close()
     conn.close()

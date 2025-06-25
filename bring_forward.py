@@ -15,8 +15,8 @@ def display_brought_forward_main_fund():
         # Calculate closing balance for last month
         cursor.execute("""
             SELECT
-              COALESCE(SUM(CASE WHEN entry_type = 'Debit' THEN amount ELSE 0 END), 0) -
-              COALESCE(SUM(CASE WHEN entry_type = 'Credit' THEN amount ELSE 0 END), 0) AS balance
+              COALESCE(SUM(CASE WHEN entry_type = 'Bank' THEN amount ELSE 0 END), 0) -
+              COALESCE(SUM(CASE WHEN entry_type = 'Fund' THEN amount ELSE 0 END), 0) AS balance
             FROM journal_entries
             WHERE account_name = %s
               AND entry_date BETWEEN %s AND %s

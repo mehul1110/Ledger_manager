@@ -4,7 +4,7 @@ MAIN_FUND_ACCOUNT = "main fund"
 
 def display_brought_forward_balances(conn):
     """
-    Display brought forward balances for main fund, FDs, property, and credit given at the start of the current month.
+    Display brought forward balances for main fund, FDs, property, and Fund given at the start of the current month.
     """
     from datetime import datetime
     cursor = conn.cursor()
@@ -13,7 +13,7 @@ def display_brought_forward_balances(conn):
 
     # Main Fund
     cursor.execute("""
-        SELECT COALESCE(SUM(CASE WHEN entry_type='Credit' THEN amount ELSE -amount END), 0)
+        SELECT COALESCE(SUM(CASE WHEN entry_type='Fund' THEN amount ELSE -amount END), 0)
         FROM journal_entries
         WHERE account_name = %s AND entry_date < %s
     """, (MAIN_FUND_ACCOUNT, first_of_month))
@@ -29,18 +29,18 @@ def display_brought_forward_balances(conn):
 
     # Property
     cursor.execute("""
-        SELECT COALESCE(SUM(amount), 0) FROM property_details WHERE date < %s
+        SELECT COALESCE(SUM(value), 0) FROM property_details WHERE purchase_date < %s
     """, (first_of_month,))
     property_balance = cursor.fetchone()[0]
     print(f"\n==== Property (Brought Forward as of {first_of_month.strftime('%Y-%m-%d')}): {property_balance} ====")
 
-    # Credit Given (sum all credit lend to other accounts up to the start of the month)
+    # Fund Given (sum all Fund lend to other accounts up to the start of the month)
     cursor.execute("""
         SELECT COALESCE(SUM(amount), 0) FROM payments
-        WHERE narration LIKE '%Credit lend to other accounts%' AND date < %s
+        WHERE narration LIKE '%Fund lend to other accounts%' AND date < %s
     """, (first_of_month,))
-    credit_given = cursor.fetchone()[0]
-    print(f"\n==== Credit Given (Brought Forward as of {first_of_month.strftime('%Y-%m-%d')}): {credit_given} ====")
+    Fund_given = cursor.fetchone()[0]
+    print(f"\n==== Fund Given (Brought Forward as of {first_of_month.strftime('%Y-%m-%d')}): {Fund_given} ====")
 
 if __name__ == "__main__":
     conn = get_connection()

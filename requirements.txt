@@ -1,0 +1,7 @@
+# Core dependencies for BAHI-KHATA bookkeeping application
+Pillow>=9.0.0
+mysql-connector-python>=8.0.0
+PyInstaller>=5.0.0
+
+# Additional dependencies that might be needed
+pywin32>=300; sys_platform == "win32"
