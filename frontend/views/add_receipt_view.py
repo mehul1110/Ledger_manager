@@ -6,7 +6,14 @@ from tkcalendar import Calendar
 from add_receipt import add_receipt
 import db_connect
 
-def show_add_receipt_form(app, go_back_callback):
+def show_add_receipt_form(app, go_back_callback=None, user_info=None):
+    # Add permission check at the top
+    sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+    from role_permissions import check_permission_with_message, Permissions
+    
+    if user_info and not check_permission_with_message(user_info, Permissions.ADD_RECEIPTS, "add receipts"):
+        return
+    
     for widget in app.root.winfo_children():
         widget.destroy()
     app.set_background()
@@ -20,7 +27,7 @@ def show_add_receipt_form(app, go_back_callback):
     # Fetch accounts
     conn = db_connect.get_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT account_name FROM accounts WHERE account_type = 'unit' ORDER BY account_name ASC")
+    cursor.execute("SELECT account_name FROM accounts WHERE account_type IN ('unit', 'bank','payer') ORDER BY account_name ASC")
     unit_accounts = [row[0] for row in cursor.fetchall()]
     cursor.close()
     conn.close()
@@ -29,7 +36,7 @@ def show_add_receipt_form(app, go_back_callback):
     account_var = tk.StringVar(value='Select')
     mop_options_with_custom = ['Select', 'Cash', 'Cheque', 'Bank Transfer', 'UPI', 'Other (custom...)']
     mop_var = tk.StringVar(value='Select')
-    RECEIPT_NARRATION_OPTIONS_WITH_CUSTOM = ['Select', 'UCS', 'Interest on FD', 'Other (custom...)']
+    RECEIPT_NARRATION_OPTIONS_WITH_CUSTOM = ['Select', 'UCS', 'LCS', 'Interest on FD', 'Other (custom...)']
     narration_var = tk.StringVar(value='Select')
 
     # --- Widgets ---
@@ -56,7 +63,7 @@ def show_add_receipt_form(app, go_back_callback):
     account_menu = tk.OptionMenu(app.root, account_var, *unit_accounts_with_custom)
     account_menu.config(font=entry_font)
     custom_account_entry = tk.Entry(app.root, width=25, font=entry_font)
-    add_row("From (account name):", account_menu, account_var, custom_account_entry)
+    add_row("From (payer):", account_menu, account_var, custom_account_entry)
     custom_account_entry.grid_remove()
     error_labels[custom_account_entry].grid_remove()
 
@@ -72,11 +79,7 @@ def show_add_receipt_form(app, go_back_callback):
     custom_mop_entry.grid_remove()
     error_labels[custom_mop_entry].grid_remove()
 
-    # Cheque widgets must be defined before on_mop_change
-    cheque_label = tk.Label(app.root, text="Cheque No (if cheque):", font=label_font)
-    cheque_entry = tk.Entry(app.root, width=25, font=entry_font)
-    error_labels[cheque_entry] = tk.Label(app.root, text='', fg='red', font=entry_font, bg=app.root['bg'])
-    # Do not grid cheque_label or cheque_entry here; only show in on_mop_change
+    # Cheque widgets removed - no longer needed
 
     # Narration
     narration_menu = tk.OptionMenu(app.root, narration_var, *RECEIPT_NARRATION_OPTIONS_WITH_CUSTOM)
@@ -194,14 +197,6 @@ def show_add_receipt_form(app, go_back_callback):
     account_var.trace_add('write', on_account_change)
 
     def on_mop_change(*args):
-        if mop_var.get() == "Cheque":
-            cheque_label.grid(row=row, column=0, padx=10, pady=8, sticky='e')
-            cheque_entry.grid(row=row, column=1, padx=10, pady=8, sticky='w')
-            error_labels[cheque_entry].grid(row=row, column=2, padx=5, sticky='w')
-        else:
-            cheque_label.grid_forget()
-            cheque_entry.grid_forget()
-            error_labels[cheque_entry].grid_forget()
         if mop_var.get() == "Other (custom...)":
             custom_mop_entry.grid()
             error_labels[custom_mop_entry].grid()
@@ -222,19 +217,44 @@ def show_add_receipt_form(app, go_back_callback):
 
     # --- Helper functions ---
     def get_account_value():
-        return custom_account_entry.get() if account_var.get() == "Other (custom...)" else account_var.get()
+        if account_var.get() == "Other (custom...)":
+            custom_name = custom_account_entry.get().strip()
+            if not custom_name:
+                raise ValueError("Custom account name cannot be empty")
+            if len(custom_name) > 100:
+                raise ValueError("Account name too long (max 100 characters)")
+            # Check for invalid characters
+            invalid_chars = ['\\', '/', ':', '*', '?', '"', '<', '>', '|']
+            for char in invalid_chars:
+                if char in custom_name:
+                    raise ValueError(f"Account name cannot contain '{char}'")
+            return custom_name
+        else:
+            return account_var.get()
+    
     def get_mop_value():
-        return custom_mop_entry.get() if mop_var.get() == "Other (custom...)" else mop_var.get()
+        if mop_var.get() == "Other (custom...)":
+            custom_mop = custom_mop_entry.get().strip()
+            if not custom_mop:
+                raise ValueError("Custom mode of payment cannot be empty")
+            return custom_mop
+        else:
+            return mop_var.get()
+    
     def get_narration_value():
-        return custom_narration_entry.get() if narration_var.get() == "Other (custom...)" else narration_var.get()
+        if narration_var.get() == "Other (custom...)":
+            custom_narration = custom_narration_entry.get().strip()
+            if not custom_narration:
+                raise ValueError("Custom narration cannot be empty")
+            return custom_narration
+        else:
+            return narration_var.get()
 
     # --- Validation and Submission ---
     def submit(event=None):
         empty = False
         # Build list of all visible entries to validate
         entries = [amount_entry, narration_menu, date_entry]
-        if mop_var.get() == 'Cheque':
-            entries.append(cheque_entry)
         if account_var.get() == 'Other (custom...)':
             entries.append(custom_account_entry)
         if mop_var.get() == 'Other (custom...)':
@@ -244,42 +264,104 @@ def show_add_receipt_form(app, go_back_callback):
         # Validate
         for entry in entries:
             value = entry.get() if hasattr(entry, 'get') else narration_var.get() if entry == narration_menu else entry.get()
-            if not value.strip() or value == 'Select':
-                if hasattr(entry, 'config'):
-                    entry.config(bg="#ffe6e6")
-                error_labels[entry].config(text='Required')
-                empty = True
-            else:
-                if hasattr(entry, 'config'):
-                    entry.config(bg="white")
-                error_labels[entry].config(text='')
-            if entry == amount_entry:
-                try:
-                    float(value)
-                    error_labels[entry].config(text='')
-                except ValueError:
-                    error_labels[entry].config(text='Must be a number')
+            # Only access error_labels if the entry has one
+            if entry in error_labels:
+                if not value.strip() or value == 'Select':
+                    if hasattr(entry, 'config'):
+                        entry.config(bg="#ffe6e6")
+                    error_labels[entry].config(text='Required')
                     empty = True
+                else:
+                    if hasattr(entry, 'config'):
+                        entry.config(bg="white")
+                    error_labels[entry].config(text='')
+                if entry == amount_entry:
+                    try:
+                        float(value)
+                        error_labels[entry].config(text='')
+                    except ValueError:
+                        error_labels[entry].config(text='Must be a number')
+                        empty = True
+            else:
+                # Basic validation for entries without error labels
+                if not value.strip() or value == 'Select':
+                    if hasattr(entry, 'config'):
+                        entry.config(bg="#ffe6e6")
+                    empty = True
+                else:
+                    if hasattr(entry, 'config'):
+                        entry.config(bg="white")
         if empty:
             return
         try:
+            # Validate custom inputs first
+            account_name = get_account_value()
+            mop_value = get_mop_value()
+            narration_value = get_narration_value()
+            
+            # Additional validation for custom account name
+            if account_var.get() == "Other (custom...)":
+                if not account_name:
+                    raise ValueError("Please enter a custom account name")
+                
+                # Create the custom account immediately
+                conn = db_connect.get_connection()
+                cursor = conn.cursor()
+                try:
+                    # Check if account already exists
+                    cursor.execute("SELECT COUNT(*) FROM accounts WHERE account_name = %s", (account_name,))
+                    exists = cursor.fetchone()[0] > 0
+                    
+                    if not exists:
+                        # Create account with type 'custom'
+                        cursor.execute(
+                            "INSERT INTO accounts (account_name, account_type) VALUES (%s, %s)",
+                            (account_name, 'custom')
+                        )
+                        conn.commit()
+                        print(f"✅ Created custom account: {account_name}")
+                    
+                    cursor.close()
+                    conn.close()
+                    
+                except Exception as db_error:
+                    cursor.close()
+                    conn.close()
+                    raise ValueError(f"Failed to create custom account: {db_error}")
+            
+            
             add_receipt(
-                account_name=get_account_value(),
+                account_name=account_name,
                 amount=float(amount_entry.get()),
-                mop=get_mop_value(),
-                narration=get_narration_value(),
+                mop=mop_value,
+                narration=narration_value,
                 date_str=date_entry.get(),
-                remarks=remarks_entry.get() if remarks_entry.get().strip() else (cheque_entry.get() if mop_var.get() == 'Cheque' else None)
+                remarks=remarks_entry.get() if remarks_entry.get().strip() else None
             )
-            tk.Label(app.root, text="✅ Receipt and journal entries recorded!", fg="green", font=label_font).grid(row=row+1, columnspan=3, pady=10)
+            
+            # Success message
+            msg = "✅ Receipt submitted for approval!"
+            if account_var.get() == "Other (custom...)":
+                msg += f"\n✅ Custom account '{account_name}' created successfully!"
+            
+            tk.Label(app.root, text=msg, fg="green", font=label_font, bg=app.root['bg']).grid(row=row+1, columnspan=3, pady=10)
+            
+        except ValueError as ve:
+            # Handle validation errors
+            tk.Label(app.root, text=f"⚠️ Validation Error: {ve}", fg="orange", font=label_font, bg=app.root['bg']).grid(row=row+1, columnspan=3, pady=10)
+            
         except Exception as e:
-            tk.Label(app.root, text=f"❌ Error: {e}", fg="red", font=label_font).grid(row=row+1, columnspan=3, pady=10)
+            # Handle other errors
+            error_msg = str(e)
+            if "foreign key constraint" in error_msg.lower():
+                tk.Label(app.root, text=f"❌ Database Error: Account validation failed. Please check account name.", fg="red", font=label_font, bg=app.root['bg']).grid(row=row+1, columnspan=3, pady=10)
+            else:
+                tk.Label(app.root, text=f"❌ Error: {error_msg}", fg="red", font=label_font, bg=app.root['bg']).grid(row=row+1, columnspan=3, pady=10)
     tk.Button(app.root, text="Submit", command=submit, width=18, font=button_font).grid(row=row, columnspan=2, pady=15)
     # Keyboard navigation
     account_menu.bind('<Return>', lambda e: amount_entry.focus_set())
     amount_entry.bind('<Return>', lambda e: mop_menu.focus_set())
-    mop_menu.bind('<Return>', lambda e: cheque_entry.focus_set() if mop_var.get() == 'Cheque' else narration_menu.focus_set())
-    cheque_entry.bind('<Return>', lambda e: narration_menu.focus_set())
+    mop_menu.bind('<Return>', lambda e: narration_menu.focus_set())
     narration_menu.bind('<Return>', lambda e: date_entry.focus_set())
     date_entry.bind('<Return>', lambda e: submit())
     # Set up grid weights for alignment (fix label cutoff)

@@ -9,7 +9,14 @@ from add_payment import add_payment
 
 # This module contains the Add Payment form logic, extracted from the main app.
 # The function expects the parent (root) and callbacks as arguments.
-def show_add_payment_form(app, go_back_callback):
+def show_add_payment_form(app, go_back_callback=None, user_info=None):
+    # Add permission check at the top
+    sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+    from role_permissions import check_permission_with_message, Permissions
+    
+    if user_info and not check_permission_with_message(user_info, Permissions.ADD_PAYMENTS, "add payments"):
+        return
+    
     # Clear the window before adding the form
     for widget in app.root.winfo_children():
         widget.destroy()
@@ -19,17 +26,14 @@ def show_add_payment_form(app, go_back_callback):
     entry_font = app.fonts['entry']
     button_font = app.fonts['button']
     tk.Button(app.root, text="← Go Back", command=go_back_callback, font=button_font).grid(row=0, column=0, padx=10, pady=10, sticky='w')
-    tk.Label(app.root, text="To (account name):", font=label_font).grid(row=1, column=0, padx=10, pady=10, sticky='e')
+    tk.Label(app.root, text="To (Payee):", font=label_font).grid(row=1, column=0, padx=10, pady=10, sticky='e')
     conn = db_connect.get_connection()
     cursor = conn.cursor()
     cursor.execute("SELECT account_name FROM accounts WHERE account_type != 'unit' ORDER BY account_name ASC")
     account_names = [row[0] for row in cursor.fetchall()]
     cursor.close()
     conn.close()
-    # Cheque widgets must be defined before show_cheque_field
-    cheque_label = tk.Label(app.root, text="Cheque No (if cheque):", font=label_font)
-    cheque_entry = tk.Entry(app.root, font=entry_font)
-    # Do not grid cheque_label or cheque_entry here; only show in show_cheque_field
+    # Cheque widgets removed - no longer needed
     # Account dropdown with custom option
     account_names_with_custom = ['Select'] + account_names + ["Other (custom...)"]
     account_var = tk.StringVar(value='Select')
@@ -54,24 +58,19 @@ def show_add_payment_form(app, go_back_callback):
     mop_menu.config(font=entry_font)
     mop_menu.grid(row=3, column=1, padx=10, pady=10, sticky='ew')
     custom_mop_entry = tk.Entry(app.root, font=entry_font)
-    def show_cheque_field(*args):
-        if mop_var.get() == "Cheque":
-            cheque_label.grid(row=3, column=3, padx=10, pady=10, sticky='e')
-            cheque_entry.grid(row=3, column=4, padx=10, pady=10, sticky='ew')
-        else:
-            cheque_label.grid_remove()
-            cheque_entry.grid_remove()
+    def show_mop_custom_field(*args):
         if mop_var.get() == "Other (custom...)":
             custom_mop_entry.grid(row=3, column=2, padx=10, pady=10, sticky='ew')
         else:
             custom_mop_entry.grid_remove()
-    mop_var.trace_add('write', show_cheque_field)
-    show_cheque_field()
+    mop_var.trace_add('write', show_mop_custom_field)
+    show_mop_custom_field()
     tk.Label(app.root, text="Narration:", font=label_font).grid(row=4, column=0, padx=10, pady=10, sticky='e')
     # Narration dropdown with custom option
     NARRATION_OPTIONS = [
-        "Petty", "Maintenance", "Salary", "Misc", "FD in bank", "Fund lend to other accounts",
-        "Internet bill", "Article appreciation amount", "Property", "Printing of happenings"
+        "Petty", "Maintenance", "Salary", "Property", "FD in bank", "Misc", 
+    "Article appreciation amount", "Internet bill", "Fund lend to other accounts", 
+    "Printing of happenings"
     ]
     NARRATION_OPTIONS_WITH_CUSTOM = ['Select'] + NARRATION_OPTIONS + ["Other (custom...)"]
     narration_var = tk.StringVar(value='Select')
@@ -85,8 +84,8 @@ def show_add_payment_form(app, go_back_callback):
         else:
             custom_narration_entry.grid_remove()
     narration_var.trace_add('write', on_narration_change)
-    author_label = tk.Label(app.root, text="Author (for Article appreciation):", font=label_font)
-    author_entry = tk.Entry(app.root, font=entry_font)
+    
+    # Property fields
     item_label = tk.Label(app.root, text="Item Name (for Property):", font=label_font)
     item_entry = tk.Entry(app.root, font=entry_font)
     desc_var = tk.StringVar(value="expendable")
@@ -100,7 +99,7 @@ def show_add_payment_form(app, go_back_callback):
     desc_radio2.pack(side='left')
     type_label = tk.Label(app.root, text="Type (electronic/furniture/etc):", font=label_font)
     # Property type dropdown for 'Type' field with 'Select' as default
-    PROPERTY_TYPES = ["Select", "electronic", "furniture", "stationery", "vehicle", "building"]
+    PROPERTY_TYPES = ["Select", "electronic", "furniture", "stationery", "vehicle", "building", "other"]
     type_var = tk.StringVar(value=PROPERTY_TYPES[0])
     type_menu = tk.OptionMenu(app.root, type_var, *PROPERTY_TYPES)
     type_menu.config(font=entry_font)
@@ -206,7 +205,7 @@ def show_add_payment_form(app, go_back_callback):
     )
     cal_btn.grid(row=5, column=2, padx=5, pady=10, sticky='w')
     def hide_all_extras():
-        for w in [author_label, author_entry, item_label, item_entry, desc_radio1, desc_radio2, type_label, type_menu, fd_duration_label, fd_duration_number, fd_duration_unit_menu, fd_interest_label, fd_interest_entry]:
+        for w in [item_label, item_entry, desc_radio1, desc_radio2, type_label, type_menu, fd_duration_label, fd_duration_number, fd_duration_unit_menu, fd_interest_label, fd_interest_entry]:
             w.grid_forget()
     def show_extras(*args):
         hide_all_extras()
@@ -233,36 +232,54 @@ def show_add_payment_form(app, go_back_callback):
     show_extras()
     def style_entry(entry):
         entry.config(relief='flat', highlightthickness=2, highlightbackground='#cccccc', highlightcolor='#4A90E2', bd=0)
-    for e in [account_menu, amount_entry, cheque_entry, date_entry, remarks_entry, author_entry, item_entry, fd_duration_number, fd_interest_entry]:
+    for e in [account_menu, amount_entry, date_entry, remarks_entry, item_entry, fd_duration_number, fd_interest_entry]:
         style_entry(e)
     # Validation and error labels
     # Use only widgets as keys in error_labels
     error_labels = {}
-    # Map: (label, variable, widget)
-    fields = [
-        ("To (account name)", account_var, account_menu),
-        ("Amount paid", amount_entry, amount_entry),
-        ("Transaction date", date_entry, date_entry)
-    ]
-    if mop_var.get() == "Cheque":
-        fields.append(("Cheque No", cheque_entry, cheque_entry))
-    if narration_var.get() == "Property":
-        fields.extend([
-            ("Item Name", item_entry, item_entry),
-            ("Type", type_var, type_menu)
-        ])
-    if narration_var.get() == "FD in bank":
-        fields.extend([
-            ("FD Duration", fd_duration_number, fd_duration_number),
-            ("FD Interest Rate", fd_interest_entry, fd_interest_entry)
-        ])
-    for _, _, widget in fields:
-        error_labels[widget] = tk.Label(app.root, text='', fg='red', font=entry_font, bg=app.root['bg'])
-        # Place error labels as before (grid logic)
+    
     # Validation
     def submit(event=None):
         empty = False
         fd_unit = fd_duration_unit.get() if narration_var.get() == "FD in bank" else ''
+        
+        # Build fields list dynamically based on current form state
+        fields = [
+            ("To (Payee)", account_var, account_menu),
+            ("Amount paid", amount_entry, amount_entry),
+            ("Transaction date", date_entry, date_entry)
+        ]
+        
+        # Add custom account field if needed
+        if account_var.get() == "Other (custom...)":
+            fields.append(("Custom Account Name", custom_account_entry, custom_account_entry))
+            
+        # Add custom MoP field if needed
+        if mop_var.get() == "Other (custom...)":
+            fields.append(("Custom Mode of Payment", custom_mop_entry, custom_mop_entry))
+            
+        # Add custom narration field if needed
+        if narration_var.get() == "Other (custom...)":
+            fields.append(("Custom Narration", custom_narration_entry, custom_narration_entry))
+        
+        # Add narration-specific fields
+        if narration_var.get() == "Property":
+            fields.extend([
+                ("Item Name", item_entry, item_entry),
+                ("Type", type_var, type_menu)
+            ])
+        if narration_var.get() == "FD in bank":
+            fields.extend([
+                ("FD Duration", fd_duration_number, fd_duration_number),
+                ("FD Interest Rate", fd_interest_entry, fd_interest_entry)
+            ])
+        
+        # Ensure error labels exist for all widgets
+        for _, _, widget in fields:
+            if widget not in error_labels:
+                error_labels[widget] = tk.Label(app.root, text='', fg='red', font=entry_font, bg=app.root['bg'])
+        
+        # Validate all fields
         for label, var, widget in fields:
             value = var.get() if hasattr(var, 'get') else var.get()
             if label in ["Amount paid", "FD Interest Rate"]:
@@ -310,28 +327,100 @@ def show_add_payment_form(app, go_back_callback):
         if narration_var.get() == "FD in bank":
             try:
                 principal = float(amount_entry.get()) if amount_entry.get() else 0
-                months = int(fd_num) if fd_unit == 'months' else int(fd_num) / 30
+                # Convert duration to years for simple interest calculation
+                if fd_unit == 'months':
+                    time_in_years = int(fd_num) / 12
+                elif fd_unit == 'days':
+                    # Convert days to years (using 365.25 to account for leap years)
+                    time_in_years = int(fd_num) / 365.25
+                else:
+                    time_in_years = 0
                 rate = float(fd_interest_entry.get())
-                maturity_amount = round(principal * (1 + (rate/100) * (months/12)), 2)
+                # Simple Interest Formula: SI = (P × R × T) / 100
+                simple_interest = (principal * rate * time_in_years) / 100
+                # Maturity Amount = Principal + Simple Interest
+                maturity_amount = round(principal + simple_interest, 2)
             except Exception:
                 maturity_amount = None
         # Helper functions for custom dropdowns
         def get_account_value():
-            return custom_account_entry.get() if account_var.get() == "Other (custom...)" else account_var.get()
+            if account_var.get() == "Other (custom...)":
+                custom_name = custom_account_entry.get().strip()
+                if not custom_name:
+                    raise ValueError("Custom account name cannot be empty")
+                if len(custom_name) > 100:
+                    raise ValueError("Account name too long (max 100 characters)")
+                # Check for invalid characters that might cause database issues
+                invalid_chars = ['\\', '/', ':', '*', '?', '"', '<', '>', '|']
+                for char in invalid_chars:
+                    if char in custom_name:
+                        raise ValueError(f"Account name cannot contain '{char}'")
+                return custom_name
+            else:
+                return account_var.get()
+        
         def get_mop_value():
-            return custom_mop_entry.get() if mop_var.get() == "Other (custom...)" else mop_var.get()
+            if mop_var.get() == "Other (custom...)":
+                custom_mop = custom_mop_entry.get().strip()
+                if not custom_mop:
+                    raise ValueError("Custom mode of payment cannot be empty")
+                return custom_mop
+            else:
+                return mop_var.get()
+        
         def get_narration_value():
-            return custom_narration_entry.get() if narration_var.get() == "Other (custom...)" else narration_var.get()
+            if narration_var.get() == "Other (custom...)":
+                custom_narration = custom_narration_entry.get().strip()
+                if not custom_narration:
+                    raise ValueError("Custom narration cannot be empty")
+                return custom_narration
+            else:
+                return narration_var.get()
         # Always pass all required arguments for each narration type
         try:
+            # Validate custom inputs first
+            account_name = get_account_value()
+            mop_value = get_mop_value()
+            narration_value = get_narration_value()
+            
+            # Additional validation for custom account name
+            if account_var.get() == "Other (custom...)":
+                if not account_name:
+                    raise ValueError("Please enter a custom account name")
+                
+                # Create the custom account immediately
+                conn = db_connect.get_connection()
+                cursor = conn.cursor()
+                try:
+                    # Check if account already exists
+                    cursor.execute("SELECT COUNT(*) FROM accounts WHERE account_name = %s", (account_name,))
+                    exists = cursor.fetchone()[0] > 0
+                    
+                    if not exists:
+                        # Create account with type 'custom'
+                        cursor.execute(
+                            "INSERT INTO accounts (account_name, account_type) VALUES (%s, %s)",
+                            (account_name, 'custom')
+                        )
+                        conn.commit()
+                        print(f"✅ Created custom account: {account_name}")
+                    
+                    cursor.close()
+                    conn.close()
+                    
+                except Exception as db_error:
+                    cursor.close()
+                    conn.close()
+                    raise ValueError(f"Failed to create custom account: {db_error}")
+            
+            
             add_payment(
-                name=get_account_value(),
+                name=account_name,
                 amount=float(amount_entry.get()),
-                mop=get_mop_value(),
-                cheque_no=cheque_entry.get() if get_mop_value() == 'Cheque' else None,
+                mop=mop_value,
+                cheque_no=None,
                 date_str=date_entry.get(),
-                narration=get_narration_value(),
-                author=None,
+                narration=narration_value,
                 item_name=item_entry.get() if narration_var.get() == 'Property' else None,
                 description=desc_var.get() if narration_var.get() == 'Property' else None,
                 item_type=type_var.get() if narration_var.get() == 'Property' else None,
@@ -339,39 +428,71 @@ def show_add_payment_form(app, go_back_callback):
                 fd_interest=fd_interest_entry.get() if narration_var.get() == 'FD in bank' else None,
                 remarks=remarks_entry.get() if remarks_entry.get().strip() else None
             )
-            msg = "✅ Payment and journal entries recorded!"
+            
+            # Success message
+            msg = "✅ Payment submitted for approval!"
+            if account_var.get() == "Other (custom...)":
+                msg += f"\n✅ Custom account '{account_name}' created successfully!"
+            
             if narration_var.get() == "FD in bank":
                 try:
                     principal = float(amount_entry.get()) if amount_entry.get() else 0
-                    months = int(fd_num) if fd_unit == 'months' else int(fd_num) / 30
+                    # Convert duration to years for simple interest calculation
+                    if fd_unit == 'months':
+                        time_in_years = int(fd_num) / 12
+                    elif fd_unit == 'days':
+                        # Convert days to years (using 365.25 to account for leap years)
+                        time_in_years = int(fd_num) / 365.25
+                    else:
+                        time_in_years = 0
                     rate = float(fd_interest_entry.get())
-                    maturity_amount = round(principal * (1 + (rate/100) * (months/12)), 2)
-                    msg += f"  Maturity Amount: {maturity_amount}"
+                    # Simple Interest Formula: SI = (P × R × T) / 100
+                    simple_interest = (principal * rate * time_in_years) / 100
+                    # Maturity Amount = Principal + Simple Interest
+                    maturity_amount = round(principal + simple_interest, 2)
+                    msg += f"\n💰 Maturity Amount: ₹{maturity_amount:,.2f}"
+                    msg += f"\n📈 Interest Earned: ₹{simple_interest:,.2f}"
                 except Exception:
-                    msg += "  (Maturity calculation error)"
+                    msg += "\n⚠️ (Maturity calculation error)"
+            
             app.message_label = tk.Label(app.root, text=msg, fg="green", font=label_font, bg=app.root['bg'])
             app.message_label.grid(row=999, columnspan=4, pady=10, sticky='ew')
+            
+        except ValueError as ve:
+            # Handle validation errors
+            app.message_label = tk.Label(app.root, text=f"⚠️ Validation Error: {ve}", fg="orange", font=label_font, bg=app.root['bg'])
+            app.message_label.grid(row=999, columnspan=4, pady=10, sticky='ew')
+            
         except Exception as e:
-            app.message_label = tk.Label(app.root, text=f"❌ Error: {e}", fg="red", font=label_font, bg=app.root['bg'])
+            # Handle other errors
+            error_msg = str(e)
+            if "foreign key constraint" in error_msg.lower():
+                app.message_label = tk.Label(
+                    app.root, 
+                    text=f"❌ Database Error: Account validation failed. Please check account name.", 
+                    fg="red", font=label_font, bg=app.root['bg']
+                )
+            else:
+                app.message_label = tk.Label(
+                    app.root, 
+                    text=f"❌ Error: {error_msg}", 
+                    fg="red", font=label_font, bg=app.root['bg']
+                )
             app.message_label.grid(row=999, columnspan=4, pady=10, sticky='ew')
     tk.Button(app.root, text="Submit", command=submit, font=button_font, width=18).grid(row=100, columnspan=2, pady=15)
     account_menu.bind('<Return>', lambda e: amount_entry.focus_set())
     amount_entry.bind('<Return>', lambda e: mop_menu.focus_set())
-    mop_menu.bind('<Return>', lambda e: cheque_entry.focus_set() if mop_var.get() == 'Cheque' else narration_menu.focus_set())
-    # Only bind cheque_entry if Cheque is selected
-    def update_cheque_entry_binding(*args):
-        if mop_var.get() == "Cheque":
-            cheque_entry.bind('<Return>', lambda e: narration_menu.focus_set())
-        else:
-            cheque_entry.unbind('<Return>')
-    mop_var.trace_add('write', update_cheque_entry_binding)
-    update_cheque_entry_binding()
+    mop_menu.bind('<Return>', lambda e: narration_menu.focus_set())
+    # Remove cheque entry keyboard navigation
+    def update_mop_entry_binding(*args):
+        pass  # No special binding needed anymore
+    mop_var.trace_add('write', update_mop_entry_binding)
+    update_mop_entry_binding()
     narration_menu.bind('<Return>', lambda e: (
         item_entry.focus_set() if narration_var.get() == 'Property' else
         fd_duration_number.focus_set() if narration_var.get() == 'FD in bank' else
         date_entry.focus_set()
     ))
-    author_entry.bind('<Return>', lambda e: date_entry.focus_set())
     item_entry.bind('<Return>', lambda e: desc_radio1.focus_set())
     desc_radio1.bind('<Return>', lambda e: desc_radio2.focus_set())
     desc_radio2.bind('<Return>', lambda e: type_menu.focus_set())

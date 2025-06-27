@@ -4,8 +4,8 @@ from journal_utils import insert_journal_entry
 
 MAIN_FUND_ACCOUNT = "main fund"
 NARRATION_OPTIONS = [
-    "Petty", "Maintenance", "Salary", "Misc", "FD in bank", "Fund lend to other accounts",
-    "Internet bill", "Article appreciation amount", "Property", "Printing of happenings"
+    "Petty", "Maintenance", "Salary", "Property", "FD in bank", "Misc", "Article appreciation amount",
+    "Internet bill", "Fund lend to other accounts", "Printing of happenings"
 ]
 
 def add_payment(
@@ -80,12 +80,9 @@ def add_payment_to_final_tables(conn, cursor, transaction):
         return
 
     extra_narration = ""
-    if narration == "Article appreciation amount":
-        if not author:
-            raise ValueError("Author must be provided for Article appreciation amount")
-        extra_narration = f" | Author: {author}"
+    # Article appreciation amount no longer requires author field
     
-    narration_full = narration + extra_narration if extra_narration else narration
+    narration_full = narration
 
     # --- ID GENERATION LOGIC ---
     # Get the last payment number, increment it, and format the new ID
@@ -117,31 +114,17 @@ def add_payment_to_final_tables(conn, cursor, transaction):
     is_property = narration == "Property"
     is_non_expendable_property = (is_property and description and description.strip().lower() == "non-expendable")
 
-    # Determine columns for the DEBIT entry (property account)
-    if is_property:
-        # Property payments: debit entry uses property column
-        debit_amount = None
-        debit_fd = None
-        debit_property = amount
-        debit_sundry = None
-    elif is_fd:
-        # FD payments: debit entry uses fd column
-        debit_amount = None
-        debit_fd = amount
-        debit_property = None
-        debit_sundry = None
-    elif is_sundry:
-        # Sundry payments: debit entry uses sundry column
-        debit_amount = None
-        debit_fd = None
-        debit_property = None
-        debit_sundry = amount
-    else:
-        # Regular payments: debit entry uses regular amount column
-        debit_amount = amount
-        debit_fd = None
-        debit_property = None
-        debit_sundry = None
+    # Determine columns for the DEBIT entry (recipient account)
+    # Normal payment entries ALWAYS use the main amount column
+    debit_amount = amount
+    debit_fd = None
+    debit_property = None
+    debit_sundry = None
+
+    # Refine logic for specialized columns based on narration
+    debit_fd = amount if is_fd else None  # Use amount instead of fd_interest
+    debit_property = amount if is_property else None
+    debit_sundry = amount if is_sundry else None
 
     # Debit the account that received the payment
     insert_journal_entry(
@@ -150,7 +133,7 @@ def add_payment_to_final_tables(conn, cursor, transaction):
         account_name=name,
         entry_type=main_entry_type,
         amount=debit_amount,
-        narration=f"Payment for {narration}",
+        narration=narration,
         mop=mop,
         entry_date=date,
         fd=debit_fd,
@@ -159,26 +142,29 @@ def add_payment_to_final_tables(conn, cursor, transaction):
     )
 
     # Credit the main fund account (counter entry)
-    # For special transaction types, use special columns instead of regular amount
-    
-    # Determine which column to use for the counter entry
+    # For payments, the main fund is being debited (money going out)
+    # We put the amount in specialized columns to categorize the spending
+    # Initialize counter_amount to avoid reference errors
+    counter_amount = None
+    counter_fd = None
+    counter_sundry = None
+    counter_property = None
+
+    # Refine logic for specialized columns in counter entries
     if is_fd:
-        counter_amount = None
-        counter_fd = amount
-        counter_sundry = None
+        counter_fd = amount  # FD value derived from amount
         counter_property = None
+        counter_sundry = None
     elif is_non_expendable_property:
-        counter_amount = None
+        counter_property = amount  # Property value derived from amount
         counter_fd = None
         counter_sundry = None
-        counter_property = amount
     elif is_sundry:
-        counter_amount = None
+        counter_sundry = amount  # Sundry value derived from amount
         counter_fd = None
-        counter_sundry = amount
         counter_property = None
     else:
-        # Regular transactions (including expendable property) use the normal amount column
+        # Regular transactions use the normal amount column
         counter_amount = amount
         counter_fd = None
         counter_sundry = None
@@ -190,7 +176,7 @@ def add_payment_to_final_tables(conn, cursor, transaction):
         account_name=MAIN_FUND_ACCOUNT,
         entry_type=counter_entry_type,
         amount=counter_amount,
-        narration=f"Payment to {name} for {narration}",
+        narration=narration,
         mop=mop,
         entry_date=date,
         fd=counter_fd,
@@ -332,7 +318,7 @@ def handle_fd_maturity_payment(conn, cursor, transaction):
         account_name=name,
         entry_type='Fund',
         amount=amount,
-        narration=f"FD maturity payment: {narration}",
+        narration=narration,
         mop=mop,
         entry_date=date,
         fd=None,
@@ -349,7 +335,7 @@ def handle_fd_maturity_payment(conn, cursor, transaction):
             account_name=MAIN_FUND_ACCOUNT,
             entry_type='Bank',
             amount=principal_amount,  # Principal in regular amount column
-            narration=f"FD maturity from {name}: Principal + Interest",
+            narration=narration,
             mop=mop,
             entry_date=date,
             fd=interest_amount,  # Interest in FD column
@@ -364,7 +350,7 @@ def handle_fd_maturity_payment(conn, cursor, transaction):
             account_name=MAIN_FUND_ACCOUNT,
             entry_type='Bank',
             amount=amount,
-            narration=f"FD maturity from {name}",
+            narration=narration,
             mop=mop,
             entry_date=date,
             fd=None,

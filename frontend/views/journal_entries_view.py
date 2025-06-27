@@ -120,16 +120,36 @@ def show_journal_entries_view(app):
             for row in rows:
                 row = list(row)
                 # map fd/sundry/property to correct column
-                amt, fd, sundry, prop = row[3], row[7], row[8], row[9]
+                entry_id, amt, fd, sundry, prop = row[0], row[3], row[7], row[8], row[9]
                 row[3], row[7], row[8], row[9] = ('', '', '', '')
-                if fd:
-                    row[7] = fd
-                elif prop:
-                    row[9] = prop
-                elif sundry:
-                    row[8] = sundry
+                
+                # Check if this is a counter entry (starts with 'C')
+                is_counter_entry = entry_id and str(entry_id).startswith('C')
+                
+                if is_counter_entry:
+                    # Counter entries always show amount in main Amount column
+                    # Calculate the total amount from all possible sources
+                    total_amount = 0
+                    if amt:
+                        total_amount += float(amt)
+                    if fd:
+                        total_amount += float(fd)
+                    if sundry:
+                        total_amount += float(sundry)
+                    if prop:
+                        total_amount += float(prop)
+                    row[3] = total_amount if total_amount != 0 else ''
                 else:
-                    row[3] = amt
+                    # Normal entries: use specialized columns
+                    if fd:
+                        row[7] = fd
+                    elif prop:
+                        row[9] = prop
+                    elif sundry:
+                        row[8] = sundry
+                    else:
+                        row[3] = amt if amt else ''
+                
                 tree.insert('', 'end', values=row)
         except Exception as e:
             messagebox.showerror('Database Error', f'Failed to fetch journal entries: {e}')
@@ -146,6 +166,53 @@ def show_journal_entries_view(app):
 
     tk.Button(filters_frame, text="Filter", command=apply_filters, font=button_font).grid(row=0, column=8, padx=5)
     tk.Button(filters_frame, text="Clear", command=clear_filters, font=button_font).grid(row=0, column=9, padx=5)
+
+    # --- End-of-Last-Month Balances Panel ---
+    balances_frame = tk.Frame(filters_frame, bg='white')
+    balances_frame.grid(row=1, column=0, columnspan=10, pady=(10,0), sticky='w')
+    balances_label = tk.Label(balances_frame,
+                              text="B/F Balances -> Bank: -- | FD: -- | Property: -- | Sundry: --",
+                              font=label_font, bg='white')
+    balances_label.pack()
+
+    def compute_balances():
+        from datetime import date, timedelta
+        today = date.today()
+        first_of_month = today.replace(day=1)
+        end_last_month = first_of_month - timedelta(days=1)
+        conn_bal = db_connect.get_connection()
+        cur_bal = conn_bal.cursor()
+        # Main Fund / Bank
+        cur_bal.execute(
+            """
+            SELECT
+              COALESCE(SUM(CASE WHEN entry_type='Bank' THEN amount ELSE 0 END),0) -
+              COALESCE(SUM(CASE WHEN entry_type='Fund' THEN amount ELSE 0 END),0)
+            FROM journal_entries
+            WHERE account_name='main fund' AND entry_date <= %s
+            """, (end_last_month,)
+        )
+        main_fund_bal = cur_bal.fetchone()[0] or 0
+        # FD
+        cur_bal.execute("SELECT COALESCE(SUM(fd),0) FROM journal_entries WHERE entry_date <= %s", (end_last_month,))
+        total_fd = cur_bal.fetchone()[0] or 0
+        # Property
+        cur_bal.execute("SELECT COALESCE(SUM(property),0) FROM journal_entries WHERE entry_date <= %s", (end_last_month,))
+        total_prop = cur_bal.fetchone()[0] or 0
+        # Sundry
+        cur_bal.execute("SELECT COALESCE(SUM(sundry),0) FROM journal_entries WHERE entry_date <= %s", (end_last_month,))
+        total_sundry = cur_bal.fetchone()[0] or 0
+        cur_bal.close()
+        conn_bal.close()
+        # Update single balances label
+        balances_label.config(
+            text=(f"B/F Balances -> Bank: {main_fund_bal:,.2f} | "
+                  f"FD: {total_fd:,.2f} | "
+                  f"Property: {total_prop:,.2f} | "
+                  f"Sundry: {total_sundry:,.2f}"))
+
+    # Initial balance computation
+    compute_balances()
 
     vsb = ttk.Scrollbar(table_frame, orient="vertical", command=tree.yview)
     tree.configure(yscrollcommand=vsb.set)

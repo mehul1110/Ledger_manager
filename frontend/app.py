@@ -3,6 +3,14 @@
 
 import tkinter as tk
 from PIL import Image, ImageTk
+import sys
+import os
+
+# Add parent directory to path for permission system
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from role_permissions import has_permission, check_permission_with_message, Permissions
+from notification_utils import get_recent_notifications
 from views.add_payment_view import show_add_payment_form
 from views.add_account_view import show_add_account_form
 from views.add_receipt_view import show_add_receipt_form
@@ -15,9 +23,11 @@ from views.monthly_balance_sheet_view import show_monthly_balance_sheet_ui
 from views.fd_details_view import show_fd_details_view
 from views.property_details_view import show_property_details_view
 from views.approval_view import show_approval_view
+from views.about_view import show_about_view
 from transaction_approver import get_pending_transaction_count
 from views.comparison_view import show_comparison_view
 from simple_login import show_login_dialog
+
 
 
 class BookkeepingApp:
@@ -33,12 +43,43 @@ class BookkeepingApp:
         self.create_widgets()
         self.root.bind('<Configure>', self._on_resize)
 
+    def check_permission(self, permission, action_name):
+        """Check if current user has permission for an action"""
+        return check_permission_with_message(self.user_info, permission, action_name)
+
+    # Permission-protected wrapper functions
+    def show_add_receipt_form_protected(self):
+        """Add Receipt with permission check"""
+        if self.check_permission(Permissions.ADD_RECEIPTS, "add receipts"):
+            self.show_add_receipt_form()
+
+    def show_add_payment_form_protected(self):
+        """Add Payment with permission check"""
+        if self.check_permission(Permissions.ADD_PAYMENTS, "add payments"):
+            self.show_add_payment_form()
+
+    def show_add_account_form_protected(self):
+        """Add Account with permission check"""
+        if self.check_permission(Permissions.ADD_ACCOUNTS, "add accounts"):
+            self.show_add_account_form()
+
+    def show_approval_view_protected(self):
+        """Approval View with permission check"""
+        if self.check_permission(Permissions.APPROVE_TRANSACTIONS, "approve transactions"):
+            self.show_approval_view()
+
+    def show_add_transactions_menu_protected(self):
+        """Add Transactions Menu with permission check"""
+        if self.check_permission(Permissions.ADD_RECEIPTS, "add transactions") or self.check_permission(Permissions.ADD_PAYMENTS, "add transactions"):
+            self.show_add_transactions_menu()
+
     def set_background(self):
         # Load and set a background image as a label covering the window, resizing dynamically
         try:
             width = self.root.winfo_width() or 900
             height = self.root.winfo_height() or 600
-            img = Image.open("frontend/bg_image.jpg")
+            bg_image_path = os.path.join(os.path.dirname(__file__), "bg_image.jpg")
+            img = Image.open(bg_image_path)
             img = img.resize((width, height), Image.LANCZOS)
             self.bg_photo = ImageTk.PhotoImage(img)
             if hasattr(self, 'bg_label') and self.bg_label.winfo_exists():
@@ -58,23 +99,81 @@ class BookkeepingApp:
 
         tk.Label(self.sidebar, text="Notifications", font=("Arial", 16, "bold"), bg='#f0f0f0').pack(pady=10)
 
-        pending_count = get_pending_transaction_count()
-        approval_button_text = f"Pending Approvals ({pending_count})"
-        self.approval_button = tk.Button(self.sidebar, text=approval_button_text, command=self.show_approval_view, font=("Arial", 12), bg='#e0e0e0')
-        self.approval_button.pack(pady=10, padx=10, fill='x')
+        # Show recent notifications for all users
+        self.display_recent_notifications()
 
-        if pending_count == 0:
-            tk.Label(self.sidebar, text="No new notifications.", font=("Arial", 12), bg='#f0f0f0').pack(pady=10, padx=10)
+        # Only show approval button if user has permission
+        if has_permission(self.user_info.get('role', 'viewer'), Permissions.APPROVE_TRANSACTIONS):
+            pending_count = get_pending_transaction_count()
+            approval_button_text = f"Pending Approvals ({pending_count})"
+            self.approval_button = tk.Button(self.sidebar, text=approval_button_text, command=self.show_approval_view_protected, font=("Arial", 12), bg='#e0e0e0')
+            self.approval_button.pack(pady=10, padx=10, fill='x')
 
-        # Add a periodic check to update the count
-        self.root.after(30000, self.update_pending_count) # Check every 30 seconds
+        # Add About button at the bottom
+        about_button = tk.Button(self.sidebar, text="About", command=self.show_about_page, font=("Arial", 12), bg='#e0e0e0')
+        about_button.pack(side='bottom', pady=10, padx=10, fill='x')
+
+        # Add a periodic check to update the notifications and count
+        self.root.after(30000, self.update_sidebar_notifications) # Check every 30 seconds
+
+    def display_recent_notifications(self):
+        """Display recent notifications in the sidebar"""
+        try:
+            notifications = get_recent_notifications(5)  # Get last 5 notifications
+            
+            if notifications:
+                # Create a frame for notifications with scrollbar if needed
+                notifications_frame = tk.Frame(self.sidebar, bg='#f0f0f0')
+                notifications_frame.pack(pady=5, padx=10, fill='x')
+                
+                for notification in notifications:
+                    entry_id = notification['entry_id']
+                    status = notification['status']
+                    
+                    # Create a status indicator
+                    status_color = '#28a745' if status == 'approved' else '#dc3545'  # Green for approved, red for rejected
+                    status_symbol = '✓' if status == 'approved' else '✗'
+                    
+                    # Create notification text
+                    notification_text = f"{status_symbol} ({entry_id}) {status}"
+                    
+                    # Create notification label
+                    notif_label = tk.Label(
+                        notifications_frame, 
+                        text=notification_text,
+                        font=("Arial", 10),
+                        bg='#f0f0f0',
+                        fg=status_color,
+                        anchor='w'
+                    )
+                    notif_label.pack(fill='x', pady=2)
+            else:
+                tk.Label(self.sidebar, text="No recent notifications.", font=("Arial", 11), bg='#f0f0f0', fg='#666').pack(pady=5, padx=10)
+                
+        except Exception as e:
+            print(f"Error displaying notifications: {e}")
+            tk.Label(self.sidebar, text="Error loading notifications.", font=("Arial", 11), bg='#f0f0f0', fg='#dc3545').pack(pady=5, padx=10)
+
+    def update_sidebar_notifications(self):
+        """Periodically updates the notifications and pending transaction count in the sidebar."""
+        if self.sidebar and self.sidebar.winfo_exists():
+            # Recreate the sidebar to refresh notifications
+            self.sidebar.destroy()
+            self.create_sidebar()
+            # Show the sidebar again if it was visible
+            self.sidebar.place(x=0, y=0, relheight=1)
+            self.sidebar.lift()
+        
+        # Reschedule the check
+        self.root.after(30000, self.update_sidebar_notifications)
 
     def update_pending_count(self):
         """Periodically updates the pending transaction count in the sidebar."""
         if self.sidebar and self.sidebar.winfo_exists():
-            pending_count = get_pending_transaction_count()
-            approval_button_text = f"Pending Approvals ({pending_count})"
-            self.approval_button.config(text=approval_button_text)
+            if hasattr(self, 'approval_button') and self.approval_button.winfo_exists():
+                pending_count = get_pending_transaction_count()
+                approval_button_text = f"Pending Approvals ({pending_count})"
+                self.approval_button.config(text=approval_button_text)
         self.root.after(30000, self.update_pending_count) # Reschedule the check
 
     def toggle_sidebar(self):
@@ -124,11 +223,21 @@ class BookkeepingApp:
         self.get_responsive_fonts()
         title_font = ("Georgia", max(int(32 * (self.root.winfo_width() / 900)), 18), 'bold italic')
         btn_font = ("Segoe UI", max(int(18 * (self.root.winfo_width() / 900)), 13), 'bold')
-        button_names = [
-            ("Add Payer/Payee", self.show_add_account_form),
-            ("Add Transactions", self.show_add_transactions_menu),
-            ("View Transactions", self.show_view_transactions_menu)
-        ]
+        # Create menu based on user permissions
+        button_names = []
+        
+        # Add Account button - check permission
+        if has_permission(self.user_info.get('role', 'viewer'), Permissions.ADD_ACCOUNTS):
+            button_names.append(("Add Payer/Payee", self.show_add_account_form_protected))
+        
+        # Add Transactions button - check if user can add receipts or payments
+        if (has_permission(self.user_info.get('role', 'viewer'), Permissions.ADD_RECEIPTS) or 
+            has_permission(self.user_info.get('role', 'viewer'), Permissions.ADD_PAYMENTS)):
+            button_names.append(("Add Transactions", self.show_add_transactions_menu_protected))
+        
+        # View Transactions - most roles can view
+        if has_permission(self.user_info.get('role', 'viewer'), Permissions.VIEW_TRANSACTIONS):
+            button_names.append(("View Transactions", self.show_view_transactions_menu))
         tk.Label(self.root, text="The BAHIKHATA App!", font=title_font, bg="white", fg="#222").pack(pady=(40, 5), padx=30)
         subheading_font = ("Segoe UI", max(int(12 * (self.root.winfo_width() / 900)), 8), 'italic')
         tk.Label(self.root, text="EME Journal Accounts Management System.", font=subheading_font, bg="white", fg="#555").pack(pady=(0, 25), padx=30)
@@ -161,16 +270,20 @@ class BookkeepingApp:
         footer_font = ("Arial", 10, 'bold italic')
         footer_label = tk.Label(self.root, text="Developed by Mehul Ashra during Summer Internship at FEL, MCEME", font=footer_font, fg="#666", anchor='e', justify='right', borderwidth=0, highlightthickness=0)
         footer_label.place(relx=1.0, rely=1.0, anchor='se', x=-20, y=-8)
+        # Add logos
         try:
-            left_logo_img = Image.open("frontend/left_logo.jpg")
+            left_logo_path = os.path.join(os.path.dirname(__file__), "left_logo.jpg")
+            left_logo_img = Image.open(left_logo_path)
             left_logo_img = left_logo_img.resize((90, 90), Image.LANCZOS)
             self.left_logo_photo = ImageTk.PhotoImage(left_logo_img)
             left_logo_label = tk.Label(self.root, image=self.left_logo_photo, borderwidth=0, highlightthickness=0)
             left_logo_label.place(x=10, y=10)
         except Exception as e:
             print(f"Left logo error: {e}")
+        
         try:
-            right_logo_img = Image.open("frontend/right_logo.jpg")
+            right_logo_path = os.path.join(os.path.dirname(__file__), "right_logo.jpg")
+            right_logo_img = Image.open(right_logo_path)
             right_logo_img = right_logo_img.resize((90, 90), Image.LANCZOS)
             self.right_logo_photo = ImageTk.PhotoImage(right_logo_img)
             right_logo_label = tk.Label(self.root, image=self.right_logo_photo, borderwidth=0, highlightthickness=0)
@@ -209,11 +322,11 @@ class BookkeepingApp:
             e.widget.configure(style='Hover.TButton')
         def on_leave(e):
             e.widget.configure(style='Modern.TButton')
-        btn_receipt = ttk.Button(btn_frame, text="Add Receipt(incoming)", command=self.show_add_receipt_form, style='Modern.TButton', width=22)
+        btn_receipt = ttk.Button(btn_frame, text="Add Receipt(incoming)", command=self.show_add_receipt_form_protected, style='Modern.TButton', width=22)
         btn_receipt.pack(pady=7)
         btn_receipt.bind('<Enter>', on_enter)
         btn_receipt.bind('<Leave>', on_leave)
-        btn_payment = ttk.Button(btn_frame, text="Add Payment(outgoing)", command=self.show_add_payment_form, style='Modern.TButton', width=22)
+        btn_payment = ttk.Button(btn_frame, text="Add Payment(outgoing)", command=self.show_add_payment_form_protected, style='Modern.TButton', width=22)
         btn_payment.pack(pady=7)
         btn_payment.bind('<Enter>', on_enter)
         btn_payment.bind('<Leave>', on_leave)
@@ -233,15 +346,15 @@ class BookkeepingApp:
 
     def show_add_receipt_form(self):
         from views.add_receipt_view import show_add_receipt_form
-        show_add_receipt_form(self, go_back_callback=self.show_add_transactions_menu)
+        show_add_receipt_form(self, go_back_callback=self.show_add_transactions_menu, user_info=self.user_info)
 
     def show_add_account_form(self):
         from views.add_account_view import show_add_account_form
-        show_add_account_form(self)
+        show_add_account_form(self, user_info=self.user_info)
 
     def show_add_payment_form(self):
         from views.add_payment_view import show_add_payment_form
-        show_add_payment_form(self, go_back_callback=self.show_add_transactions_menu)
+        show_add_payment_form(self, go_back_callback=self.show_add_transactions_menu, user_info=self.user_info)
 
     def show_view_transactions_menu(self):
         show_view_transactions_menu(self)
@@ -283,7 +396,7 @@ class BookkeepingApp:
         show_property_details_view(self)
 
     def show_approval_view(self):
-        show_approval_view(self, on_success_callback=self.current_view_refresh_callback)
+        show_approval_view(self, on_success_callback=self.current_view_refresh_callback, user_info=self.user_info)
 
     def show_placeholder_view(self, name):
         self.current_view_refresh_callback = None
@@ -295,6 +408,10 @@ class BookkeepingApp:
         button_font = self.fonts['button']
         tk.Button(self.root, text="← Go Back", command=self.show_view_transactions_menu, font=button_font).pack(anchor='w', padx=10, pady=10)
         tk.Label(self.root, text=f"{name} view coming soon...", font=label_font, bg="white").pack(pady=40)
+
+    def show_about_page(self):
+        """Show the About page with application information."""
+        show_about_view(self)
 
 if __name__ == "__main__":
     import sys

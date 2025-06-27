@@ -5,7 +5,14 @@ import tkinter as tk
 import sys, os, io
 from add_account import add_account
 
-def show_add_account_form(app):
+def show_add_account_form(app, user_info=None):
+    # Add permission check at the top
+    sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+    from role_permissions import check_permission_with_message, Permissions
+    
+    if user_info and not check_permission_with_message(user_info, Permissions.ADD_ACCOUNTS, "add accounts"):
+        return
+    
     for widget in app.root.winfo_children():
         widget.destroy()
     app.set_background()

@@ -85,9 +85,10 @@ def show_property_details_view(app):
         # Clear existing rows
         for i in tree.get_children():
             tree.delete(i)
-        # Construct query
+        # Construct query - select only the columns we want to display (exclude internal id)
         query = (
-            "SELECT * FROM property_details WHERE 1=1"
+            "SELECT payment_id, item_name, description, type, value, purchase_date, depreciation_rate "
+            "FROM property_details WHERE 1=1"
         )
         # Only apply date filter if user selects a date and it is not today's date
         today_str = utils.get_today_str()  # You should implement this in utils.py to return today's date in dd-mm-yyyy
@@ -111,7 +112,15 @@ def show_property_details_view(app):
             cursor_data.execute(query)
             rows = cursor_data.fetchall()
             for row in rows:
-                tree.insert('', 'end', values=row)
+                # Format the data properly
+                formatted_row = list(row)
+                # Format value with 2 decimal places if it exists
+                if formatted_row[4] is not None:  # value column
+                    formatted_row[4] = f"{float(formatted_row[4]):.2f}"
+                # Format depreciation rate with 2 decimal places if it exists
+                if formatted_row[6] is not None:  # depreciation_rate column
+                    formatted_row[6] = f"{float(formatted_row[6]):.2f}"
+                tree.insert('', 'end', values=formatted_row)
             cursor_data.close()
             conn_data.close()
         except Exception as e:

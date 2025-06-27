@@ -88,9 +88,11 @@ def show_fd_details_view(app):
         # Clear existing rows
         for i in tree.get_children():
             tree.delete(i)
-        # Construct query
+        # Construct query - select only the columns we want to display (exclude internal id)
         query = (
-            "SELECT * FROM fd_details WHERE 1=1"
+            "SELECT payment_id, bank_account, amount, duration, interest_rate, "
+            "narration, fd_date, maturity_date, status, maturity_amount "
+            "FROM fd_details WHERE 1=1"
         )
         # Only apply date filter if user selects a date and it is not today's date
         today_str = utils.get_today_str()  # You should implement this in utils.py to return today's date in dd-mm-yyyy
@@ -116,7 +118,18 @@ def show_fd_details_view(app):
             cursor_data.execute(query)
             rows = cursor_data.fetchall()
             for row in rows:
-                tree.insert('', 'end', values=row)
+                # Format the data properly
+                formatted_row = list(row)
+                # Format amount with 2 decimal places if it exists (index 2)
+                if formatted_row[2] is not None:
+                    formatted_row[2] = f"{float(formatted_row[2]):.2f}"
+                # Format interest rate with 2 decimal places if it exists (index 4)
+                if formatted_row[4] is not None:
+                    formatted_row[4] = f"{float(formatted_row[4]):.2f}%"
+                # Format maturity amount with 2 decimal places if it exists (index 9)
+                if formatted_row[9] is not None:
+                    formatted_row[9] = f"{float(formatted_row[9]):.2f}"
+                tree.insert('', 'end', values=formatted_row)
             cursor_data.close()
             conn_data.close()
         except Exception as e:

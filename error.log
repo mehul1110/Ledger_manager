@@ -51,3 +51,850 @@
 2025-06-26 01:21:10,629 - INFO - ✓ BookkeepingApp instance created successfully
 2025-06-26 01:21:10,629 - INFO - Starting main application loop...
 2025-06-26 01:21:14,778 - INFO - Application closed normally
+2025-06-26 02:22:33.374134 - Error in add_payment: module 'datetime' has no attribute 'strptime'
+2025-06-26 02:22:33.405136 - Error in add_receipt: module 'datetime' has no attribute 'strptime'
+2025-06-26 02:22:33.449890 - Error in add_payment: module 'datetime' has no attribute 'strptime'
+2025-06-26 02:22:33.459891 - Error in add_payment: module 'datetime' has no attribute 'strptime'
+2025-06-26 02:22:33.468892 - Error in add_payment: module 'datetime' has no attribute 'strptime'
+2025-06-26 09:55:21,524 - INFO - ============================================================
+2025-06-26 09:55:21,525 - INFO - BAHI-KHATA Application Starting
+2025-06-26 09:55:21,525 - INFO - ============================================================
+2025-06-26 09:55:21,526 - INFO - Python version: 3.10.0 (tags/v3.10.0:b494f59, Oct  4 2021, 19:00:18) [MSC v.1929 64 bit (AMD64)]
+2025-06-26 09:55:21,526 - INFO - Working directory: C:\ledger management\db
+2025-06-26 09:55:21,527 - INFO - Script path: C:\ledger management\db\frontend\app.py
+2025-06-26 09:55:21,527 - INFO - Python path: ['C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db\\frontend', 'C:\\Python310\\python310.zip', 'C:\\Python310\\DLLs', 'C:\\Python310\\lib', 'C:\\Python310', 'C:\\Python310\\lib\\site-packages', 'C:\\Python310\\lib\\site-packages\\win32', 'C:\\Python310\\lib\\site-packages\\win32\\lib', 'C:\\Python310\\lib\\site-packages\\Pythonwin', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db']
+2025-06-26 09:55:21,528 - INFO - ------------------------------------------------------------
+2025-06-26 09:55:21,529 - INFO - Testing critical imports...
+2025-06-26 09:55:21,529 - INFO - ✓ tkinter imported successfully
+2025-06-26 09:55:21,530 - INFO - ✓ PIL/Pillow imported successfully
+2025-06-26 09:55:21,530 - INFO - ✓ mysql.connector imported successfully
+2025-06-26 09:55:21,531 - INFO - ✓ All critical imports successful
+2025-06-26 09:55:21,531 - INFO - ------------------------------------------------------------
+2025-06-26 09:55:21,532 - INFO - Creating Tkinter root window...
+2025-06-26 09:55:22,785 - INFO - ✓ Tkinter root window created successfully
+2025-06-26 09:55:22,785 - INFO - Configuring main window...
+2025-06-26 09:55:22,786 - INFO - ✓ Main window configured and hidden
+2025-06-26 09:55:22,786 - INFO - Attempting to show login dialog...
+2025-06-26 09:55:33,861 - INFO - ✓ Login successful for user: admin (Role: admin)
+2025-06-26 09:55:33,891 - INFO - Creating BookkeepingApp instance...
+2025-06-26 09:55:34,769 - INFO - ✓ BookkeepingApp instance created successfully
+2025-06-26 09:55:34,770 - INFO - Starting main application loop...
+2025-06-26 09:58:57,087 - INFO - Application closed normally
+2025-06-26 10:22:58,150 - INFO - ============================================================
+2025-06-26 10:22:58,151 - INFO - BAHI-KHATA Application Starting
+2025-06-26 10:22:58,151 - INFO - ============================================================
+2025-06-26 10:22:58,151 - INFO - Python version: 3.10.0 (tags/v3.10.0:b494f59, Oct  4 2021, 19:00:18) [MSC v.1929 64 bit (AMD64)]
+2025-06-26 10:22:58,152 - INFO - Working directory: C:\ledger management\db
+2025-06-26 10:22:58,152 - INFO - Script path: C:\ledger management\db\frontend\app.py
+2025-06-26 10:22:58,152 - INFO - Python path: ['C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db\\frontend', 'C:\\Python310\\python310.zip', 'C:\\Python310\\DLLs', 'C:\\Python310\\lib', 'C:\\Python310', 'C:\\Python310\\lib\\site-packages', 'C:\\Python310\\lib\\site-packages\\win32', 'C:\\Python310\\lib\\site-packages\\win32\\lib', 'C:\\Python310\\lib\\site-packages\\Pythonwin', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db']
+2025-06-26 10:22:58,152 - INFO - ------------------------------------------------------------
+2025-06-26 10:22:58,153 - INFO - Testing critical imports...
+2025-06-26 10:22:58,153 - INFO - ✓ tkinter imported successfully
+2025-06-26 10:22:58,153 - INFO - ✓ PIL/Pillow imported successfully
+2025-06-26 10:22:58,154 - INFO - ✓ mysql.connector imported successfully
+2025-06-26 10:22:58,154 - INFO - ✓ All critical imports successful
+2025-06-26 10:22:58,154 - INFO - ------------------------------------------------------------
+2025-06-26 10:22:58,154 - INFO - Creating Tkinter root window...
+2025-06-26 10:22:58,690 - INFO - ✓ Tkinter root window created successfully
+2025-06-26 10:22:58,691 - INFO - Configuring main window...
+2025-06-26 10:22:58,691 - INFO - ✓ Main window configured and hidden
+2025-06-26 10:22:58,691 - INFO - Attempting to show login dialog...
+2025-06-26 10:23:06,289 - INFO - ✓ Login successful for user: accountant (Role: accountant)
+2025-06-26 10:23:06,307 - INFO - Creating BookkeepingApp instance...
+2025-06-26 10:23:06,667 - INFO - ✓ BookkeepingApp instance created successfully
+2025-06-26 10:23:06,667 - INFO - Starting main application loop...
+2025-06-26 10:38:12,593 - INFO - Application closed normally
+2025-06-26 10:38:27,635 - INFO - ============================================================
+2025-06-26 10:38:27,635 - INFO - BAHI-KHATA Application Starting
+2025-06-26 10:38:27,636 - INFO - ============================================================
+2025-06-26 10:38:27,636 - INFO - Python version: 3.10.0 (tags/v3.10.0:b494f59, Oct  4 2021, 19:00:18) [MSC v.1929 64 bit (AMD64)]
+2025-06-26 10:38:27,636 - INFO - Working directory: C:\ledger management\db
+2025-06-26 10:38:27,636 - INFO - Script path: C:\ledger management\db\frontend\app.py
+2025-06-26 10:38:27,636 - INFO - Python path: ['C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db\\frontend', 'C:\\Python310\\python310.zip', 'C:\\Python310\\DLLs', 'C:\\Python310\\lib', 'C:\\Python310', 'C:\\Python310\\lib\\site-packages', 'C:\\Python310\\lib\\site-packages\\win32', 'C:\\Python310\\lib\\site-packages\\win32\\lib', 'C:\\Python310\\lib\\site-packages\\Pythonwin', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db']
+2025-06-26 10:38:27,637 - INFO - ------------------------------------------------------------
+2025-06-26 10:38:27,637 - INFO - Testing critical imports...
+2025-06-26 10:38:27,637 - INFO - ✓ tkinter imported successfully
+2025-06-26 10:38:27,638 - INFO - ✓ PIL/Pillow imported successfully
+2025-06-26 10:38:27,638 - INFO - ✓ mysql.connector imported successfully
+2025-06-26 10:38:27,638 - INFO - ✓ All critical imports successful
+2025-06-26 10:38:27,638 - INFO - ------------------------------------------------------------
+2025-06-26 10:38:27,638 - INFO - Creating Tkinter root window...
+2025-06-26 10:38:27,729 - INFO - ✓ Tkinter root window created successfully
+2025-06-26 10:38:27,729 - INFO - Configuring main window...
+2025-06-26 10:38:27,729 - INFO - ✓ Main window configured and hidden
+2025-06-26 10:38:27,730 - INFO - Attempting to show login dialog...
+2025-06-26 10:38:38,273 - INFO - ✓ Login successful for user: accountant (Role: accountant)
+2025-06-26 10:38:38,286 - INFO - Creating BookkeepingApp instance...
+2025-06-26 10:38:38,510 - INFO - ✓ BookkeepingApp instance created successfully
+2025-06-26 10:38:38,511 - INFO - Starting main application loop...
+2025-06-26 10:47:43,549 - INFO - Application closed normally
+2025-06-26 10:47:46,975 - INFO - ============================================================
+2025-06-26 10:47:46,976 - INFO - BAHI-KHATA Application Starting
+2025-06-26 10:47:46,976 - INFO - ============================================================
+2025-06-26 10:47:46,976 - INFO - Python version: 3.10.0 (tags/v3.10.0:b494f59, Oct  4 2021, 19:00:18) [MSC v.1929 64 bit (AMD64)]
+2025-06-26 10:47:46,977 - INFO - Working directory: C:\ledger management\db
+2025-06-26 10:47:46,977 - INFO - Script path: C:\ledger management\db\frontend\app.py
+2025-06-26 10:47:46,977 - INFO - Python path: ['C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db\\frontend', 'C:\\Python310\\python310.zip', 'C:\\Python310\\DLLs', 'C:\\Python310\\lib', 'C:\\Python310', 'C:\\Python310\\lib\\site-packages', 'C:\\Python310\\lib\\site-packages\\win32', 'C:\\Python310\\lib\\site-packages\\win32\\lib', 'C:\\Python310\\lib\\site-packages\\Pythonwin', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db']
+2025-06-26 10:47:46,978 - INFO - ------------------------------------------------------------
+2025-06-26 10:47:46,978 - INFO - Testing critical imports...
+2025-06-26 10:47:46,978 - INFO - ✓ tkinter imported successfully
+2025-06-26 10:47:46,978 - INFO - ✓ PIL/Pillow imported successfully
+2025-06-26 10:47:46,979 - INFO - ✓ mysql.connector imported successfully
+2025-06-26 10:47:46,979 - INFO - ✓ All critical imports successful
+2025-06-26 10:47:46,979 - INFO - ------------------------------------------------------------
+2025-06-26 10:47:46,979 - INFO - Creating Tkinter root window...
+2025-06-26 10:47:47,061 - INFO - ✓ Tkinter root window created successfully
+2025-06-26 10:47:47,062 - INFO - Configuring main window...
+2025-06-26 10:47:47,062 - INFO - ✓ Main window configured and hidden
+2025-06-26 10:47:47,063 - INFO - Attempting to show login dialog...
+2025-06-26 10:47:51,166 - INFO - ✓ Login successful for user: admin (Role: admin)
+2025-06-26 10:47:51,179 - INFO - Creating BookkeepingApp instance...
+2025-06-26 10:47:51,418 - INFO - ✓ BookkeepingApp instance created successfully
+2025-06-26 10:47:51,419 - INFO - Starting main application loop...
+2025-06-26 10:48:32.287397 - Error in process_pending_transaction: 0
+2025-06-26 10:48:36.635149 - Error in process_pending_transaction: 0
+2025-06-26 10:48:39.878285 - Error in process_pending_transaction: 0
+2025-06-26 11:29:18,685 - INFO - Application closed normally
+2025-06-26 11:35:22,046 - INFO - ============================================================
+2025-06-26 11:35:22,046 - INFO - BAHI-KHATA Application Starting
+2025-06-26 11:35:22,046 - INFO - ============================================================
+2025-06-26 11:35:22,046 - INFO - Python version: 3.10.0 (tags/v3.10.0:b494f59, Oct  4 2021, 19:00:18) [MSC v.1929 64 bit (AMD64)]
+2025-06-26 11:35:22,047 - INFO - Working directory: C:\ledger management\db
+2025-06-26 11:35:22,047 - INFO - Script path: C:\ledger management\db\frontend\app.py
+2025-06-26 11:35:22,047 - INFO - Python path: ['C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db\\frontend', 'C:\\Python310\\python310.zip', 'C:\\Python310\\DLLs', 'C:\\Python310\\lib', 'C:\\Python310', 'C:\\Python310\\lib\\site-packages', 'C:\\Python310\\lib\\site-packages\\win32', 'C:\\Python310\\lib\\site-packages\\win32\\lib', 'C:\\Python310\\lib\\site-packages\\Pythonwin', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db']
+2025-06-26 11:35:22,048 - INFO - ------------------------------------------------------------
+2025-06-26 11:35:22,049 - INFO - Testing critical imports...
+2025-06-26 11:35:22,049 - INFO - ✓ tkinter imported successfully
+2025-06-26 11:35:22,049 - INFO - ✓ PIL/Pillow imported successfully
+2025-06-26 11:35:22,050 - INFO - ✓ mysql.connector imported successfully
+2025-06-26 11:35:22,050 - INFO - ✓ All critical imports successful
+2025-06-26 11:35:22,050 - INFO - ------------------------------------------------------------
+2025-06-26 11:35:22,050 - INFO - Creating Tkinter root window...
+2025-06-26 11:35:22,123 - INFO - ✓ Tkinter root window created successfully
+2025-06-26 11:35:22,123 - INFO - Configuring main window...
+2025-06-26 11:35:22,124 - INFO - ✓ Main window configured and hidden
+2025-06-26 11:35:22,124 - INFO - Attempting to show login dialog...
+2025-06-26 11:35:28,250 - INFO - ✓ Login successful for user: admin (Role: admin)
+2025-06-26 11:35:28,263 - INFO - Creating BookkeepingApp instance...
+2025-06-26 11:35:28,476 - INFO - ✓ BookkeepingApp instance created successfully
+2025-06-26 11:35:28,476 - INFO - Starting main application loop...
+2025-06-26 11:35:37.084970 - Error in process_pending_transaction: An unexpected error occurred during transaction processing. Please check the transaction details and try again. (Exception type: KeyError, Transaction ID: 7)
+2025-06-26 11:35:58.364087 - Error in process_pending_transaction: An unexpected error occurred during transaction processing. Please check the transaction details and try again. (Exception type: KeyError, Transaction ID: 10)
+2025-06-26 11:51:54,418 - INFO - ============================================================
+2025-06-26 11:51:54,418 - INFO - BAHI-KHATA Application Starting
+2025-06-26 11:51:54,419 - INFO - ============================================================
+2025-06-26 11:51:54,419 - INFO - Python version: 3.10.0 (tags/v3.10.0:b494f59, Oct  4 2021, 19:00:18) [MSC v.1929 64 bit (AMD64)]
+2025-06-26 11:51:54,420 - INFO - Working directory: C:\ledger management\db
+2025-06-26 11:51:54,420 - INFO - Script path: C:\ledger management\db\frontend\app.py
+2025-06-26 11:51:54,420 - INFO - Python path: ['C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db\\frontend', 'C:\\Python310\\python310.zip', 'C:\\Python310\\DLLs', 'C:\\Python310\\lib', 'C:\\Python310', 'C:\\Python310\\lib\\site-packages', 'C:\\Python310\\lib\\site-packages\\win32', 'C:\\Python310\\lib\\site-packages\\win32\\lib', 'C:\\Python310\\lib\\site-packages\\Pythonwin', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db']
+2025-06-26 11:51:54,421 - INFO - ------------------------------------------------------------
+2025-06-26 11:51:54,421 - INFO - Testing critical imports...
+2025-06-26 11:51:54,421 - INFO - ✓ tkinter imported successfully
+2025-06-26 11:51:54,421 - INFO - ✓ PIL/Pillow imported successfully
+2025-06-26 11:51:54,422 - INFO - ✓ mysql.connector imported successfully
+2025-06-26 11:51:54,422 - INFO - ✓ All critical imports successful
+2025-06-26 11:51:54,422 - INFO - ------------------------------------------------------------
+2025-06-26 11:51:54,422 - INFO - Creating Tkinter root window...
+2025-06-26 11:51:54,494 - INFO - ✓ Tkinter root window created successfully
+2025-06-26 11:51:54,494 - INFO - Configuring main window...
+2025-06-26 11:51:54,495 - INFO - ✓ Main window configured and hidden
+2025-06-26 11:51:54,495 - INFO - Attempting to show login dialog...
+2025-06-26 11:52:10,897 - INFO - Login cancelled or failed, exiting application
+2025-06-26 11:53:04,726 - INFO - ============================================================
+2025-06-26 11:53:04,726 - INFO - BAHI-KHATA Application Starting
+2025-06-26 11:53:04,726 - INFO - ============================================================
+2025-06-26 11:53:04,727 - INFO - Python version: 3.10.0 (tags/v3.10.0:b494f59, Oct  4 2021, 19:00:18) [MSC v.1929 64 bit (AMD64)]
+2025-06-26 11:53:04,727 - INFO - Working directory: C:\ledger management\db
+2025-06-26 11:53:04,727 - INFO - Script path: C:\ledger management\db\frontend\app.py
+2025-06-26 11:53:04,727 - INFO - Python path: ['C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db\\frontend', 'C:\\Python310\\python310.zip', 'C:\\Python310\\DLLs', 'C:\\Python310\\lib', 'C:\\Python310', 'C:\\Python310\\lib\\site-packages', 'C:\\Python310\\lib\\site-packages\\win32', 'C:\\Python310\\lib\\site-packages\\win32\\lib', 'C:\\Python310\\lib\\site-packages\\Pythonwin', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db']
+2025-06-26 11:53:04,728 - INFO - ------------------------------------------------------------
+2025-06-26 11:53:04,728 - INFO - Testing critical imports...
+2025-06-26 11:53:04,728 - INFO - ✓ tkinter imported successfully
+2025-06-26 11:53:04,728 - INFO - ✓ PIL/Pillow imported successfully
+2025-06-26 11:53:04,729 - INFO - ✓ mysql.connector imported successfully
+2025-06-26 11:53:04,729 - INFO - ✓ All critical imports successful
+2025-06-26 11:53:04,729 - INFO - ------------------------------------------------------------
+2025-06-26 11:53:04,729 - INFO - Creating Tkinter root window...
+2025-06-26 11:53:04,799 - INFO - ✓ Tkinter root window created successfully
+2025-06-26 11:53:04,799 - INFO - Configuring main window...
+2025-06-26 11:53:04,799 - INFO - ✓ Main window configured and hidden
+2025-06-26 11:53:04,799 - INFO - Attempting to show login dialog...
+2025-06-26 11:53:09,057 - INFO - ✓ Login successful for user: admin (Role: admin)
+2025-06-26 11:53:09,075 - INFO - Creating BookkeepingApp instance...
+2025-06-26 11:53:09,283 - INFO - ✓ BookkeepingApp instance created successfully
+2025-06-26 11:53:09,283 - INFO - Starting main application loop...
+2025-06-26 11:53:53.979241 - Error in process_pending_transaction: Failed to ensure account 'ptrs abw' exists: 0 (Exception type: Exception, Transaction ID: 9)
+2025-06-26 12:04:57,385 - INFO - ============================================================
+2025-06-26 12:04:57,385 - INFO - BAHI-KHATA Application Starting
+2025-06-26 12:04:57,385 - INFO - ============================================================
+2025-06-26 12:04:57,385 - INFO - Python version: 3.10.0 (tags/v3.10.0:b494f59, Oct  4 2021, 19:00:18) [MSC v.1929 64 bit (AMD64)]
+2025-06-26 12:04:57,385 - INFO - Working directory: C:\ledger management\db
+2025-06-26 12:04:57,386 - INFO - Script path: C:\ledger management\db\frontend\app.py
+2025-06-26 12:04:57,386 - INFO - Python path: ['C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db\\frontend', 'C:\\Python310\\python310.zip', 'C:\\Python310\\DLLs', 'C:\\Python310\\lib', 'C:\\Python310', 'C:\\Python310\\lib\\site-packages', 'C:\\Python310\\lib\\site-packages\\win32', 'C:\\Python310\\lib\\site-packages\\win32\\lib', 'C:\\Python310\\lib\\site-packages\\Pythonwin', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db']
+2025-06-26 12:04:57,386 - INFO - ------------------------------------------------------------
+2025-06-26 12:04:57,386 - INFO - Testing critical imports...
+2025-06-26 12:04:57,387 - INFO - ✓ tkinter imported successfully
+2025-06-26 12:04:57,387 - INFO - ✓ PIL/Pillow imported successfully
+2025-06-26 12:04:57,387 - INFO - ✓ mysql.connector imported successfully
+2025-06-26 12:04:57,387 - INFO - ✓ All critical imports successful
+2025-06-26 12:04:57,387 - INFO - ------------------------------------------------------------
+2025-06-26 12:04:57,388 - INFO - Creating Tkinter root window...
+2025-06-26 12:04:57,458 - INFO - ✓ Tkinter root window created successfully
+2025-06-26 12:04:57,458 - INFO - Configuring main window...
+2025-06-26 12:04:57,459 - INFO - ✓ Main window configured and hidden
+2025-06-26 12:04:57,459 - INFO - Attempting to show login dialog...
+2025-06-26 12:05:07,483 - INFO - ✓ Login successful for user: admin (Role: admin)
+2025-06-26 12:05:07,496 - INFO - Creating BookkeepingApp instance...
+2025-06-26 12:05:07,700 - INFO - ✓ BookkeepingApp instance created successfully
+2025-06-26 12:05:07,701 - INFO - Starting main application loop...
+2025-06-26 12:05:15.076098 - Error in process_pending_transaction: Failed to ensure account 'ptrs abw' exists: 0 (Exception type: Exception, Transaction ID: 9)
+2025-06-26 12:11:08,165 - INFO - ============================================================
+2025-06-26 12:11:08,166 - INFO - BAHI-KHATA Application Starting
+2025-06-26 12:11:08,166 - INFO - ============================================================
+2025-06-26 12:11:08,166 - INFO - Python version: 3.10.0 (tags/v3.10.0:b494f59, Oct  4 2021, 19:00:18) [MSC v.1929 64 bit (AMD64)]
+2025-06-26 12:11:08,166 - INFO - Working directory: C:\ledger management\db
+2025-06-26 12:11:08,167 - INFO - Script path: C:\ledger management\db\frontend\app.py
+2025-06-26 12:11:08,167 - INFO - Python path: ['C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db\\frontend', 'C:\\Python310\\python310.zip', 'C:\\Python310\\DLLs', 'C:\\Python310\\lib', 'C:\\Python310', 'C:\\Python310\\lib\\site-packages', 'C:\\Python310\\lib\\site-packages\\win32', 'C:\\Python310\\lib\\site-packages\\win32\\lib', 'C:\\Python310\\lib\\site-packages\\Pythonwin', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db']
+2025-06-26 12:11:08,167 - INFO - ------------------------------------------------------------
+2025-06-26 12:11:08,168 - INFO - Testing critical imports...
+2025-06-26 12:11:08,168 - INFO - ✓ tkinter imported successfully
+2025-06-26 12:11:08,168 - INFO - ✓ PIL/Pillow imported successfully
+2025-06-26 12:11:08,168 - INFO - ✓ mysql.connector imported successfully
+2025-06-26 12:11:08,168 - INFO - ✓ All critical imports successful
+2025-06-26 12:11:08,168 - INFO - ------------------------------------------------------------
+2025-06-26 12:11:08,169 - INFO - Creating Tkinter root window...
+2025-06-26 12:11:08,231 - INFO - ✓ Tkinter root window created successfully
+2025-06-26 12:11:08,231 - INFO - Configuring main window...
+2025-06-26 12:11:08,231 - INFO - ✓ Main window configured and hidden
+2025-06-26 12:11:08,231 - INFO - Attempting to show login dialog...
+2025-06-26 12:11:14,485 - INFO - ✓ Login successful for user: admin (Role: admin)
+2025-06-26 12:11:14,503 - INFO - Creating BookkeepingApp instance...
+2025-06-26 12:11:14,737 - INFO - ✓ BookkeepingApp instance created successfully
+2025-06-26 12:11:14,738 - INFO - Starting main application loop...
+2025-06-26 12:25:16,753 - INFO - Application closed normally
+2025-06-26 12:34:46,373 - INFO - ============================================================
+2025-06-26 12:34:46,373 - INFO - BAHI-KHATA Application Starting
+2025-06-26 12:34:46,374 - INFO - ============================================================
+2025-06-26 12:34:46,374 - INFO - Python version: 3.10.0 (tags/v3.10.0:b494f59, Oct  4 2021, 19:00:18) [MSC v.1929 64 bit (AMD64)]
+2025-06-26 12:34:46,374 - INFO - Working directory: C:\ledger management\db
+2025-06-26 12:34:46,374 - INFO - Script path: C:\ledger management\db\frontend\app.py
+2025-06-26 12:34:46,375 - INFO - Python path: ['C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db\\frontend', 'C:\\Python310\\python310.zip', 'C:\\Python310\\DLLs', 'C:\\Python310\\lib', 'C:\\Python310', 'C:\\Python310\\lib\\site-packages', 'C:\\Python310\\lib\\site-packages\\win32', 'C:\\Python310\\lib\\site-packages\\win32\\lib', 'C:\\Python310\\lib\\site-packages\\Pythonwin', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db']
+2025-06-26 12:34:46,375 - INFO - ------------------------------------------------------------
+2025-06-26 12:34:46,375 - INFO - Testing critical imports...
+2025-06-26 12:34:46,375 - INFO - ✓ tkinter imported successfully
+2025-06-26 12:34:46,375 - INFO - ✓ PIL/Pillow imported successfully
+2025-06-26 12:34:46,376 - INFO - ✓ mysql.connector imported successfully
+2025-06-26 12:34:46,376 - INFO - ✓ All critical imports successful
+2025-06-26 12:34:46,376 - INFO - ------------------------------------------------------------
+2025-06-26 12:34:46,376 - INFO - Creating Tkinter root window...
+2025-06-26 12:34:46,440 - INFO - ✓ Tkinter root window created successfully
+2025-06-26 12:34:46,440 - INFO - Configuring main window...
+2025-06-26 12:34:46,440 - INFO - ✓ Main window configured and hidden
+2025-06-26 12:34:46,440 - INFO - Attempting to show login dialog...
+2025-06-26 12:34:52,938 - INFO - ✓ Login successful for user: admin (Role: admin)
+2025-06-26 12:34:52,956 - INFO - Creating BookkeepingApp instance...
+2025-06-26 12:34:53,139 - INFO - ✓ BookkeepingApp instance created successfully
+2025-06-26 12:34:53,139 - INFO - Starting main application loop...
+2025-06-26 12:37:45,789 - INFO - Application closed normally
+2025-06-26 12:38:50,544 - INFO - ============================================================
+2025-06-26 12:38:50,545 - INFO - BAHI-KHATA Application Starting
+2025-06-26 12:38:50,545 - INFO - ============================================================
+2025-06-26 12:38:50,545 - INFO - Python version: 3.10.0 (tags/v3.10.0:b494f59, Oct  4 2021, 19:00:18) [MSC v.1929 64 bit (AMD64)]
+2025-06-26 12:38:50,546 - INFO - Working directory: C:\ledger management\db
+2025-06-26 12:38:50,546 - INFO - Script path: C:\ledger management\db\frontend\app.py
+2025-06-26 12:38:50,546 - INFO - Python path: ['C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db\\frontend', 'C:\\Python310\\python310.zip', 'C:\\Python310\\DLLs', 'C:\\Python310\\lib', 'C:\\Python310', 'C:\\Python310\\lib\\site-packages', 'C:\\Python310\\lib\\site-packages\\win32', 'C:\\Python310\\lib\\site-packages\\win32\\lib', 'C:\\Python310\\lib\\site-packages\\Pythonwin', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db']
+2025-06-26 12:38:50,546 - INFO - ------------------------------------------------------------
+2025-06-26 12:38:50,547 - INFO - Testing critical imports...
+2025-06-26 12:38:50,547 - INFO - ✓ tkinter imported successfully
+2025-06-26 12:38:50,547 - INFO - ✓ PIL/Pillow imported successfully
+2025-06-26 12:38:50,547 - INFO - ✓ mysql.connector imported successfully
+2025-06-26 12:38:50,548 - INFO - ✓ All critical imports successful
+2025-06-26 12:38:50,548 - INFO - ------------------------------------------------------------
+2025-06-26 12:38:50,548 - INFO - Creating Tkinter root window...
+2025-06-26 12:38:50,616 - INFO - ✓ Tkinter root window created successfully
+2025-06-26 12:38:50,617 - INFO - Configuring main window...
+2025-06-26 12:38:50,617 - INFO - ✓ Main window configured and hidden
+2025-06-26 12:38:50,617 - INFO - Attempting to show login dialog...
+2025-06-26 12:38:57,378 - INFO - ✓ Login successful for user: accountant (Role: accountant)
+2025-06-26 12:38:57,394 - INFO - Creating BookkeepingApp instance...
+2025-06-26 12:38:57,587 - INFO - ✓ BookkeepingApp instance created successfully
+2025-06-26 12:38:57,588 - INFO - Starting main application loop...
+2025-06-26 12:39:10,869 - INFO - Application closed normally
+2025-06-26 12:44:51,591 - INFO - ============================================================
+2025-06-26 12:44:51,591 - INFO - BAHI-KHATA Application Starting
+2025-06-26 12:44:51,591 - INFO - ============================================================
+2025-06-26 12:44:51,591 - INFO - Python version: 3.10.0 (tags/v3.10.0:b494f59, Oct  4 2021, 19:00:18) [MSC v.1929 64 bit (AMD64)]
+2025-06-26 12:44:51,592 - INFO - Working directory: C:\ledger management\db
+2025-06-26 12:44:51,592 - INFO - Script path: C:\ledger management\db\frontend\app.py
+2025-06-26 12:44:51,592 - INFO - Python path: ['C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db\\frontend', 'C:\\Python310\\python310.zip', 'C:\\Python310\\DLLs', 'C:\\Python310\\lib', 'C:\\Python310', 'C:\\Python310\\lib\\site-packages', 'C:\\Python310\\lib\\site-packages\\win32', 'C:\\Python310\\lib\\site-packages\\win32\\lib', 'C:\\Python310\\lib\\site-packages\\Pythonwin', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db']
+2025-06-26 12:44:51,593 - INFO - ------------------------------------------------------------
+2025-06-26 12:44:51,593 - INFO - Testing critical imports...
+2025-06-26 12:44:51,593 - INFO - ✓ tkinter imported successfully
+2025-06-26 12:44:51,593 - INFO - ✓ PIL/Pillow imported successfully
+2025-06-26 12:44:51,593 - INFO - ✓ mysql.connector imported successfully
+2025-06-26 12:44:51,594 - INFO - ✓ All critical imports successful
+2025-06-26 12:44:51,594 - INFO - ------------------------------------------------------------
+2025-06-26 12:44:51,594 - INFO - Creating Tkinter root window...
+2025-06-26 12:44:51,659 - INFO - ✓ Tkinter root window created successfully
+2025-06-26 12:44:51,660 - INFO - Configuring main window...
+2025-06-26 12:44:51,660 - INFO - ✓ Main window configured and hidden
+2025-06-26 12:44:51,660 - INFO - Attempting to show login dialog...
+2025-06-26 12:44:55,998 - INFO - ✓ Login successful for user: admin (Role: admin)
+2025-06-26 12:44:56,015 - INFO - Creating BookkeepingApp instance...
+2025-06-26 12:44:56,234 - INFO - ✓ BookkeepingApp instance created successfully
+2025-06-26 12:44:56,234 - INFO - Starting main application loop...
+2025-06-26 12:45:50,699 - INFO - Application closed normally
+2025-06-26 12:51:20,407 - INFO - ============================================================
+2025-06-26 12:51:20,407 - INFO - BAHI-KHATA Application Starting
+2025-06-26 12:51:20,408 - INFO - ============================================================
+2025-06-26 12:51:20,408 - INFO - Python version: 3.10.0 (tags/v3.10.0:b494f59, Oct  4 2021, 19:00:18) [MSC v.1929 64 bit (AMD64)]
+2025-06-26 12:51:20,408 - INFO - Working directory: C:\ledger management\db
+2025-06-26 12:51:20,408 - INFO - Script path: C:\ledger management\db\frontend\app.py
+2025-06-26 12:51:20,408 - INFO - Python path: ['C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db\\frontend', 'C:\\Python310\\python310.zip', 'C:\\Python310\\DLLs', 'C:\\Python310\\lib', 'C:\\Python310', 'C:\\Python310\\lib\\site-packages', 'C:\\Python310\\lib\\site-packages\\win32', 'C:\\Python310\\lib\\site-packages\\win32\\lib', 'C:\\Python310\\lib\\site-packages\\Pythonwin', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db']
+2025-06-26 12:51:20,409 - INFO - ------------------------------------------------------------
+2025-06-26 12:51:20,409 - INFO - Testing critical imports...
+2025-06-26 12:51:20,409 - INFO - ✓ tkinter imported successfully
+2025-06-26 12:51:20,410 - INFO - ✓ PIL/Pillow imported successfully
+2025-06-26 12:51:20,410 - INFO - ✓ mysql.connector imported successfully
+2025-06-26 12:51:20,410 - INFO - ✓ All critical imports successful
+2025-06-26 12:51:20,410 - INFO - ------------------------------------------------------------
+2025-06-26 12:51:20,410 - INFO - Creating Tkinter root window...
+2025-06-26 12:51:20,474 - INFO - ✓ Tkinter root window created successfully
+2025-06-26 12:51:20,474 - INFO - Configuring main window...
+2025-06-26 12:51:20,474 - INFO - ✓ Main window configured and hidden
+2025-06-26 12:51:20,475 - INFO - Attempting to show login dialog...
+2025-06-26 12:51:30,009 - INFO - ✓ Login successful for user: admin (Role: admin)
+2025-06-26 12:51:30,024 - INFO - Creating BookkeepingApp instance...
+2025-06-26 12:51:30,226 - INFO - ✓ BookkeepingApp instance created successfully
+2025-06-26 12:51:30,227 - INFO - Starting main application loop...
+2025-06-26 12:56:39,918 - INFO - Application closed normally
+2025-06-26 13:10:14,081 - INFO - ============================================================
+2025-06-26 13:10:14,081 - INFO - BAHI-KHATA Application Starting
+2025-06-26 13:10:14,081 - INFO - ============================================================
+2025-06-26 13:10:14,082 - INFO - Python version: 3.10.0 (tags/v3.10.0:b494f59, Oct  4 2021, 19:00:18) [MSC v.1929 64 bit (AMD64)]
+2025-06-26 13:10:14,082 - INFO - Working directory: C:\ledger management\db
+2025-06-26 13:10:14,082 - INFO - Script path: C:\ledger management\db\frontend\app.py
+2025-06-26 13:10:14,082 - INFO - Python path: ['C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db\\frontend', 'C:\\Python310\\python310.zip', 'C:\\Python310\\DLLs', 'C:\\Python310\\lib', 'C:\\Python310', 'C:\\Python310\\lib\\site-packages', 'C:\\Python310\\lib\\site-packages\\win32', 'C:\\Python310\\lib\\site-packages\\win32\\lib', 'C:\\Python310\\lib\\site-packages\\Pythonwin', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db']
+2025-06-26 13:10:14,083 - INFO - ------------------------------------------------------------
+2025-06-26 13:10:14,083 - INFO - Testing critical imports...
+2025-06-26 13:10:14,083 - INFO - ✓ tkinter imported successfully
+2025-06-26 13:10:14,083 - INFO - ✓ PIL/Pillow imported successfully
+2025-06-26 13:10:14,084 - INFO - ✓ mysql.connector imported successfully
+2025-06-26 13:10:14,084 - INFO - ✓ All critical imports successful
+2025-06-26 13:10:14,084 - INFO - ------------------------------------------------------------
+2025-06-26 13:10:14,084 - INFO - Creating Tkinter root window...
+2025-06-26 13:10:14,148 - INFO - ✓ Tkinter root window created successfully
+2025-06-26 13:10:14,148 - INFO - Configuring main window...
+2025-06-26 13:10:14,148 - INFO - ✓ Main window configured and hidden
+2025-06-26 13:10:14,149 - INFO - Attempting to show login dialog...
+2025-06-26 13:10:19,116 - INFO - ✓ Login successful for user: admin (Role: admin)
+2025-06-26 13:10:19,131 - INFO - Creating BookkeepingApp instance...
+2025-06-26 13:10:19,165 - INFO - ✓ BookkeepingApp instance created successfully
+2025-06-26 13:10:19,166 - INFO - Starting main application loop...
+2025-06-26 13:10:33,143 - INFO - Application closed normally
+2025-06-26 13:12:12,146 - INFO - ============================================================
+2025-06-26 13:12:12,146 - INFO - BAHI-KHATA Application Starting
+2025-06-26 13:12:12,146 - INFO - ============================================================
+2025-06-26 13:12:12,147 - INFO - Python version: 3.10.0 (tags/v3.10.0:b494f59, Oct  4 2021, 19:00:18) [MSC v.1929 64 bit (AMD64)]
+2025-06-26 13:12:12,147 - INFO - Working directory: C:\ledger management\db
+2025-06-26 13:12:12,147 - INFO - Script path: C:\ledger management\db\frontend\app.py
+2025-06-26 13:12:12,147 - INFO - Python path: ['C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db\\frontend', 'C:\\Python310\\python310.zip', 'C:\\Python310\\DLLs', 'C:\\Python310\\lib', 'C:\\Python310', 'C:\\Python310\\lib\\site-packages', 'C:\\Python310\\lib\\site-packages\\win32', 'C:\\Python310\\lib\\site-packages\\win32\\lib', 'C:\\Python310\\lib\\site-packages\\Pythonwin', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db']
+2025-06-26 13:12:12,148 - INFO - ------------------------------------------------------------
+2025-06-26 13:12:12,148 - INFO - Testing critical imports...
+2025-06-26 13:12:12,148 - INFO - ✓ tkinter imported successfully
+2025-06-26 13:12:12,148 - INFO - ✓ PIL/Pillow imported successfully
+2025-06-26 13:12:12,149 - INFO - ✓ mysql.connector imported successfully
+2025-06-26 13:12:12,149 - INFO - ✓ All critical imports successful
+2025-06-26 13:12:12,149 - INFO - ------------------------------------------------------------
+2025-06-26 13:12:12,149 - INFO - Creating Tkinter root window...
+2025-06-26 13:12:12,205 - INFO - ✓ Tkinter root window created successfully
+2025-06-26 13:12:12,206 - INFO - Configuring main window...
+2025-06-26 13:12:12,206 - INFO - ✓ Main window configured and hidden
+2025-06-26 13:12:12,206 - INFO - Attempting to show login dialog...
+2025-06-26 13:12:18,849 - INFO - ✓ Login successful for user: accountant (Role: accountant)
+2025-06-26 13:12:18,864 - INFO - Creating BookkeepingApp instance...
+2025-06-26 13:12:18,912 - INFO - ✓ BookkeepingApp instance created successfully
+2025-06-26 13:12:18,912 - INFO - Starting main application loop...
+2025-06-26 13:14:24,233 - INFO - Application closed normally
+2025-06-26 13:14:29,343 - INFO - ============================================================
+2025-06-26 13:14:29,343 - INFO - BAHI-KHATA Application Starting
+2025-06-26 13:14:29,343 - INFO - ============================================================
+2025-06-26 13:14:29,344 - INFO - Python version: 3.10.0 (tags/v3.10.0:b494f59, Oct  4 2021, 19:00:18) [MSC v.1929 64 bit (AMD64)]
+2025-06-26 13:14:29,344 - INFO - Working directory: C:\ledger management\db
+2025-06-26 13:14:29,344 - INFO - Script path: C:\ledger management\db\frontend\app.py
+2025-06-26 13:14:29,344 - INFO - Python path: ['C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db\\frontend', 'C:\\Python310\\python310.zip', 'C:\\Python310\\DLLs', 'C:\\Python310\\lib', 'C:\\Python310', 'C:\\Python310\\lib\\site-packages', 'C:\\Python310\\lib\\site-packages\\win32', 'C:\\Python310\\lib\\site-packages\\win32\\lib', 'C:\\Python310\\lib\\site-packages\\Pythonwin', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db']
+2025-06-26 13:14:29,345 - INFO - ------------------------------------------------------------
+2025-06-26 13:14:29,345 - INFO - Testing critical imports...
+2025-06-26 13:14:29,345 - INFO - ✓ tkinter imported successfully
+2025-06-26 13:14:29,346 - INFO - ✓ PIL/Pillow imported successfully
+2025-06-26 13:14:29,346 - INFO - ✓ mysql.connector imported successfully
+2025-06-26 13:14:29,346 - INFO - ✓ All critical imports successful
+2025-06-26 13:14:29,346 - INFO - ------------------------------------------------------------
+2025-06-26 13:14:29,346 - INFO - Creating Tkinter root window...
+2025-06-26 13:14:29,409 - INFO - ✓ Tkinter root window created successfully
+2025-06-26 13:14:29,409 - INFO - Configuring main window...
+2025-06-26 13:14:29,409 - INFO - ✓ Main window configured and hidden
+2025-06-26 13:14:29,410 - INFO - Attempting to show login dialog...
+2025-06-26 13:14:34,120 - INFO - ✓ Login successful for user: admin (Role: admin)
+2025-06-26 13:14:34,134 - INFO - Creating BookkeepingApp instance...
+2025-06-26 13:14:34,346 - INFO - ✓ BookkeepingApp instance created successfully
+2025-06-26 13:14:34,346 - INFO - Starting main application loop...
+2025-06-26 13:14:41,601 - INFO - Application closed normally
+2025-06-26 13:18:35,294 - INFO - ============================================================
+2025-06-26 13:18:35,294 - INFO - BAHI-KHATA Application Starting
+2025-06-26 13:18:35,294 - INFO - ============================================================
+2025-06-26 13:18:35,294 - INFO - Python version: 3.10.0 (tags/v3.10.0:b494f59, Oct  4 2021, 19:00:18) [MSC v.1929 64 bit (AMD64)]
+2025-06-26 13:18:35,295 - INFO - Working directory: C:\ledger management\db
+2025-06-26 13:18:35,295 - INFO - Script path: C:\ledger management\db\frontend\app.py
+2025-06-26 13:18:35,295 - INFO - Python path: ['C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db\\frontend', 'C:\\Python310\\python310.zip', 'C:\\Python310\\DLLs', 'C:\\Python310\\lib', 'C:\\Python310', 'C:\\Python310\\lib\\site-packages', 'C:\\Python310\\lib\\site-packages\\win32', 'C:\\Python310\\lib\\site-packages\\win32\\lib', 'C:\\Python310\\lib\\site-packages\\Pythonwin', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db']
+2025-06-26 13:18:35,296 - INFO - ------------------------------------------------------------
+2025-06-26 13:18:35,296 - INFO - Testing critical imports...
+2025-06-26 13:18:35,296 - INFO - ✓ tkinter imported successfully
+2025-06-26 13:18:35,296 - INFO - ✓ PIL/Pillow imported successfully
+2025-06-26 13:18:35,297 - INFO - ✓ mysql.connector imported successfully
+2025-06-26 13:18:35,297 - INFO - ✓ All critical imports successful
+2025-06-26 13:18:35,297 - INFO - ------------------------------------------------------------
+2025-06-26 13:18:35,297 - INFO - Creating Tkinter root window...
+2025-06-26 13:18:35,366 - INFO - ✓ Tkinter root window created successfully
+2025-06-26 13:18:35,367 - INFO - Configuring main window...
+2025-06-26 13:18:35,367 - INFO - ✓ Main window configured and hidden
+2025-06-26 13:18:35,367 - INFO - Attempting to show login dialog...
+2025-06-26 13:18:41,384 - INFO - ✓ Login successful for user: admin (Role: admin)
+2025-06-26 13:18:41,399 - INFO - Creating BookkeepingApp instance...
+2025-06-26 13:18:41,593 - INFO - ✓ BookkeepingApp instance created successfully
+2025-06-26 13:18:41,593 - INFO - Starting main application loop...
+2025-06-26 13:38:55,442 - INFO - ============================================================
+2025-06-26 13:38:55,445 - INFO - BAHI-KHATA Application Starting
+2025-06-26 13:38:55,445 - INFO - ============================================================
+2025-06-26 13:38:55,445 - INFO - Python version: 3.10.0 (tags/v3.10.0:b494f59, Oct  4 2021, 19:00:18) [MSC v.1929 64 bit (AMD64)]
+2025-06-26 13:38:55,446 - INFO - Working directory: C:\ledger management\db
+2025-06-26 13:38:55,446 - INFO - Script path: C:\ledger management\db\frontend\app.py
+2025-06-26 13:38:55,446 - INFO - Python path: ['C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db\\frontend', 'C:\\Python310\\python310.zip', 'C:\\Python310\\DLLs', 'C:\\Python310\\lib', 'C:\\Python310', 'C:\\Python310\\lib\\site-packages', 'C:\\Python310\\lib\\site-packages\\win32', 'C:\\Python310\\lib\\site-packages\\win32\\lib', 'C:\\Python310\\lib\\site-packages\\Pythonwin', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db']
+2025-06-26 13:38:55,447 - INFO - ------------------------------------------------------------
+2025-06-26 13:38:55,448 - INFO - Testing critical imports...
+2025-06-26 13:38:55,449 - INFO - ✓ tkinter imported successfully
+2025-06-26 13:38:55,450 - INFO - ✓ PIL/Pillow imported successfully
+2025-06-26 13:38:55,450 - INFO - ✓ mysql.connector imported successfully
+2025-06-26 13:38:55,451 - INFO - ✓ All critical imports successful
+2025-06-26 13:38:55,451 - INFO - ------------------------------------------------------------
+2025-06-26 13:38:55,451 - INFO - Creating Tkinter root window...
+2025-06-26 13:38:56,771 - INFO - ✓ Tkinter root window created successfully
+2025-06-26 13:38:56,772 - INFO - Configuring main window...
+2025-06-26 13:38:56,774 - INFO - ✓ Main window configured and hidden
+2025-06-26 13:38:56,774 - INFO - Attempting to show login dialog...
+2025-06-26 13:39:10,674 - INFO - ✓ Login successful for user: admin (Role: admin)
+2025-06-26 13:39:10,711 - INFO - Creating BookkeepingApp instance...
+2025-06-26 13:39:11,475 - INFO - ✓ BookkeepingApp instance created successfully
+2025-06-26 13:39:11,476 - INFO - Starting main application loop...
+2025-06-26 13:39:16,739 - INFO - Application closed normally
+2025-06-26 13:39:23,703 - INFO - ============================================================
+2025-06-26 13:39:23,705 - INFO - BAHI-KHATA Application Starting
+2025-06-26 13:39:23,706 - INFO - ============================================================
+2025-06-26 13:39:23,706 - INFO - Python version: 3.10.0 (tags/v3.10.0:b494f59, Oct  4 2021, 19:00:18) [MSC v.1929 64 bit (AMD64)]
+2025-06-26 13:39:23,707 - INFO - Working directory: C:\ledger management\db
+2025-06-26 13:39:23,707 - INFO - Script path: C:\ledger management\db\frontend\app.py
+2025-06-26 13:39:23,708 - INFO - Python path: ['C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db\\frontend', 'C:\\Python310\\python310.zip', 'C:\\Python310\\DLLs', 'C:\\Python310\\lib', 'C:\\Python310', 'C:\\Python310\\lib\\site-packages', 'C:\\Python310\\lib\\site-packages\\win32', 'C:\\Python310\\lib\\site-packages\\win32\\lib', 'C:\\Python310\\lib\\site-packages\\Pythonwin', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db']
+2025-06-26 13:39:23,709 - INFO - ------------------------------------------------------------
+2025-06-26 13:39:23,710 - INFO - Testing critical imports...
+2025-06-26 13:39:23,711 - INFO - ✓ tkinter imported successfully
+2025-06-26 13:39:23,713 - INFO - ✓ PIL/Pillow imported successfully
+2025-06-26 13:39:23,714 - INFO - ✓ mysql.connector imported successfully
+2025-06-26 13:39:23,714 - INFO - ✓ All critical imports successful
+2025-06-26 13:39:23,715 - INFO - ------------------------------------------------------------
+2025-06-26 13:39:23,716 - INFO - Creating Tkinter root window...
+2025-06-26 13:39:23,874 - INFO - ✓ Tkinter root window created successfully
+2025-06-26 13:39:23,874 - INFO - Configuring main window...
+2025-06-26 13:39:23,875 - INFO - ✓ Main window configured and hidden
+2025-06-26 13:39:23,876 - INFO - Attempting to show login dialog...
+2025-06-26 13:39:29,255 - INFO - ✓ Login successful for user: viewer (Role: viewer)
+2025-06-26 13:39:29,278 - INFO - Creating BookkeepingApp instance...
+2025-06-26 13:39:29,657 - INFO - ✓ BookkeepingApp instance created successfully
+2025-06-26 13:39:29,657 - INFO - Starting main application loop...
+2025-06-26 13:41:20,738 - INFO - Application closed normally
+2025-06-26 13:41:33,093 - INFO - ============================================================
+2025-06-26 13:41:33,094 - INFO - BAHI-KHATA Application Starting
+2025-06-26 13:41:33,094 - INFO - ============================================================
+2025-06-26 13:41:33,095 - INFO - Python version: 3.10.0 (tags/v3.10.0:b494f59, Oct  4 2021, 19:00:18) [MSC v.1929 64 bit (AMD64)]
+2025-06-26 13:41:33,095 - INFO - Working directory: C:\ledger management\db
+2025-06-26 13:41:33,095 - INFO - Script path: C:\ledger management\db\frontend\app.py
+2025-06-26 13:41:33,096 - INFO - Python path: ['C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db\\frontend', 'C:\\Python310\\python310.zip', 'C:\\Python310\\DLLs', 'C:\\Python310\\lib', 'C:\\Python310', 'C:\\Python310\\lib\\site-packages', 'C:\\Python310\\lib\\site-packages\\win32', 'C:\\Python310\\lib\\site-packages\\win32\\lib', 'C:\\Python310\\lib\\site-packages\\Pythonwin', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db']
+2025-06-26 13:41:33,097 - INFO - ------------------------------------------------------------
+2025-06-26 13:41:33,097 - INFO - Testing critical imports...
+2025-06-26 13:41:33,098 - INFO - ✓ tkinter imported successfully
+2025-06-26 13:41:33,100 - INFO - ✓ PIL/Pillow imported successfully
+2025-06-26 13:41:33,100 - INFO - ✓ mysql.connector imported successfully
+2025-06-26 13:41:33,100 - INFO - ✓ All critical imports successful
+2025-06-26 13:41:33,108 - INFO - ------------------------------------------------------------
+2025-06-26 13:41:33,109 - INFO - Creating Tkinter root window...
+2025-06-26 13:41:33,227 - INFO - ✓ Tkinter root window created successfully
+2025-06-26 13:41:33,228 - INFO - Configuring main window...
+2025-06-26 13:41:33,229 - INFO - ✓ Main window configured and hidden
+2025-06-26 13:41:33,229 - INFO - Attempting to show login dialog...
+2025-06-26 13:41:37,925 - INFO - ✓ Login successful for user: admin (Role: admin)
+2025-06-26 13:41:37,949 - INFO - Creating BookkeepingApp instance...
+2025-06-26 13:41:38,300 - INFO - ✓ BookkeepingApp instance created successfully
+2025-06-26 13:41:38,301 - INFO - Starting main application loop...
+2025-06-26 14:09:09,373 - INFO - ============================================================
+2025-06-26 14:09:09,374 - INFO - BAHI-KHATA Application Starting
+2025-06-26 14:09:09,374 - INFO - ============================================================
+2025-06-26 14:09:09,375 - INFO - Python version: 3.10.0 (tags/v3.10.0:b494f59, Oct  4 2021, 19:00:18) [MSC v.1929 64 bit (AMD64)]
+2025-06-26 14:09:09,375 - INFO - Working directory: C:\ledger management\db
+2025-06-26 14:09:09,375 - INFO - Script path: C:\ledger management\db\frontend\app.py
+2025-06-26 14:09:09,376 - INFO - Python path: ['C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db\\frontend', 'C:\\Python310\\python310.zip', 'C:\\Python310\\DLLs', 'C:\\Python310\\lib', 'C:\\Python310', 'C:\\Python310\\lib\\site-packages', 'C:\\Python310\\lib\\site-packages\\win32', 'C:\\Python310\\lib\\site-packages\\win32\\lib', 'C:\\Python310\\lib\\site-packages\\Pythonwin', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db']
+2025-06-26 14:09:09,376 - INFO - ------------------------------------------------------------
+2025-06-26 14:09:09,376 - INFO - Testing critical imports...
+2025-06-26 14:09:09,377 - INFO - ✓ tkinter imported successfully
+2025-06-26 14:09:09,377 - INFO - ✓ PIL/Pillow imported successfully
+2025-06-26 14:09:09,377 - INFO - ✓ mysql.connector imported successfully
+2025-06-26 14:09:09,377 - INFO - ✓ All critical imports successful
+2025-06-26 14:09:09,378 - INFO - ------------------------------------------------------------
+2025-06-26 14:09:09,378 - INFO - Creating Tkinter root window...
+2025-06-26 14:09:10,223 - INFO - ✓ Tkinter root window created successfully
+2025-06-26 14:09:10,223 - INFO - Configuring main window...
+2025-06-26 14:09:10,224 - INFO - ✓ Main window configured and hidden
+2025-06-26 14:09:10,224 - INFO - Attempting to show login dialog...
+2025-06-26 14:09:53,002 - INFO - ✓ Login successful for user: admin (Role: admin)
+2025-06-26 14:09:53,034 - INFO - Creating BookkeepingApp instance...
+2025-06-26 14:09:53,844 - INFO - ✓ BookkeepingApp instance created successfully
+2025-06-26 14:09:53,845 - INFO - Starting main application loop...
+2025-06-26 14:10:57,609 - INFO - Application closed normally
+2025-06-26 22:42:49,133 - INFO - ============================================================
+2025-06-26 22:42:49,133 - INFO - BAHI-KHATA Application Starting
+2025-06-26 22:42:49,133 - INFO - ============================================================
+2025-06-26 22:42:49,134 - INFO - Python version: 3.10.0 (tags/v3.10.0:b494f59, Oct  4 2021, 19:00:18) [MSC v.1929 64 bit (AMD64)]
+2025-06-26 22:42:49,134 - INFO - Working directory: C:\ledger management\db
+2025-06-26 22:42:49,134 - INFO - Script path: C:\ledger management\db\frontend\app.py
+2025-06-26 22:42:49,134 - INFO - Python path: ['C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db\\frontend', 'C:\\Python310\\python310.zip', 'C:\\Python310\\DLLs', 'C:\\Python310\\lib', 'C:\\Python310', 'C:\\Python310\\lib\\site-packages', 'C:\\Python310\\lib\\site-packages\\win32', 'C:\\Python310\\lib\\site-packages\\win32\\lib', 'C:\\Python310\\lib\\site-packages\\Pythonwin', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db']
+2025-06-26 22:42:49,135 - INFO - ------------------------------------------------------------
+2025-06-26 22:42:49,135 - INFO - Testing critical imports...
+2025-06-26 22:42:49,135 - INFO - ✓ tkinter imported successfully
+2025-06-26 22:42:49,135 - INFO - ✓ PIL/Pillow imported successfully
+2025-06-26 22:42:49,135 - INFO - ✓ mysql.connector imported successfully
+2025-06-26 22:42:49,136 - INFO - ✓ All critical imports successful
+2025-06-26 22:42:49,136 - INFO - ------------------------------------------------------------
+2025-06-26 22:42:49,136 - INFO - Creating Tkinter root window...
+2025-06-26 22:42:49,680 - INFO - ✓ Tkinter root window created successfully
+2025-06-26 22:42:49,680 - INFO - Configuring main window...
+2025-06-26 22:42:49,681 - INFO - ✓ Main window configured and hidden
+2025-06-26 22:42:49,681 - INFO - Attempting to show login dialog...
+2025-06-26 22:42:56,169 - INFO - ✓ Login successful for user: accountant (Role: accountant)
+2025-06-26 22:42:56,184 - INFO - Creating BookkeepingApp instance...
+2025-06-26 22:42:56,569 - INFO - ✓ BookkeepingApp instance created successfully
+2025-06-26 22:42:56,569 - INFO - Starting main application loop...
+2025-06-26 23:06:33,298 - INFO - Application closed normally
+2025-06-26 23:06:45,939 - INFO - ============================================================
+2025-06-26 23:06:45,940 - INFO - BAHI-KHATA Application Starting
+2025-06-26 23:06:45,940 - INFO - ============================================================
+2025-06-26 23:06:45,940 - INFO - Python version: 3.10.0 (tags/v3.10.0:b494f59, Oct  4 2021, 19:00:18) [MSC v.1929 64 bit (AMD64)]
+2025-06-26 23:06:45,940 - INFO - Working directory: C:\ledger management\db
+2025-06-26 23:06:45,940 - INFO - Script path: C:\ledger management\db\frontend\app.py
+2025-06-26 23:06:45,940 - INFO - Python path: ['C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db\\frontend', 'C:\\Python310\\python310.zip', 'C:\\Python310\\DLLs', 'C:\\Python310\\lib', 'C:\\Python310', 'C:\\Python310\\lib\\site-packages', 'C:\\Python310\\lib\\site-packages\\win32', 'C:\\Python310\\lib\\site-packages\\win32\\lib', 'C:\\Python310\\lib\\site-packages\\Pythonwin', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db']
+2025-06-26 23:06:45,941 - INFO - ------------------------------------------------------------
+2025-06-26 23:06:45,941 - INFO - Testing critical imports...
+2025-06-26 23:06:45,942 - INFO - ✓ tkinter imported successfully
+2025-06-26 23:06:45,942 - INFO - ✓ PIL/Pillow imported successfully
+2025-06-26 23:06:45,942 - INFO - ✓ mysql.connector imported successfully
+2025-06-26 23:06:45,942 - INFO - ✓ All critical imports successful
+2025-06-26 23:06:45,942 - INFO - ------------------------------------------------------------
+2025-06-26 23:06:45,943 - INFO - Creating Tkinter root window...
+2025-06-26 23:06:46,006 - INFO - ✓ Tkinter root window created successfully
+2025-06-26 23:06:46,007 - INFO - Configuring main window...
+2025-06-26 23:06:46,007 - INFO - ✓ Main window configured and hidden
+2025-06-26 23:06:46,007 - INFO - Attempting to show login dialog...
+2025-06-26 23:06:54,014 - INFO - ✓ Login successful for user: accountant (Role: accountant)
+2025-06-26 23:06:54,030 - INFO - Creating BookkeepingApp instance...
+2025-06-26 23:06:54,208 - INFO - ✓ BookkeepingApp instance created successfully
+2025-06-26 23:06:54,208 - INFO - Starting main application loop...
+2025-06-26 23:17:34,753 - INFO - Application closed normally
+2025-06-26 23:17:51,354 - INFO - ============================================================
+2025-06-26 23:17:51,355 - INFO - BAHI-KHATA Application Starting
+2025-06-26 23:17:51,355 - INFO - ============================================================
+2025-06-26 23:17:51,355 - INFO - Python version: 3.10.0 (tags/v3.10.0:b494f59, Oct  4 2021, 19:00:18) [MSC v.1929 64 bit (AMD64)]
+2025-06-26 23:17:51,355 - INFO - Working directory: C:\ledger management\db
+2025-06-26 23:17:51,356 - INFO - Script path: C:\ledger management\db\frontend\app.py
+2025-06-26 23:17:51,356 - INFO - Python path: ['C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db\\frontend', 'C:\\Python310\\python310.zip', 'C:\\Python310\\DLLs', 'C:\\Python310\\lib', 'C:\\Python310', 'C:\\Python310\\lib\\site-packages', 'C:\\Python310\\lib\\site-packages\\win32', 'C:\\Python310\\lib\\site-packages\\win32\\lib', 'C:\\Python310\\lib\\site-packages\\Pythonwin', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db']
+2025-06-26 23:17:51,356 - INFO - ------------------------------------------------------------
+2025-06-26 23:17:51,356 - INFO - Testing critical imports...
+2025-06-26 23:17:51,357 - INFO - ✓ tkinter imported successfully
+2025-06-26 23:17:51,357 - INFO - ✓ PIL/Pillow imported successfully
+2025-06-26 23:17:51,357 - INFO - ✓ mysql.connector imported successfully
+2025-06-26 23:17:51,357 - INFO - ✓ All critical imports successful
+2025-06-26 23:17:51,357 - INFO - ------------------------------------------------------------
+2025-06-26 23:17:51,357 - INFO - Creating Tkinter root window...
+2025-06-26 23:17:51,430 - INFO - ✓ Tkinter root window created successfully
+2025-06-26 23:17:51,430 - INFO - Configuring main window...
+2025-06-26 23:17:51,430 - INFO - ✓ Main window configured and hidden
+2025-06-26 23:17:51,431 - INFO - Attempting to show login dialog...
+2025-06-26 23:18:02,806 - INFO - ✓ Login successful for user: accountant (Role: accountant)
+2025-06-26 23:18:02,822 - INFO - Creating BookkeepingApp instance...
+2025-06-26 23:18:03,010 - INFO - ✓ BookkeepingApp instance created successfully
+2025-06-26 23:18:03,010 - INFO - Starting main application loop...
+2025-06-26 23:21:42,699 - INFO - Application closed normally
+2025-06-26 23:21:49,126 - INFO - ============================================================
+2025-06-26 23:21:49,126 - INFO - BAHI-KHATA Application Starting
+2025-06-26 23:21:49,127 - INFO - ============================================================
+2025-06-26 23:21:49,127 - INFO - Python version: 3.10.0 (tags/v3.10.0:b494f59, Oct  4 2021, 19:00:18) [MSC v.1929 64 bit (AMD64)]
+2025-06-26 23:21:49,127 - INFO - Working directory: C:\ledger management\db
+2025-06-26 23:21:49,127 - INFO - Script path: C:\ledger management\db\frontend\app.py
+2025-06-26 23:21:49,128 - INFO - Python path: ['C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db\\frontend', 'C:\\Python310\\python310.zip', 'C:\\Python310\\DLLs', 'C:\\Python310\\lib', 'C:\\Python310', 'C:\\Python310\\lib\\site-packages', 'C:\\Python310\\lib\\site-packages\\win32', 'C:\\Python310\\lib\\site-packages\\win32\\lib', 'C:\\Python310\\lib\\site-packages\\Pythonwin', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db']
+2025-06-26 23:21:49,128 - INFO - ------------------------------------------------------------
+2025-06-26 23:21:49,129 - INFO - Testing critical imports...
+2025-06-26 23:21:49,129 - INFO - ✓ tkinter imported successfully
+2025-06-26 23:21:49,129 - INFO - ✓ PIL/Pillow imported successfully
+2025-06-26 23:21:49,129 - INFO - ✓ mysql.connector imported successfully
+2025-06-26 23:21:49,129 - INFO - ✓ All critical imports successful
+2025-06-26 23:21:49,130 - INFO - ------------------------------------------------------------
+2025-06-26 23:21:49,130 - INFO - Creating Tkinter root window...
+2025-06-26 23:21:49,201 - INFO - ✓ Tkinter root window created successfully
+2025-06-26 23:21:49,201 - INFO - Configuring main window...
+2025-06-26 23:21:49,201 - INFO - ✓ Main window configured and hidden
+2025-06-26 23:21:49,201 - INFO - Attempting to show login dialog...
+2025-06-26 23:22:10,328 - INFO - ✓ Login successful for user: accountant (Role: accountant)
+2025-06-26 23:22:10,342 - INFO - Creating BookkeepingApp instance...
+2025-06-26 23:22:10,535 - INFO - ✓ BookkeepingApp instance created successfully
+2025-06-26 23:22:10,535 - INFO - Starting main application loop...
+2025-06-26 23:24:25,523 - INFO - Application closed normally
+2025-06-26 23:24:51,189 - INFO - ============================================================
+2025-06-26 23:24:51,189 - INFO - BAHI-KHATA Application Starting
+2025-06-26 23:24:51,189 - INFO - ============================================================
+2025-06-26 23:24:51,190 - INFO - Python version: 3.10.0 (tags/v3.10.0:b494f59, Oct  4 2021, 19:00:18) [MSC v.1929 64 bit (AMD64)]
+2025-06-26 23:24:51,190 - INFO - Working directory: C:\ledger management\db
+2025-06-26 23:24:51,190 - INFO - Script path: C:\ledger management\db\frontend\app.py
+2025-06-26 23:24:51,190 - INFO - Python path: ['C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db\\frontend', 'C:\\Python310\\python310.zip', 'C:\\Python310\\DLLs', 'C:\\Python310\\lib', 'C:\\Python310', 'C:\\Python310\\lib\\site-packages', 'C:\\Python310\\lib\\site-packages\\win32', 'C:\\Python310\\lib\\site-packages\\win32\\lib', 'C:\\Python310\\lib\\site-packages\\Pythonwin', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db']
+2025-06-26 23:24:51,191 - INFO - ------------------------------------------------------------
+2025-06-26 23:24:51,191 - INFO - Testing critical imports...
+2025-06-26 23:24:51,191 - INFO - ✓ tkinter imported successfully
+2025-06-26 23:24:51,191 - INFO - ✓ PIL/Pillow imported successfully
+2025-06-26 23:24:51,191 - INFO - ✓ mysql.connector imported successfully
+2025-06-26 23:24:51,192 - INFO - ✓ All critical imports successful
+2025-06-26 23:24:51,192 - INFO - ------------------------------------------------------------
+2025-06-26 23:24:51,192 - INFO - Creating Tkinter root window...
+2025-06-26 23:24:51,265 - INFO - ✓ Tkinter root window created successfully
+2025-06-26 23:24:51,266 - INFO - Configuring main window...
+2025-06-26 23:24:51,266 - INFO - ✓ Main window configured and hidden
+2025-06-26 23:24:51,266 - INFO - Attempting to show login dialog...
+2025-06-26 23:24:59,188 - INFO - ✓ Login successful for user: accountant (Role: accountant)
+2025-06-26 23:24:59,204 - INFO - Creating BookkeepingApp instance...
+2025-06-26 23:24:59,394 - INFO - ✓ BookkeepingApp instance created successfully
+2025-06-26 23:24:59,394 - INFO - Starting main application loop...
+2025-06-26 23:25:33,979 - INFO - Application closed normally
+2025-06-26 23:25:41,385 - INFO - ============================================================
+2025-06-26 23:25:41,385 - INFO - BAHI-KHATA Application Starting
+2025-06-26 23:25:41,386 - INFO - ============================================================
+2025-06-26 23:25:41,386 - INFO - Python version: 3.10.0 (tags/v3.10.0:b494f59, Oct  4 2021, 19:00:18) [MSC v.1929 64 bit (AMD64)]
+2025-06-26 23:25:41,386 - INFO - Working directory: C:\ledger management\db
+2025-06-26 23:25:41,386 - INFO - Script path: C:\ledger management\db\frontend\app.py
+2025-06-26 23:25:41,386 - INFO - Python path: ['C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db\\frontend', 'C:\\Python310\\python310.zip', 'C:\\Python310\\DLLs', 'C:\\Python310\\lib', 'C:\\Python310', 'C:\\Python310\\lib\\site-packages', 'C:\\Python310\\lib\\site-packages\\win32', 'C:\\Python310\\lib\\site-packages\\win32\\lib', 'C:\\Python310\\lib\\site-packages\\Pythonwin', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db']
+2025-06-26 23:25:41,387 - INFO - ------------------------------------------------------------
+2025-06-26 23:25:41,387 - INFO - Testing critical imports...
+2025-06-26 23:25:41,387 - INFO - ✓ tkinter imported successfully
+2025-06-26 23:25:41,387 - INFO - ✓ PIL/Pillow imported successfully
+2025-06-26 23:25:41,388 - INFO - ✓ mysql.connector imported successfully
+2025-06-26 23:25:41,388 - INFO - ✓ All critical imports successful
+2025-06-26 23:25:41,388 - INFO - ------------------------------------------------------------
+2025-06-26 23:25:41,388 - INFO - Creating Tkinter root window...
+2025-06-26 23:25:41,463 - INFO - ✓ Tkinter root window created successfully
+2025-06-26 23:25:41,463 - INFO - Configuring main window...
+2025-06-26 23:25:41,463 - INFO - ✓ Main window configured and hidden
+2025-06-26 23:25:41,464 - INFO - Attempting to show login dialog...
+2025-06-26 23:25:48,312 - INFO - ✓ Login successful for user: accountant (Role: accountant)
+2025-06-26 23:25:48,329 - INFO - Creating BookkeepingApp instance...
+2025-06-26 23:25:48,521 - INFO - ✓ BookkeepingApp instance created successfully
+2025-06-26 23:25:48,521 - INFO - Starting main application loop...
+2025-06-26 23:27:20,449 - INFO - Application closed normally
+2025-06-26 23:27:29,240 - INFO - ============================================================
+2025-06-26 23:27:29,240 - INFO - BAHI-KHATA Application Starting
+2025-06-26 23:27:29,240 - INFO - ============================================================
+2025-06-26 23:27:29,241 - INFO - Python version: 3.10.0 (tags/v3.10.0:b494f59, Oct  4 2021, 19:00:18) [MSC v.1929 64 bit (AMD64)]
+2025-06-26 23:27:29,241 - INFO - Working directory: C:\ledger management\db
+2025-06-26 23:27:29,241 - INFO - Script path: C:\ledger management\db\frontend\app.py
+2025-06-26 23:27:29,241 - INFO - Python path: ['C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db\\frontend', 'C:\\Python310\\python310.zip', 'C:\\Python310\\DLLs', 'C:\\Python310\\lib', 'C:\\Python310', 'C:\\Python310\\lib\\site-packages', 'C:\\Python310\\lib\\site-packages\\win32', 'C:\\Python310\\lib\\site-packages\\win32\\lib', 'C:\\Python310\\lib\\site-packages\\Pythonwin', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db']
+2025-06-26 23:27:29,242 - INFO - ------------------------------------------------------------
+2025-06-26 23:27:29,242 - INFO - Testing critical imports...
+2025-06-26 23:27:29,242 - INFO - ✓ tkinter imported successfully
+2025-06-26 23:27:29,242 - INFO - ✓ PIL/Pillow imported successfully
+2025-06-26 23:27:29,243 - INFO - ✓ mysql.connector imported successfully
+2025-06-26 23:27:29,243 - INFO - ✓ All critical imports successful
+2025-06-26 23:27:29,243 - INFO - ------------------------------------------------------------
+2025-06-26 23:27:29,243 - INFO - Creating Tkinter root window...
+2025-06-26 23:27:29,314 - INFO - ✓ Tkinter root window created successfully
+2025-06-26 23:27:29,314 - INFO - Configuring main window...
+2025-06-26 23:27:29,315 - INFO - ✓ Main window configured and hidden
+2025-06-26 23:27:29,315 - INFO - Attempting to show login dialog...
+2025-06-26 23:27:38,354 - INFO - ✓ Login successful for user: accountant (Role: accountant)
+2025-06-26 23:27:38,367 - INFO - Creating BookkeepingApp instance...
+2025-06-26 23:27:38,552 - INFO - ✓ BookkeepingApp instance created successfully
+2025-06-26 23:27:38,552 - INFO - Starting main application loop...
+2025-06-26 23:40:02,747 - INFO - Application closed normally
+2025-06-26 23:43:29,862 - INFO - ============================================================
+2025-06-26 23:43:29,863 - INFO - BAHI-KHATA Application Starting
+2025-06-26 23:43:29,863 - INFO - ============================================================
+2025-06-26 23:43:29,863 - INFO - Python version: 3.10.0 (tags/v3.10.0:b494f59, Oct  4 2021, 19:00:18) [MSC v.1929 64 bit (AMD64)]
+2025-06-26 23:43:29,863 - INFO - Working directory: C:\ledger management\db
+2025-06-26 23:43:29,864 - INFO - Script path: C:\ledger management\db\frontend\app.py
+2025-06-26 23:43:29,864 - INFO - Python path: ['C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db\\frontend', 'C:\\Python310\\python310.zip', 'C:\\Python310\\DLLs', 'C:\\Python310\\lib', 'C:\\Python310', 'C:\\Python310\\lib\\site-packages', 'C:\\Python310\\lib\\site-packages\\win32', 'C:\\Python310\\lib\\site-packages\\win32\\lib', 'C:\\Python310\\lib\\site-packages\\Pythonwin', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db']
+2025-06-26 23:43:29,865 - INFO - ------------------------------------------------------------
+2025-06-26 23:43:29,865 - INFO - Testing critical imports...
+2025-06-26 23:43:29,865 - INFO - ✓ tkinter imported successfully
+2025-06-26 23:43:29,865 - INFO - ✓ PIL/Pillow imported successfully
+2025-06-26 23:43:29,866 - INFO - ✓ mysql.connector imported successfully
+2025-06-26 23:43:29,866 - INFO - ✓ All critical imports successful
+2025-06-26 23:43:29,866 - INFO - ------------------------------------------------------------
+2025-06-26 23:43:29,866 - INFO - Creating Tkinter root window...
+2025-06-26 23:43:30,382 - INFO - ✓ Tkinter root window created successfully
+2025-06-26 23:43:30,383 - INFO - Configuring main window...
+2025-06-26 23:43:30,383 - INFO - ✓ Main window configured and hidden
+2025-06-26 23:43:30,383 - INFO - Attempting to show login dialog...
+2025-06-26 23:43:34,082 - INFO - ✓ Login successful for user: admin (Role: admin)
+2025-06-26 23:43:34,095 - INFO - Creating BookkeepingApp instance...
+2025-06-26 23:43:34,415 - INFO - ✓ BookkeepingApp instance created successfully
+2025-06-26 23:43:34,416 - INFO - Starting main application loop...
+2025-06-26 23:55:59,380 - INFO - Application closed normally
+2025-06-26 23:56:26,729 - INFO - ============================================================
+2025-06-26 23:56:26,729 - INFO - BAHI-KHATA Application Starting
+2025-06-26 23:56:26,729 - INFO - ============================================================
+2025-06-26 23:56:26,730 - INFO - Python version: 3.10.0 (tags/v3.10.0:b494f59, Oct  4 2021, 19:00:18) [MSC v.1929 64 bit (AMD64)]
+2025-06-26 23:56:26,730 - INFO - Working directory: C:\ledger management\db
+2025-06-26 23:56:26,730 - INFO - Script path: C:\ledger management\db\frontend\app.py
+2025-06-26 23:56:26,730 - INFO - Python path: ['C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db\\frontend', 'C:\\Python310\\python310.zip', 'C:\\Python310\\DLLs', 'C:\\Python310\\lib', 'C:\\Python310', 'C:\\Python310\\lib\\site-packages', 'C:\\Python310\\lib\\site-packages\\win32', 'C:\\Python310\\lib\\site-packages\\win32\\lib', 'C:\\Python310\\lib\\site-packages\\Pythonwin', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db']
+2025-06-26 23:56:26,731 - INFO - ------------------------------------------------------------
+2025-06-26 23:56:26,731 - INFO - Testing critical imports...
+2025-06-26 23:56:26,732 - INFO - ✓ tkinter imported successfully
+2025-06-26 23:56:26,732 - INFO - ✓ PIL/Pillow imported successfully
+2025-06-26 23:56:26,732 - INFO - ✓ mysql.connector imported successfully
+2025-06-26 23:56:26,732 - INFO - ✓ All critical imports successful
+2025-06-26 23:56:26,732 - INFO - ------------------------------------------------------------
+2025-06-26 23:56:26,733 - INFO - Creating Tkinter root window...
+2025-06-26 23:56:26,805 - INFO - ✓ Tkinter root window created successfully
+2025-06-26 23:56:26,805 - INFO - Configuring main window...
+2025-06-26 23:56:26,805 - INFO - ✓ Main window configured and hidden
+2025-06-26 23:56:26,805 - INFO - Attempting to show login dialog...
+2025-06-26 23:56:31,690 - INFO - ✓ Login successful for user: admin (Role: admin)
+2025-06-26 23:56:31,709 - INFO - Creating BookkeepingApp instance...
+2025-06-26 23:56:31,921 - INFO - ✓ BookkeepingApp instance created successfully
+2025-06-26 23:56:31,921 - INFO - Starting main application loop...
+2025-06-27 00:04:17.539872 - Error in process_pending_transaction: FD value must be provided for 'FD in bank' narration. (Exception type: ValueError, Transaction ID: 23)
+2025-06-27 00:04:24.120781 - Error in process_pending_transaction: Property value must be provided for 'Property' narration. (Exception type: ValueError, Transaction ID: 24)
+2025-06-27 00:04:27,138 - INFO - Application closed normally
+2025-06-27 00:04:35,075 - INFO - ============================================================
+2025-06-27 00:04:35,076 - INFO - BAHI-KHATA Application Starting
+2025-06-27 00:04:35,076 - INFO - ============================================================
+2025-06-27 00:04:35,076 - INFO - Python version: 3.10.0 (tags/v3.10.0:b494f59, Oct  4 2021, 19:00:18) [MSC v.1929 64 bit (AMD64)]
+2025-06-27 00:04:35,076 - INFO - Working directory: C:\ledger management\db
+2025-06-27 00:04:35,076 - INFO - Script path: C:\ledger management\db\frontend\app.py
+2025-06-27 00:04:35,077 - INFO - Python path: ['C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db\\frontend', 'C:\\Python310\\python310.zip', 'C:\\Python310\\DLLs', 'C:\\Python310\\lib', 'C:\\Python310', 'C:\\Python310\\lib\\site-packages', 'C:\\Python310\\lib\\site-packages\\win32', 'C:\\Python310\\lib\\site-packages\\win32\\lib', 'C:\\Python310\\lib\\site-packages\\Pythonwin', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db']
+2025-06-27 00:04:35,077 - INFO - ------------------------------------------------------------
+2025-06-27 00:04:35,077 - INFO - Testing critical imports...
+2025-06-27 00:04:35,078 - INFO - ✓ tkinter imported successfully
+2025-06-27 00:04:35,078 - INFO - ✓ PIL/Pillow imported successfully
+2025-06-27 00:04:35,078 - INFO - ✓ mysql.connector imported successfully
+2025-06-27 00:04:35,078 - INFO - ✓ All critical imports successful
+2025-06-27 00:04:35,078 - INFO - ------------------------------------------------------------
+2025-06-27 00:04:35,079 - INFO - Creating Tkinter root window...
+2025-06-27 00:04:35,154 - INFO - ✓ Tkinter root window created successfully
+2025-06-27 00:04:35,154 - INFO - Configuring main window...
+2025-06-27 00:04:35,155 - INFO - ✓ Main window configured and hidden
+2025-06-27 00:04:35,155 - INFO - Attempting to show login dialog...
+2025-06-27 00:04:38,926 - INFO - ✓ Login successful for user: admin (Role: admin)
+2025-06-27 00:04:38,944 - INFO - Creating BookkeepingApp instance...
+2025-06-27 00:04:39,194 - INFO - ✓ BookkeepingApp instance created successfully
+2025-06-27 00:04:39,195 - INFO - Starting main application loop...
+2025-06-27 00:04:49.087207 - Error in process_pending_transaction: FD value must be provided for 'FD in bank' narration. (Exception type: ValueError, Transaction ID: 23)
+2025-06-27 00:05:30.640493 - Error in process_pending_transaction: FD value must be provided for 'FD in bank' narration. (Exception type: ValueError, Transaction ID: 26)
+2025-06-27 00:05:33.120126 - Error in process_pending_transaction: FD value must be provided for 'FD in bank' narration. (Exception type: ValueError, Transaction ID: 25)
+2025-06-27 00:12:26.655889 - Error in process_pending_transaction: FD value must be provided for 'FD in bank' narration. (Exception type: ValueError, Transaction ID: 23)
+2025-06-27 00:12:30,477 - INFO - Application closed normally
+2025-06-27 00:18:41,946 - INFO - ============================================================
+2025-06-27 00:18:41,946 - INFO - BAHI-KHATA Application Starting
+2025-06-27 00:18:41,946 - INFO - ============================================================
+2025-06-27 00:18:41,947 - INFO - Python version: 3.10.0 (tags/v3.10.0:b494f59, Oct  4 2021, 19:00:18) [MSC v.1929 64 bit (AMD64)]
+2025-06-27 00:18:41,947 - INFO - Working directory: C:\ledger management\db
+2025-06-27 00:18:41,947 - INFO - Script path: C:\ledger management\db\frontend\app.py
+2025-06-27 00:18:41,947 - INFO - Python path: ['C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db\\frontend', 'C:\\Python310\\python310.zip', 'C:\\Python310\\DLLs', 'C:\\Python310\\lib', 'C:\\Python310', 'C:\\Python310\\lib\\site-packages', 'C:\\Python310\\lib\\site-packages\\win32', 'C:\\Python310\\lib\\site-packages\\win32\\lib', 'C:\\Python310\\lib\\site-packages\\Pythonwin', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db']
+2025-06-27 00:18:41,948 - INFO - ------------------------------------------------------------
+2025-06-27 00:18:41,948 - INFO - Testing critical imports...
+2025-06-27 00:18:41,948 - INFO - ✓ tkinter imported successfully
+2025-06-27 00:18:41,948 - INFO - ✓ PIL/Pillow imported successfully
+2025-06-27 00:18:41,948 - INFO - ✓ mysql.connector imported successfully
+2025-06-27 00:18:41,949 - INFO - ✓ All critical imports successful
+2025-06-27 00:18:41,949 - INFO - ------------------------------------------------------------
+2025-06-27 00:18:41,949 - INFO - Creating Tkinter root window...
+2025-06-27 00:18:42,031 - INFO - ✓ Tkinter root window created successfully
+2025-06-27 00:18:42,031 - INFO - Configuring main window...
+2025-06-27 00:18:42,032 - INFO - ✓ Main window configured and hidden
+2025-06-27 00:18:42,032 - INFO - Attempting to show login dialog...
+2025-06-27 00:18:44,422 - INFO - Login cancelled or failed, exiting application
+2025-06-27 00:24:27,020 - INFO - ============================================================
+2025-06-27 00:24:27,020 - INFO - BAHI-KHATA Application Starting
+2025-06-27 00:24:27,021 - INFO - ============================================================
+2025-06-27 00:24:27,021 - INFO - Python version: 3.10.0 (tags/v3.10.0:b494f59, Oct  4 2021, 19:00:18) [MSC v.1929 64 bit (AMD64)]
+2025-06-27 00:24:27,021 - INFO - Working directory: C:\ledger management\db
+2025-06-27 00:24:27,021 - INFO - Script path: C:\ledger management\db\frontend\app.py
+2025-06-27 00:24:27,022 - INFO - Python path: ['C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db\\frontend', 'C:\\Python310\\python310.zip', 'C:\\Python310\\DLLs', 'C:\\Python310\\lib', 'C:\\Python310', 'C:\\Python310\\lib\\site-packages', 'C:\\Python310\\lib\\site-packages\\win32', 'C:\\Python310\\lib\\site-packages\\win32\\lib', 'C:\\Python310\\lib\\site-packages\\Pythonwin', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db']
+2025-06-27 00:24:27,022 - INFO - ------------------------------------------------------------
+2025-06-27 00:24:27,022 - INFO - Testing critical imports...
+2025-06-27 00:24:27,023 - INFO - ✓ tkinter imported successfully
+2025-06-27 00:24:27,023 - INFO - ✓ PIL/Pillow imported successfully
+2025-06-27 00:24:27,023 - INFO - ✓ mysql.connector imported successfully
+2025-06-27 00:24:27,023 - INFO - ✓ All critical imports successful
+2025-06-27 00:24:27,023 - INFO - ------------------------------------------------------------
+2025-06-27 00:24:27,023 - INFO - Creating Tkinter root window...
+2025-06-27 00:24:27,083 - INFO - ✓ Tkinter root window created successfully
+2025-06-27 00:24:27,083 - INFO - Configuring main window...
+2025-06-27 00:24:27,083 - INFO - ✓ Main window configured and hidden
+2025-06-27 00:24:27,084 - INFO - Attempting to show login dialog...
+2025-06-27 00:24:32,197 - INFO - ✓ Login successful for user: admin (Role: admin)
+2025-06-27 00:24:32,209 - INFO - Creating BookkeepingApp instance...
+2025-06-27 00:24:32,422 - INFO - ✓ BookkeepingApp instance created successfully
+2025-06-27 00:24:32,422 - INFO - Starting main application loop...
+2025-06-27 00:42:59.496556 - Error in process_pending_transaction: local variable 'counter_amount' referenced before assignment (Exception type: UnboundLocalError, Transaction ID: 26)
+2025-06-27 00:43:00,781 - INFO - Application closed normally
+2025-06-27 00:43:07,016 - INFO - ============================================================
+2025-06-27 00:43:07,016 - INFO - BAHI-KHATA Application Starting
+2025-06-27 00:43:07,016 - INFO - ============================================================
+2025-06-27 00:43:07,017 - INFO - Python version: 3.10.0 (tags/v3.10.0:b494f59, Oct  4 2021, 19:00:18) [MSC v.1929 64 bit (AMD64)]
+2025-06-27 00:43:07,017 - INFO - Working directory: C:\ledger management\db
+2025-06-27 00:43:07,017 - INFO - Script path: C:\ledger management\db\frontend\app.py
+2025-06-27 00:43:07,017 - INFO - Python path: ['C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db\\frontend', 'C:\\Python310\\python310.zip', 'C:\\Python310\\DLLs', 'C:\\Python310\\lib', 'C:\\Python310', 'C:\\Python310\\lib\\site-packages', 'C:\\Python310\\lib\\site-packages\\win32', 'C:\\Python310\\lib\\site-packages\\win32\\lib', 'C:\\Python310\\lib\\site-packages\\Pythonwin', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db']
+2025-06-27 00:43:07,018 - INFO - ------------------------------------------------------------
+2025-06-27 00:43:07,018 - INFO - Testing critical imports...
+2025-06-27 00:43:07,018 - INFO - ✓ tkinter imported successfully
+2025-06-27 00:43:07,018 - INFO - ✓ PIL/Pillow imported successfully
+2025-06-27 00:43:07,019 - INFO - ✓ mysql.connector imported successfully
+2025-06-27 00:43:07,019 - INFO - ✓ All critical imports successful
+2025-06-27 00:43:07,019 - INFO - ------------------------------------------------------------
+2025-06-27 00:43:07,019 - INFO - Creating Tkinter root window...
+2025-06-27 00:43:07,086 - INFO - ✓ Tkinter root window created successfully
+2025-06-27 00:43:07,086 - INFO - Configuring main window...
+2025-06-27 00:43:07,087 - INFO - ✓ Main window configured and hidden
+2025-06-27 00:43:07,087 - INFO - Attempting to show login dialog...
+2025-06-27 00:43:11,254 - INFO - ✓ Login successful for user: admin (Role: admin)
+2025-06-27 00:43:11,267 - INFO - Creating BookkeepingApp instance...
+2025-06-27 00:43:11,517 - INFO - ✓ BookkeepingApp instance created successfully
+2025-06-27 00:43:11,518 - INFO - Starting main application loop...
+2025-06-27 00:43:20.689589 - Error in process_pending_transaction: Invalid FD duration period. Use 'Days', 'Months', or 'Years'. (Exception type: ValueError, Transaction ID: 25)
+2025-06-27 00:53:14,644 - INFO - Application closed normally
+2025-06-27 00:53:20,448 - INFO - ============================================================
+2025-06-27 00:53:20,448 - INFO - BAHI-KHATA Application Starting
+2025-06-27 00:53:20,449 - INFO - ============================================================
+2025-06-27 00:53:20,449 - INFO - Python version: 3.10.0 (tags/v3.10.0:b494f59, Oct  4 2021, 19:00:18) [MSC v.1929 64 bit (AMD64)]
+2025-06-27 00:53:20,450 - INFO - Working directory: C:\ledger management\db
+2025-06-27 00:53:20,450 - INFO - Script path: C:\ledger management\db\frontend\app.py
+2025-06-27 00:53:20,450 - INFO - Python path: ['C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db\\frontend', 'C:\\Python310\\python310.zip', 'C:\\Python310\\DLLs', 'C:\\Python310\\lib', 'C:\\Python310', 'C:\\Python310\\lib\\site-packages', 'C:\\Python310\\lib\\site-packages\\win32', 'C:\\Python310\\lib\\site-packages\\win32\\lib', 'C:\\Python310\\lib\\site-packages\\Pythonwin', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db', 'C:\\ledger management\\db']
+2025-06-27 00:53:20,451 - INFO - ------------------------------------------------------------
+2025-06-27 00:53:20,451 - INFO - Testing critical imports...
+2025-06-27 00:53:20,451 - INFO - ✓ tkinter imported successfully
+2025-06-27 00:53:20,451 - INFO - ✓ PIL/Pillow imported successfully
+2025-06-27 00:53:20,451 - INFO - ✓ mysql.connector imported successfully
+2025-06-27 00:53:20,452 - INFO - ✓ All critical imports successful
+2025-06-27 00:53:20,452 - INFO - ------------------------------------------------------------
+2025-06-27 00:53:20,452 - INFO - Creating Tkinter root window...
+2025-06-27 00:53:20,517 - INFO - ✓ Tkinter root window created successfully
+2025-06-27 00:53:20,517 - INFO - Configuring main window...
+2025-06-27 00:53:20,518 - INFO - ✓ Main window configured and hidden
+2025-06-27 00:53:20,518 - INFO - Attempting to show login dialog...
+2025-06-27 00:53:25,080 - INFO - ✓ Login successful for user: admin (Role: admin)
+2025-06-27 00:53:25,098 - INFO - Creating BookkeepingApp instance...
+2025-06-27 00:53:25,355 - INFO - ✓ BookkeepingApp instance created successfully
+2025-06-27 00:53:25,355 - INFO - Starting main application loop...
+2025-06-27 00:55:48,969 - INFO - Application closed normally

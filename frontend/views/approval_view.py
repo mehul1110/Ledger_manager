@@ -7,7 +7,14 @@ from tkinter import messagebox
 import db_connect
 from transaction_approver import process_pending_transaction
 
-def show_approval_view(app, on_success_callback=None):
+def show_approval_view(app, on_success_callback=None, user_info=None):
+    # Add permission check at the top
+    sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+    from role_permissions import check_permission_with_message, Permissions
+    
+    if user_info and not check_permission_with_message(user_info, Permissions.APPROVE_TRANSACTIONS, "approve transactions"):
+        return
+    
     for widget in app.root.winfo_children():
         widget.destroy()
     app.set_background()

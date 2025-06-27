@@ -1,5 +1,4 @@
-from datetime import datetime
-import datetime
+from datetime import datetime, date
 
 def parse_date(input_str):
     try:
@@ -9,4 +8,4 @@ def parse_date(input_str):
         return None
 
 def get_today_str():
-    return datetime.datetime.now().strftime('%d-%m-%Y')
+    return datetime.now().strftime('%d-%m-%Y')
