@@ -3,6 +3,7 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
 import tkinter as tk
 import db_connect
+import openpyxl
 import tkinter.ttk as ttk
 from tkinter import messagebox
 from account_utils import delete_account

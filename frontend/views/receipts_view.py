@@ -6,6 +6,7 @@ from tkcalendar import DateEntry
 import db_connect
 import tkinter.ttk as ttk
 import csv
+import openpyxl
 from tkinter import filedialog, messagebox
 import utils  # <-- add this import
 
