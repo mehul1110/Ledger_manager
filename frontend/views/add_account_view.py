@@ -58,15 +58,11 @@ def show_add_account_form(app, user_info=None):
             error_labels[type_menu].config(text='')
         if empty:
             return
-        old_stdin = sys.stdin
-        sys.stdin = io.StringIO(f"{name_entry.get()}\n{type_var.get()}\n")
         try:
-            add_account()
+            add_account(name_entry.get().strip(), type_var.get().strip())
             app.show_accounts_view()  # Show updated accounts list after adding
         except Exception as e:
             tk.Label(app.root, text=f"❌ Error: {e}", fg="red", font=label_font).grid(row=4, columnspan=2, pady=10)
-        finally:
-            sys.stdin = old_stdin
     tk.Button(app.root, text="Submit", command=submit, font=button_font, width=18).grid(row=3, columnspan=2, pady=15)
     name_entry.bind('<Return>', lambda e: submit())
     type_menu.bind('<Return>', lambda e: submit())

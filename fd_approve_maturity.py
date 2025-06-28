@@ -30,12 +30,11 @@ def approve_fd_maturity():
         print(f"  Principal: {amount}")
         print(f"  Interest Rate: {interest_rate}%")
         print(f"  Maturity Amount: {maturity_amount}")
-        approve = input("Submit FD maturity for approval? (y/n): ").strip().lower()
-        
+        # Automatically approve all matured FDs (no input prompt)
+        approve = 'y'
         if approve == 'y':
             # Submit the FD maturity transaction to pending_transactions for approval
             narration = f"FD maturity payment from {bank_account}"
-            
             cursor.execute("""
                 INSERT INTO pending_transactions (
                     transaction_type, account_name, amount, mop, narration, transaction_date, remarks,
@@ -57,14 +56,12 @@ def approve_fd_maturity():
                 None,  # fd_duration
                 None   # fd_interest
             ))
-            
             # Update FD status to indicate it's submitted for approval
             cursor.execute("""
                 UPDATE fd_details 
                 SET status = 'Maturity Submitted' 
                 WHERE payment_id = %s
             """, (payment_id,))
-            
             print(f"✅ FD {payment_id} maturity submitted for approval workflow.")
         else:
             print(f"⏸️ FD {payment_id} left pending.")

@@ -156,13 +156,7 @@ def monthly_balance_sheet(year, month):
     conn.close()
 
 if __name__ == "__main__":
-    # Prompt user for year and month
-    try:
-        year = int(input("Enter year (e.g. 2024): ").strip())
-        month = int(input("Enter month (1-12): ").strip())
-        if 1 <= month <= 12:
-            monthly_balance_sheet(year, month)
-        else:
-            print("Invalid month. Please enter a value from 1 to 12.")
-    except Exception as e:
-        print(f"Invalid input: {e}")
+    # Automatically run for a default/test year and month
+    year = 2024  # Set your default/test year
+    month = 1    # Set your default/test month
+    monthly_balance_sheet(year, month)

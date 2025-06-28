@@ -1,13 +1,10 @@
 from db_connect import get_connection
 
-def add_account():
+def add_account(name=None, acc_type=None):
     conn = get_connection()
     cursor = conn.cursor()
-
-    name = input("Enter new account name (unique): ").strip()
-    acc_type = input("Enter account type (main fund, bank, cash , salary, unit , printer): ").strip().lower()
-
-
+    if name is None or acc_type is None:
+        raise ValueError("Both 'name' and 'acc_type' must be provided.")
     try:
         cursor.execute("INSERT INTO accounts (account_name, account_type) VALUES (%s, %s)", (name, acc_type))
         conn.commit()
@@ -18,5 +15,5 @@ def add_account():
         cursor.close()
         conn.close()
 
-# Run this to test:
-# add_account()
+if __name__ == "__main__":
+    add_account()

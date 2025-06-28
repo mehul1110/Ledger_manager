@@ -139,15 +139,9 @@ def prompt_and_display():
     if not months:
         print("No entries found.")
         return
-    print("Select month for balance sheet:")
-    for idx, (y, m) in enumerate(months):
-        print(f"{idx+1}. {datetime(y, m, 1).strftime('%B %Y')}")
-    choice = int(input(f"Enter choice (1-{len(months)}): "))
-    if 1 <= choice <= len(months):
-        y, m = months[choice-1]
-        display_monthly_balance_sheet(y, m)
-    else:
-        print("Invalid choice.")
+    # Automatically select the most recent month
+    y, m = months[0]
+    display_monthly_balance_sheet(y, m)
 
 if __name__ == "__main__":
     prompt_and_display()

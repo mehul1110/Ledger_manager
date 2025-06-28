@@ -1,4 +1,3 @@
-
 from db_connect import get_connection
 from datetime import datetime, timedelta
 
@@ -110,18 +109,11 @@ def generate_monthly_statement(account_name, year, month):
 
 def prompt_for_statement():
     """Prompts user for account, year, and month to generate a statement."""
-    try:
-        account_name = input("Enter the account name (e.g., main fund): ")
-        year = int(input("Enter the year (e.g., 2023): "))
-        month = int(input("Enter the month (1-12): "))
-        if not (1 <= month <= 12):
-            print("Invalid month. Please enter a number between 1 and 12.")
-            return
-        generate_monthly_statement(account_name, year, month)
-    except ValueError:
-        print("Invalid input. Please enter numbers for year and month.")
-    except Exception as e:
-        print(f"An error occurred: {e}")
+    # Automatically approve and generate statement for a default/test account and date
+    account_name = "main fund"  # Set your default or test account here
+    year = 2024  # Set a default/test year
+    month = 1    # Set a default/test month
+    generate_monthly_statement(account_name, year, month)
 
 if __name__ == "__main__":
     prompt_for_statement()

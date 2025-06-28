@@ -78,7 +78,16 @@ class BookkeepingApp:
         try:
             width = self.root.winfo_width() or 900
             height = self.root.winfo_height() or 600
-            bg_image_path = os.path.join(os.path.dirname(__file__), "bg_image.jpg")
+            
+            # Handle both development and frozen executable environments
+            if getattr(sys, 'frozen', False):
+                # Running in a frozen executable
+                application_path = os.path.dirname(sys.executable)
+                bg_image_path = os.path.join(application_path, "bg_image.jpg")
+            else:
+                # Running in development
+                bg_image_path = os.path.join(os.path.dirname(__file__), "bg_image.jpg")
+            
             img = Image.open(bg_image_path)
             img = img.resize((width, height), Image.LANCZOS)
             self.bg_photo = ImageTk.PhotoImage(img)
@@ -272,7 +281,11 @@ class BookkeepingApp:
         footer_label.place(relx=1.0, rely=1.0, anchor='se', x=-20, y=-8)
         # Add logos
         try:
-            left_logo_path = os.path.join(os.path.dirname(__file__), "left_logo.jpg")
+            if getattr(sys, 'frozen', False):
+                application_path = os.path.dirname(sys.executable)
+                left_logo_path = os.path.join(application_path, "left_logo.jpg")
+            else:
+                left_logo_path = os.path.join(os.path.dirname(__file__), "left_logo.jpg")
             left_logo_img = Image.open(left_logo_path)
             left_logo_img = left_logo_img.resize((90, 90), Image.LANCZOS)
             self.left_logo_photo = ImageTk.PhotoImage(left_logo_img)
@@ -282,7 +295,11 @@ class BookkeepingApp:
             print(f"Left logo error: {e}")
         
         try:
-            right_logo_path = os.path.join(os.path.dirname(__file__), "right_logo.jpg")
+            if getattr(sys, 'frozen', False):
+                application_path = os.path.dirname(sys.executable)
+                right_logo_path = os.path.join(application_path, "right_logo.jpg")
+            else:
+                right_logo_path = os.path.join(os.path.dirname(__file__), "right_logo.jpg")
             right_logo_img = Image.open(right_logo_path)
             right_logo_img = right_logo_img.resize((90, 90), Image.LANCZOS)
             self.right_logo_photo = ImageTk.PhotoImage(right_logo_img)

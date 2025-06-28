@@ -1,0 +1,2 @@
+python setup_cxfreeze.py build
+E:\bahikhata\Ledger_manager\.venv\Scripts\python.exe E:\bahikhata\Ledger_manager\setup_cxfreeze.py build
