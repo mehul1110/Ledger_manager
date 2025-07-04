@@ -114,15 +114,15 @@ mysql> SHOW CREATE TABLE `journal_entries`;
   `fd` decimal(15,2) DEFAULT NULL,
   `sundry` decimal(15,2) DEFAULT NULL,
   `property` decimal(15,2) DEFAULT NULL,
-  PRIMARY KEY (`entry_id`),
-  UNIQUE KEY `id` (`id`),
-  KEY `journal_entries_ibfk_1` (`account_name`),
-  CONSTRAINT `journal_entries_ibfk_1` FOREIGN KEY (`account_name`) REFERENCES `accounts` (`account_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci 
-|
-+-----------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-1 row in set (0.00 sec)
+  `fund` decimal(15,2) DEFAULT NULL,
+  `cash` decimal(15,2) DEFAULT NULL,
+  PRIMARY KEY (id),
+  UNIQUE KEY entry_id (entry_id),
+  KEY account_name_idx (account_name),
+  CONSTRAINT journal_entries_ibfk_1 FOREIGN KEY (account_name) REFERENCES accounts (account_name)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- Table: monthly_main_fund_balance
 mysql> SHOW CREATE TABLE `monthly_main_fund_balance`;
 +---------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Table                     | Create Table

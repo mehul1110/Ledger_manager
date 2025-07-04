@@ -84,8 +84,7 @@ def add_receipt_to_final_table(conn, cursor, transaction):
     main_entry_type = 'Fund'
     counter_entry_type = 'Bank'
 
-    # Debit the main fund account (main entry)
-    # This entry populates the `amount` column.
+    # For the main entry (debit), the amount always goes in the 'amount' column.
     insert_journal_entry(
         db_connection=conn,
         entry_id=receipt_journal_id,
@@ -97,25 +96,36 @@ def add_receipt_to_final_table(conn, cursor, transaction):
         entry_date=date,
         fd=None,
         sundry=None,
-        property=None,
-        fund=None  # Explicitly set fund to None for the main entry
+        property_value=None,
+        fund=None,
+        cash=None
     )
 
-    # Credit the payer's account (counter entry)
-    # This entry populates the `fund` column.
+    # For the counter-entry (credit), the main 'amount' is NULL.
+    # The value is placed in the specific column that categorizes the receipt.
+    is_cash = narration == "Cash"
+
+    counter_amount = None
+    counter_fd = None
+    counter_property = None
+    counter_sundry = None
+    counter_cash = amount if is_cash else None
+    counter_fund = amount if not is_cash else None
+
     insert_journal_entry(
         db_connection=conn,
         entry_id=counter_journal_id,
         account_name=MAIN_FUND_ACCOUNT,
         entry_type=counter_entry_type,
-        amount=None,  # Main amount is None for the counter entry
-        narration=narration,
+        amount=counter_amount,
+        narration=f"Receipt from {account_name}",
         mop=mop,
         entry_date=date,
-        fd=None,
-        sundry=None,
-        property=None,
-        fund=amount # The value goes into the 'fund' column for the counter-entry
+        fd=counter_fd,
+        sundry=counter_sundry,
+        property_value=counter_property,
+        fund=counter_fund,
+        cash=counter_cash
     )
 
     return receipt_id

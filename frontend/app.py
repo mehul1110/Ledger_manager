@@ -26,6 +26,7 @@ from views.approval_view import show_approval_view
 from views.about_view import show_about_view
 from transaction_approver import get_pending_transaction_count
 from views.comparison_view import show_comparison_view
+from views.opening_balance_view import show_opening_balance_view
 from simple_login import show_login_dialog
 
 
@@ -121,6 +122,11 @@ class BookkeepingApp:
         # Add About button at the bottom
         about_button = tk.Button(self.sidebar, text="About", command=self.show_about_page, font=("Arial", 12), bg='#e0e0e0')
         about_button.pack(side='bottom', pady=10, padx=10, fill='x')
+
+        # Add Set Opening Balances button if user has permission
+        if has_permission(self.user_info.get('role', 'viewer'), Permissions.SET_OPENING_BALANCES):
+            opening_balance_button = tk.Button(self.sidebar, text="Set Opening Balances", command=self.show_opening_balance_view_protected, font=("Arial", 12), bg='#e0e0e0')
+            opening_balance_button.pack(side='bottom', pady=10, padx=10, fill='x')
 
         # Add a periodic check to update the notifications and count
         self.root.after(30000, self.update_sidebar_notifications) # Check every 30 seconds
@@ -373,11 +379,25 @@ class BookkeepingApp:
         from views.add_payment_view import show_add_payment_form
         show_add_payment_form(self, go_back_callback=self.show_add_transactions_menu, user_info=self.user_info)
 
+    def show_opening_balance_view_protected(self):
+        """Set Opening Balances with permission check"""
+        if self.check_permission(Permissions.SET_OPENING_BALANCES, "set opening balances"):
+            self.show_opening_balance_view()
+
+    def show_opening_balance_view(self):
+        show_opening_balance_view(self, go_back_callback=self.show_main_menu)
+
     def show_view_transactions_menu(self):
         show_view_transactions_menu(self)
 
     def show_comparison_view(self):
-        show_comparison_view(self)
+        self.current_view_refresh_callback = self.show_comparison_view
+        for widget in self.root.winfo_children():
+            widget.destroy()
+        self.set_background()
+        frame = tk.Frame(self.root, bg='white')
+        frame.pack(fill="both", expand=True)
+        show_comparison_view(frame, go_back_callback=self.show_view_transactions_menu)
 
     def show_payments_view(self):
         self.current_view_refresh_callback = self.show_payments_view

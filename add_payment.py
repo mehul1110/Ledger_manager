@@ -5,7 +5,7 @@ from journal_utils import insert_journal_entry
 MAIN_FUND_ACCOUNT = "main fund"
 NARRATION_OPTIONS = [
     "Petty", "Maintenance", "Salary", "Property", "FD in bank", "Misc", "Article appreciation amount",
-    "Internet bill", "Fund lend to other accounts", "Printing of happenings"
+    "Internet bill", "Fund lend to other accounts", "Printing of happenings", "Cash"
 ]
 
 def add_payment(
@@ -113,19 +113,18 @@ def add_payment_to_final_tables(conn, cursor, transaction):
     is_sundry = narration in ['Fund lend to other accounts', 'Sundry']
     is_fd = narration == "FD in bank"
     is_property = narration == "Property"
+    is_cash = narration in ["Cash", "Petty Cash withdrawal"]
     is_non_expendable_property = (is_property and description and description.strip().lower() == "non-expendable")
 
-    # Determine columns for the DEBIT entry (recipient account)
-    # Normal payment entries ALWAYS use the main amount column
-    debit_amount = amount
-    debit_fd = None
-    debit_property = None
-    debit_sundry = None
-
-    # Refine logic for specialized columns based on narration
-    debit_fd = amount if is_fd else None  # Use amount instead of fd_interest
-    debit_property = amount if is_property else None
-    debit_sundry = amount if is_sundry else None
+    # For the main entry (debit), the amount always goes in the 'amount' column.
+    # Specialized columns are typically used for the counter-entry to categorize the expense,
+    # but we will fill them here as well for clarity, though they are not used for balance calculations.
+    main_amount = amount
+    main_fd = None
+    main_property = None
+    main_sundry = None
+    main_cash = None
+    main_fund = None # Fund is for counter-entries
 
     # Debit the account that received the payment
     insert_journal_entry(
@@ -133,50 +132,83 @@ def add_payment_to_final_tables(conn, cursor, transaction):
         entry_id=payment_journal_id,
         account_name=name,
         entry_type=main_entry_type,
-        amount=debit_amount,
+        amount=main_amount,
         narration=narration,
         mop=mop,
         entry_date=date,
-        fd=debit_fd,
-        property=debit_property,
-        sundry=debit_sundry
+        fd=main_fd,
+        property_value=main_property,
+        sundry=main_sundry,
+        cash=main_cash,
+        fund=main_fund
     )
 
-    # Credit the main fund account (counter entry)
-    # For payments, the main fund is being debited (money going out)
-    # We put the amount in specialized columns to categorize the spending
-    # Initialize all counter values
-    counter_amount = amount # Always populate the main amount for balance calculation
-    counter_fd = None
-    counter_sundry = None
-    counter_property = None
-    counter_fund = None
-
-    # For the counter-entry, place the amount in the correct specialized column
-    if is_fd:
-        counter_fd = amount
-    elif is_non_expendable_property:
-        counter_property = amount
-    elif is_sundry:
-        counter_sundry = amount
-    else:
-        # For all other non-specialized payments, the value goes into the 'fund' column.
-        counter_fund = amount
+    # For the counter-entry (credit), the main 'amount' is NULL.
+    # The value is placed in the specific column that categorizes the payment.
+    counter_amount = None
+    counter_fd = amount if is_fd else None
+    counter_property = amount if is_property else None
+    counter_sundry = amount if is_sundry else None
+    counter_cash = amount if is_cash else None
     
+    # If it's not a specialized category, it goes into the 'fund' column.
+    is_specialized = is_fd or is_property or is_sundry or is_cash
+    counter_fund = amount if not is_specialized else None
+
     insert_journal_entry(
         db_connection=conn,
         entry_id=counter_journal_id,
         account_name=MAIN_FUND_ACCOUNT,
         entry_type=counter_entry_type,
-        amount=None, # Main amount for balance
-        narration=narration,
+        amount=counter_amount,
+        narration=f"Payment to {name}",
         mop=mop,
         entry_date=date,
         fd=counter_fd,
+        property_value=counter_property,
         sundry=counter_sundry,
-        property=counter_property,
-        fund=counter_fund # Specialized column for categorization
+        fund=counter_fund,
+        cash=counter_cash
     )
+
+    # Handle property and FD details if applicable
+    if is_property and not is_non_expendable_property:
+        if not item_name or not description or not item_type:
+            raise ValueError("Item name, description, and type must be provided for Property")
+        
+        depreciation_rates = {
+            'electronic': 15.0,
+            'furniture': 10.0,
+            'stationery': 20.0,
+            'vehicle': 20.0,
+            'building': 5.0
+        }
+        depreciation_rate = depreciation_rates.get(item_type, 10.0)
+
+        if description.strip().lower() == "non-expendable":
+            cursor.execute("""
+                INSERT INTO property_details (payment_id, item_name, description, type, value, purchase_date, depreciation_rate)
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
+                ON DUPLICATE KEY UPDATE
+                    item_name = VALUES(item_name),
+                    description = VALUES(description),
+                    type = VALUES(type),
+                    value = VALUES(value),
+                    purchase_date = VALUES(purchase_date),
+                    depreciation_rate = VALUES(depreciation_rate)
+            """, (payment_id, item_name, description, item_type, amount, date, depreciation_rate))
+        else:
+            cursor.execute("""
+                INSERT INTO property_details (payment_id, item_name, description, type, value, purchase_date, depreciation_rate)
+                VALUES (%s, %s, %s, %s, %s, %s, 0)
+                ON DUPLICATE KEY UPDATE
+                    item_name = VALUES(item_name),
+                    description = VALUES(description),
+                    type = VALUES(type),
+                    value = VALUES(value),
+                    purchase_date = VALUES(purchase_date),
+                    depreciation_rate = VALUES(depreciation_rate)
+            """, (payment_id, item_name, description, item_type, amount, date))
 
     if narration == "FD in bank":
         if not fd_duration or not fd_interest:
@@ -243,11 +275,25 @@ def add_payment_to_final_tables(conn, cursor, transaction):
             cursor.execute("""
                 INSERT INTO property_details (payment_id, item_name, description, type, value, purchase_date, depreciation_rate)
                 VALUES (%s, %s, %s, %s, %s, %s, %s)
+                ON DUPLICATE KEY UPDATE
+                    item_name = VALUES(item_name),
+                    description = VALUES(description),
+                    type = VALUES(type),
+                    value = VALUES(value),
+                    purchase_date = VALUES(purchase_date),
+                    depreciation_rate = VALUES(depreciation_rate)
             """, (payment_id, item_name, description, item_type, amount, date, depreciation_rate))
         else:
             cursor.execute("""
                 INSERT INTO property_details (payment_id, item_name, description, type, value, purchase_date, depreciation_rate)
                 VALUES (%s, %s, %s, %s, %s, %s, 0)
+                ON DUPLICATE KEY UPDATE
+                    item_name = VALUES(item_name),
+                    description = VALUES(description),
+                    type = VALUES(type),
+                    value = VALUES(value),
+                    purchase_date = VALUES(purchase_date),
+                    depreciation_rate = VALUES(depreciation_rate)
             """, (payment_id, item_name, description, item_type, amount, date))
 
     print("✅ Payment processed and recorded in final tables.")

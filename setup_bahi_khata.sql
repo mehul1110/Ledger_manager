@@ -53,8 +53,8 @@ CREATE TABLE IF NOT EXISTS journal_entries (
   id INT NOT NULL AUTO_INCREMENT,
   entry_id VARCHAR(20) NOT NULL,
   account_name VARCHAR(100) DEFAULT NULL,
-  entry_type ENUM('Bank','Fund') NOT NULL,
-  amount DECIMAL(10,2) DEFAULT NULL,
+  entry_type ENUM('Bank','Fund','System') NOT NULL,
+  amount DECIMAL(15,2) DEFAULT NULL,
   narration TEXT,
   mop VARCHAR(50) DEFAULT NULL,
   entry_date DATE NOT NULL,
@@ -62,9 +62,10 @@ CREATE TABLE IF NOT EXISTS journal_entries (
   sundry DECIMAL(15,2) DEFAULT NULL,
   property DECIMAL(15,2) DEFAULT NULL,
   fund DECIMAL(15,2) DEFAULT NULL,
-  PRIMARY KEY (entry_id),
-  UNIQUE KEY id (id),
-  KEY journal_entries_ibfk_1 (account_name),
+  cash DECIMAL(15,2) DEFAULT NULL,
+  PRIMARY KEY (id),
+  UNIQUE KEY entry_id (entry_id),
+  KEY account_name_idx (account_name),
   CONSTRAINT journal_entries_ibfk_1 FOREIGN KEY (account_name) REFERENCES accounts (account_name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

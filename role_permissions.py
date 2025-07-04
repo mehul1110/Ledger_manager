@@ -43,6 +43,7 @@ class Permissions:
     MANAGE_USERS = "manage_users"
     BACKUP_DATABASE = "backup_database"
     SYSTEM_SETTINGS = "system_settings"
+    SET_OPENING_BALANCES = "set_opening_balances"
 
 
 # Define role permissions - CUSTOMIZED FOR YOUR BUSINESS
@@ -73,6 +74,7 @@ ROLE_PERMISSIONS = {
         Permissions.MANAGE_USERS,
         Permissions.BACKUP_DATABASE,
         Permissions.SYSTEM_SETTINGS,
+        Permissions.SET_OPENING_BALANCES,
     ],
     
     'accountant': [

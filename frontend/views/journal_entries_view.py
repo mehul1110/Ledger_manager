@@ -75,11 +75,28 @@ def show_journal_entries_view(app):
     table_frame = tk.Frame(app.root, bg='', highlightthickness=0, bd=0)
     table_frame.pack(fill='both', expand=True, padx=30, pady=10)
 
-    columns = ["Entry ID", "Entry Date", "Account Name", "Amount", "Narration", "Mode", "FD", "Sundry", "Property", "Fund"]
+    # Define internal column identifiers and their display names
+    column_map = {
+        "entry_id": "Voucher No.",
+        "entry_date": "Date",
+        "account_name": "Particulars",
+        "narration": "Narration",
+        "mop": "Mode of Payment",
+        "amount": "Bank",
+        "fd": "FD",
+        "sundry": "Sundry",
+        "property": "Property",
+        "fund": "EME Journal Fund",
+        "cash": "Cash"
+    }
+    
+    columns = list(column_map.keys()) # These are the internal identifiers
+    display_names = list(column_map.values()) # These are for display
+
     tree = ttk.Treeview(table_frame, columns=columns, show='headings', height=15)
-    for col in columns:
-        tree.heading(col, text=col, command=lambda c=col: sort_column(tree, c, False))
-        tree.column(col, anchor='center', width=120)
+    for col_id, display_name in column_map.items():
+        tree.heading(col_id, text=display_name, command=lambda c=col_id: sort_column(tree, c, False))
+        tree.column(col_id, anchor='center', width=120)
 
     def is_valid_date(date_str):
         # Accepts only if user has picked a date (not empty, not today's date)
@@ -91,7 +108,7 @@ def show_journal_entries_view(app):
             tree.delete(i)
         # Construct query
         query = (
-            "SELECT entry_id, entry_date, account_name, entry_type, amount, narration, mop, fd, sundry, property, fund "
+            "SELECT entry_id, entry_date, account_name, entry_type, amount, narration, mop, fd, sundry, property, fund, cash "
             "FROM journal_entries WHERE 1=1"
         )
         # Only apply date filter if user selects a date and it is not today's date
@@ -121,7 +138,7 @@ def show_journal_entries_view(app):
             for row_data in rows:
                 # Correctly map fetched data to variables
                 (entry_id, entry_date, account_name, entry_type, amount, 
-                 narration, mop, fd, sundry, prop, fund_val) = row_data
+                 narration, mop, fd, sundry, prop, fund_val, cash_val) = row_data
 
                 # For display, format None values as empty strings
                 display_amount = f"{amount:.2f}" if amount is not None else ""
@@ -129,19 +146,21 @@ def show_journal_entries_view(app):
                 display_sundry = f"{sundry:.2f}" if sundry is not None else ""
                 display_prop = f"{prop:.2f}" if prop is not None else ""
                 display_fund = f"{fund_val:.2f}" if fund_val is not None else ""
+                display_cash = f"{cash_val:.2f}" if cash_val is not None else ""
 
                 # Assemble the final row for display in the correct order
                 final_row = [
                     entry_id,
                     entry_date.strftime('%d-%m-%Y') if entry_date else '',
                     account_name,
-                    display_amount,
                     narration,
                     mop,
+                    display_amount,
                     display_fd,
                     display_sundry,
                     display_prop,
-                    display_fund
+                    display_fund,
+                    display_cash
                 ]
                 
                 tree.insert('', 'end', values=final_row)
@@ -165,7 +184,7 @@ def show_journal_entries_view(app):
     balances_frame = tk.Frame(filters_frame, bg='white')
     balances_frame.grid(row=1, column=0, columnspan=10, pady=(10,0), sticky='w')
     balances_label = tk.Label(balances_frame,
-                              text="B/F Balances -> Bank: -- | FD: -- | Property: -- | Sundry: --",
+                              text="Bank: -- | FD: -- | Property: -- | Sundry: -- | Cash: --",
                               font=label_font, bg='white')
     balances_label.pack()
 
@@ -176,59 +195,53 @@ def show_journal_entries_view(app):
         end_last_month = first_of_month - timedelta(days=1)
         conn_bal = db_connect.get_connection()
         cur_bal = conn_bal.cursor(dictionary=True)
-        
-        # --- Main Fund / Bank Balance ---
-        # Calculates the bank balance based on normal entries as requested.
-        # Receipts (entry_type='Fund' in a normal entry) are added.
-        # Payments (entry_type='Bank' in a normal entry) are subtracted.
-        query_bank = '''
-            SELECT
-                (SELECT COALESCE(SUM(amount), 0) FROM journal_entries WHERE entry_type = 'Fund' AND entry_id NOT LIKE 'C%%' AND entry_date <= %s) - 
-                (SELECT COALESCE(SUM(amount), 0) FROM journal_entries WHERE entry_type = 'Bank' AND entry_id NOT LIKE 'C%%' AND entry_date <= %s)
-                AS total
-        '''
-        cur_bal.execute(query_bank, (end_last_month, end_last_month))
-        main_fund_bal = cur_bal.fetchone()['total'] or 0
 
-        # --- FD, Property, Sundry, and Fund Balances ---
-        # Calculates the net balance for each asset class by summing values from the specialized
-        # columns in their respective counter-entries.
-        def get_total_for_asset(asset_column):
-            query = f"""
-                SELECT COALESCE(SUM({asset_column}), 0) AS total 
-                FROM journal_entries 
-                WHERE entry_id LIKE 'C%%' 
-                  AND {asset_column} IS NOT NULL 
-                  AND entry_date <= %s
-            """
+        def get_balance_for(column_name):
+            # For 'Bank', we sum receipts and subtract payments from the 'amount' column.
+            if column_name == 'amount':
+                query = """
+                    SELECT 
+                        COALESCE(SUM(CASE WHEN entry_type IN ('Fund', 'System') THEN amount ELSE -amount END), 0) as total
+                    FROM journal_entries 
+                    WHERE entry_type IN ('Bank', 'Fund', 'System') AND amount IS NOT NULL AND entry_date <= %s
+                """
+            # For 'Fund', we need to consider the entry type to add or subtract.
+            elif column_name == 'fund':
+                query = """
+                    SELECT
+                        COALESCE(SUM(CASE WHEN entry_type IN ('Bank', 'System') THEN fund ELSE -fund END), 0) as total
+                    FROM journal_entries
+                    WHERE fund IS NOT NULL AND entry_date <= %s
+                """
+            # For all other columns (assets), we just sum the values.
+            else:
+                query = f"""
+                    SELECT COALESCE(SUM({column_name}), 0) as total 
+                    FROM journal_entries 
+                    WHERE {column_name} IS NOT NULL AND entry_date <= %s
+                """
             cur_bal.execute(query, (end_last_month,))
-            return cur_bal.fetchone()['total'] or 0
+            result = cur_bal.fetchone()
+            return result['total'] if result else 0
 
-        total_fd = get_total_for_asset('fd')
-        total_prop = get_total_for_asset('property')
-        total_sundry = get_total_for_asset('sundry')
-        
-        # --- Fund Balance (Receipts - Payments from counter-entries) ---
-        query_fund = """
-            SELECT 
-                (SELECT COALESCE(SUM(fund), 0) FROM journal_entries WHERE entry_id LIKE 'CERV%%' AND entry_date <= %s) -
-                (SELECT COALESCE(SUM(fund), 0) FROM journal_entries WHERE entry_id LIKE 'CEPV%%' AND entry_date <= %s)
-            AS total_fund
-        """
-        cur_bal.execute(query_fund, (end_last_month, end_last_month))
-        total_fund_result = cur_bal.fetchone()
-        total_fund = total_fund_result['total_fund'] if total_fund_result and total_fund_result['total_fund'] is not None else 0
+        main_fund_bal = get_balance_for('amount')
+        total_fd = get_balance_for('fd')
+        total_prop = get_balance_for('property')
+        total_sundry = get_balance_for('sundry')
+        total_fund = get_balance_for('fund')
+        total_cash = get_balance_for('cash')
         
         cur_bal.close()
         conn_bal.close()
         
         # Update single balances label
         balances_label.config(
-            text=(f"B/F Balances -> Bank: {main_fund_bal:,.2f} | "
+            text=(f"Bank: {main_fund_bal:,.2f} | "
                   f"FD: {total_fd:,.2f} | "
                   f"Property: {total_prop:,.2f} | "
                   f"Sundry: {total_sundry:,.2f} | "
-                  f"Fund: {total_fund:,.2f}"))
+                  f"Fund: {total_fund:,.2f} | "
+                  f"Cash: {total_cash:,.2f}"))
 
     # Initial balance computation
     compute_balances()
@@ -252,42 +265,38 @@ def show_journal_entries_view(app):
             conn = db_connect.get_connection()
             cursor = conn.cursor(dictionary=True)
 
-            # --- Main Fund / Bank Balance ---
-            query_bank = '''
-                SELECT
-                    (SELECT COALESCE(SUM(amount), 0) FROM journal_entries WHERE entry_type = 'Fund' AND entry_id NOT LIKE 'C%%' AND entry_date <= %s) - 
-                    (SELECT COALESCE(SUM(amount), 0) FROM journal_entries WHERE entry_type = 'Bank' AND entry_id NOT LIKE 'C%%' AND entry_date <= %s)
-                    AS total
-            '''
-            cursor.execute(query_bank, (end_last_month, end_last_month))
-            main_fund_bal = cursor.fetchone()['total'] or 0
-
-            # --- FD, Property, Sundry, and Fund Balances ---
-            def get_total_for_asset_export(asset_column):
-                query = f"""
-                    SELECT COALESCE(SUM({asset_column}), 0) AS total 
-                    FROM journal_entries 
-                    WHERE entry_id LIKE 'C%%' 
-                      AND {asset_column} IS NOT NULL 
-                      AND entry_date <= %s
-                """
+            def get_balance_for_export(column_name):
+                if column_name == 'amount':
+                    query = """
+                        SELECT 
+                            COALESCE(SUM(CASE WHEN entry_type IN ('Fund', 'System') THEN amount ELSE -amount END), 0) as total
+                        FROM journal_entries 
+                        WHERE entry_type IN ('Bank', 'Fund', 'System') AND amount IS NOT NULL AND entry_date <= %s
+                    """
+                elif column_name == 'fund':
+                    query = """
+                        SELECT
+                            COALESCE(SUM(CASE WHEN entry_type IN ('Bank', 'System') THEN fund ELSE -fund END), 0) as total
+                        FROM journal_entries
+                        WHERE fund IS NOT NULL AND entry_date <= %s
+                    """
+                # For all other columns (assets), we just sum the values.
+                else:
+                    query = f"""
+                        SELECT COALESCE(SUM({column_name}), 0) as total 
+                        FROM journal_entries 
+                        WHERE {column_name} IS NOT NULL AND entry_date <= %s
+                    """
                 cursor.execute(query, (end_last_month,))
-                return cursor.fetchone()['total'] or 0
+                result = cursor.fetchone()
+                return result['total'] if result else 0
 
-            total_fd = get_total_for_asset_export('fd')
-            total_prop = get_total_for_asset_export('property')
-            total_sundry = get_total_for_asset_export('sundry')
-            
-            # --- Fund Balance (Receipts - Payments from counter-entries) for export ---
-            query_fund_export = """
-                SELECT 
-                    (SELECT COALESCE(SUM(fund), 0) FROM journal_entries WHERE entry_id LIKE 'CERV%%' AND entry_date <= %s) -
-                    (SELECT COALESCE(SUM(fund), 0) FROM journal_entries WHERE entry_id LIKE 'CEPV%%' AND entry_date <= %s)
-                AS total_fund
-            """
-            cursor.execute(query_fund_export, (end_last_month, end_last_month))
-            total_fund_result = cursor.fetchone()
-            total_fund = total_fund_result['total_fund'] if total_fund_result and total_fund_result['total_fund'] is not None else 0
+            main_fund_bal = get_balance_for_export('amount')
+            total_fd = get_balance_for_export('fd')
+            total_prop = get_balance_for_export('property')
+            total_sundry = get_balance_for_export('sundry')
+            total_fund = get_balance_for_export('fund')
+            total_cash = get_balance_for_export('cash')
 
             cursor.close()
             conn.close()
@@ -301,12 +310,13 @@ def show_journal_entries_view(app):
                     f"FD: {total_fd:,.2f}",
                     f"Property: {total_prop:,.2f}",
                     f"Sundry: {total_sundry:,.2f}",
-                    f"Fund: {total_fund:,.2f}"
+                    f"Fund: {total_fund:,.2f}",
+                    f"Cash: {total_cash:,.2f}"
                 ]
                 writer.writerow(["Brought Forward Balances:"] + custom_line)
 
                 # Write column headers
-                writer.writerow(columns)
+                writer.writerow(display_names)
 
                 # Write data rows
                 for row_id in tree.get_children():

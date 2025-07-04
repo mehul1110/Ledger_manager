@@ -132,10 +132,11 @@ def test_journal_entries():
             entry_id="TEST001",
             account_name="Test Account",
             entry_type="Fund",
-            amount=100.0,
+            amount=None,  # Amount is in the 'fund' column for this entry type
             narration="Test Entry",
             mop="Cash",
-            entry_date=datetime.now().date()
+            entry_date=datetime.now().date(),
+            fund=100.0  # Specify the fund amount
         )
         
         # Check if journal entries count increased
