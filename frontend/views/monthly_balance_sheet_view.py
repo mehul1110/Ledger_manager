@@ -5,9 +5,19 @@ from datetime import datetime, timedelta
 
 def get_total_for_field(cursor, field_name, end_date):
     """Generic function to get the total sum of a field up to a certain date."""
-    query = f"SELECT COALESCE(SUM({field_name}), 0) FROM journal_entries WHERE entry_date < %s"
+    # This query now correctly sums values from specialized columns in counter-entries,
+    # which is where these values are stored.
+    query = f"""
+        SELECT COALESCE(SUM({field_name}), 0)
+        FROM journal_entries
+        WHERE {field_name} IS NOT NULL
+          AND entry_date < %s
+          AND entry_id LIKE 'C%%'  -- Only include counter entries for these fields
+    """
     cursor.execute(query, (end_date,))
-    return cursor.fetchone()[0] or 0
+    result = cursor.fetchone()[0] or 0
+    print(f"[DEBUG] Total for {field_name} up to {end_date}: {result}")
+    return result
 
 def show_monthly_balance_sheet_ui(frame, go_back_callback):
     for widget in frame.winfo_children():
@@ -66,32 +76,52 @@ def show_monthly_balance_sheet_ui(frame, go_back_callback):
         next_month_start = (first_day_of_month.replace(day=28) + timedelta(days=4)).replace(day=1)
 
         # --- CALCULATIONS ---
-        # 1. Main Fund/Bank Balance
-        cursor.execute("""
-            SELECT
-              COALESCE(SUM(CASE WHEN entry_type = 'Bank' THEN amount ELSE 0 END), 0) -
-              COALESCE(SUM(CASE WHEN entry_type = 'Fund' THEN amount ELSE 0 END), 0)
-            FROM journal_entries
-            WHERE account_name = 'main fund' AND entry_date < %s
-        """, (first_day_of_month,))
-        brought_forward_bank = cursor.fetchone()[0] or 0
+        print(f"[DEBUG] First day of month: {first_day_of_month}, Next month start: {next_month_start}")
 
-        cursor.execute("""
+        # 1. Main Fund/Bank Balance (Brought Forward) - from NORMAL entries
+        query_brought_forward = """
             SELECT
-              COALESCE(SUM(CASE WHEN entry_type = 'Bank' THEN amount ELSE 0 END), 0) as receipts,
-              COALESCE(SUM(CASE WHEN entry_type = 'Fund' THEN amount ELSE 0 END), 0) as payments
-            FROM journal_entries
-            WHERE account_name = 'main fund' AND entry_date >= %s AND entry_date < %s
-        """, (first_day_of_month, next_month_start))
+                (SELECT COALESCE(SUM(amount), 0) FROM journal_entries WHERE entry_type = 'Fund' AND entry_id NOT LIKE 'C%%' AND entry_date < %s) - 
+                (SELECT COALESCE(SUM(amount), 0) FROM journal_entries WHERE entry_type = 'Bank' AND entry_id NOT LIKE 'C%%' AND entry_date < %s)
+                AS total
+        """
+        print(f"[DEBUG] Query for brought forward balance: {query_brought_forward}")
+        cursor.execute(query_brought_forward, (first_day_of_month, first_day_of_month))
+        brought_forward_bank = cursor.fetchone()[0] or 0
+        print(f"[DEBUG] Brought forward bank balance: {brought_forward_bank}")
+
+        # Monthly movements for Main Fund - from NORMAL entries
+        query_monthly_movements = """
+            SELECT
+              (SELECT COALESCE(SUM(amount), 0) FROM journal_entries WHERE entry_type = 'Fund' AND entry_id NOT LIKE 'C%%' AND entry_date >= %s AND entry_date < %s) as receipts,
+              (SELECT COALESCE(SUM(amount), 0) FROM journal_entries WHERE entry_type = 'Bank' AND entry_id NOT LIKE 'C%%' AND entry_date >= %s AND entry_date < %s) as payments
+        """
+        print(f"[DEBUG] Query for monthly movements: {query_monthly_movements}")
+        cursor.execute(query_monthly_movements, (first_day_of_month, next_month_start, first_day_of_month, next_month_start))
         monthly_movement = cursor.fetchone()
+        print(f"[DEBUG] Monthly movement raw result: {monthly_movement}")
         monthly_receipts = monthly_movement[0] or 0
         monthly_payments = monthly_movement[1] or 0
         closing_bank_balance = brought_forward_bank + monthly_receipts - monthly_payments
+        print(f"[DEBUG] Monthly receipts: {monthly_receipts}, Monthly payments: {monthly_payments}, Closing bank balance: {closing_bank_balance}")
 
-        # 2. Other Asset/Liability Totals (as of end of month)
+        # 2. Other Asset/Liability Totals (as of end of month) - from COUNTER entries
         total_fd = get_total_for_field(cursor, 'fd', next_month_start)
         total_property = get_total_for_field(cursor, 'property', next_month_start)
         total_sundry = get_total_for_field(cursor, 'sundry', next_month_start)
+
+        # Fund Balance (Receipts - Payments from counter-entries)
+        query_fund = """
+            SELECT 
+                (SELECT COALESCE(SUM(fund), 0) FROM journal_entries WHERE entry_id LIKE 'CERV%%' AND entry_date < %s) -
+                (SELECT COALESCE(SUM(fund), 0) FROM journal_entries WHERE entry_id LIKE 'CEPV%%' AND entry_date < %s)
+            AS total_fund
+        """
+        cursor.execute(query_fund, (next_month_start, next_month_start))
+        total_fund_result = cursor.fetchone()
+        total_fund = total_fund_result[0] if total_fund_result and total_fund_result[0] is not None else 0
+
+        print(f"[DEBUG] Total FD: {total_fd}, Total Property: {total_property}, Total Sundry: {total_sundry}, Total Fund: {total_fund}")
 
         # --- DISPLAY ---
         tree.insert('', 'end', values=(f"Balance Sheet for {first_day_of_month.strftime('%B %Y')}", ""), tags=('header',))
@@ -111,6 +141,7 @@ def show_monthly_balance_sheet_ui(frame, go_back_callback):
         tree.insert('', 'end', values=("Total Fixed Deposits (FDs)", f"{total_fd:,.2f}"))
         tree.insert('', 'end', values=("Total Property Value", f"{total_property:,.2f}"))
         tree.insert('', 'end', values=("Total Sundry Credits/Debits", f"{total_sundry:,.2f}"))
+        tree.insert('', 'end', values=("Total Fund", f"{total_fund:,.2f}"))
 
         tree.tag_configure('total', font=('Georgia', 11, 'bold'))
 

@@ -29,7 +29,7 @@ def show_add_payment_form(app, go_back_callback=None, user_info=None):
     tk.Label(app.root, text="To (Payee):", font=label_font).grid(row=1, column=0, padx=10, pady=10, sticky='e')
     conn = db_connect.get_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT account_name FROM accounts WHERE account_type != 'unit' ORDER BY account_name ASC")
+    cursor.execute("SELECT account_name FROM accounts WHERE account_type NOT IN ('payer', 'unit') ORDER BY account_name ASC")
     account_names = [row[0] for row in cursor.fetchall()]
     cursor.close()
     conn.close()
@@ -52,7 +52,7 @@ def show_add_payment_form(app, go_back_callback=None, user_info=None):
     amount_entry.grid(row=2, column=1, padx=10, pady=10, sticky='ew')
     # Mode of payment dropdown with custom option
     tk.Label(app.root, text="Mode of Payment:", font=label_font).grid(row=3, column=0, padx=10, pady=10, sticky='e')
-    mop_options_with_custom = ['Select', 'Cash', 'Cheque', 'Bank Transfer', 'UPI', 'Other (custom...)']
+    mop_options_with_custom = ['Select', 'Cash', 'Cheque/DD', 'Bank Transfer', 'UPI', 'Other (custom...)']
     mop_var = tk.StringVar(value='Select')
     mop_menu = tk.OptionMenu(app.root, mop_var, *mop_options_with_custom)
     mop_menu.config(font=entry_font)
@@ -68,7 +68,7 @@ def show_add_payment_form(app, go_back_callback=None, user_info=None):
     tk.Label(app.root, text="Narration:", font=label_font).grid(row=4, column=0, padx=10, pady=10, sticky='e')
     # Narration dropdown with custom option
     NARRATION_OPTIONS = [
-        "Petty", "Maintenance", "Salary", "Property", "FD in bank", "Misc", 
+        "Petty Cash withdrawal", "Maintenance", "Salary", "Property", "FD in bank", "Misc", 
     "Article appreciation amount", "Internet bill", "Fund lend to other accounts", 
     "Printing of happenings"
     ]

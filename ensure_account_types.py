@@ -2,9 +2,9 @@ import mysql.connector
 
 def ensure_account_types():
     conn = mysql.connector.connect(
-        host="localhost",
+        host="EMEJOURNAL",
         user="root",
-        password="123456",
+        password="0000",
         database="ledger_db"
     )
     cursor = conn.cursor()

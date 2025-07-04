@@ -57,8 +57,6 @@ build_exe_options = {
         "fd_approve_maturity.py",
         "fd_maturity_update.py",
         "list_sundry_credits.py",
-        "monthly_balance_sheet_simple.py",
-        "monthly_balance_sheet.py",
         "notification_system.py"
     ],
     "excludes": []

@@ -34,9 +34,9 @@ def show_add_receipt_form(app, go_back_callback=None, user_info=None):
     # Add 'Select' as the first/default option for all dropdowns
     unit_accounts_with_custom = ['Select'] + unit_accounts + ["Other (custom...)"]
     account_var = tk.StringVar(value='Select')
-    mop_options_with_custom = ['Select', 'Cash', 'Cheque', 'Bank Transfer', 'UPI', 'Other (custom...)']
+    mop_options_with_custom = ['Select', 'Cash','NEFT', 'Cheque/DD', 'Bank Transfer', 'UPI', 'Other (custom...)']
     mop_var = tk.StringVar(value='Select')
-    RECEIPT_NARRATION_OPTIONS_WITH_CUSTOM = ['Select', 'UCS', 'LCS', 'Interest on FD', 'Other (custom...)']
+    RECEIPT_NARRATION_OPTIONS_WITH_CUSTOM = ['Select', 'UCS', 'LCS', 'Interest on Savings', 'Other (custom...)']
     narration_var = tk.StringVar(value='Select')
 
     # --- Widgets ---

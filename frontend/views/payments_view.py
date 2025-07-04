@@ -75,7 +75,7 @@ def show_payments_view(app):
     table_frame = tk.Frame(app.root, bg='', highlightthickness=0, bd=0)
     table_frame.pack(fill='both', expand=True, padx=30, pady=10)
     
-    columns = ["Payment ID", "Account Name", "Amount", "Mode", "Narration", "Remarks", "Date"]
+    columns = ["Payment ID", "Date", "Account Name", "Amount", "Mode", "Narration", "Remarks"]
     tree = ttk.Treeview(table_frame, columns=columns, show='headings', height=15)
     for col in columns:
         tree.heading(col, text=col, command=lambda c=col: sort_column(tree, c, False))
@@ -117,14 +117,18 @@ def show_payments_view(app):
             cursor_data = conn_data.cursor()
             cursor_data.execute(query)
             rows = cursor_data.fetchall()
-            print(f"[DEBUG] payments_view fetched {len(rows)} rows")
-            for row in rows:
-                tree.insert('', 'end', values=row)
+            for row_data in rows:
+                row_list = list(row_data)
+                # Reorder to move date to the second position
+                entry_date = row_list.pop(6) # date is the last column
+                row_list.insert(1, entry_date)
+                tree.insert('', 'end', values=row_list)
         except Exception as e:
             messagebox.showerror('Database Error', f'Failed to fetch payments: {e}')
         finally:
-            cursor_data.close()
-            conn_data.close()
+            if 'conn_data' in locals() and conn_data.is_connected():
+                cursor_data.close()
+                conn_data.close()
 
     def clear_filters():
         start_date_entry.set_date(None)
@@ -146,11 +150,83 @@ def show_payments_view(app):
         if not file_path:
             return
         try:
+            from datetime import date, timedelta
+            today = date.today()
+            first_of_month = today.replace(day=1)
+            end_last_month = first_of_month - timedelta(days=1)
+
+            # Fetch brought forward balances for specific categories
+            conn = db_connect.get_connection()
+            cursor = conn.cursor()
+
+            # --- Main Fund / Bank Balance ---
+            query_bank = '''
+                SELECT
+                    COALESCE(SUM(CASE WHEN entry_type = 'Bank' THEN amount ELSE 0 END), 0) -
+                    COALESCE(SUM(CASE WHEN entry_type = 'Fund' THEN amount ELSE 0 END), 0)
+                    AS total
+                FROM journal_entries
+                WHERE 
+                    account_name = 'main fund' 
+                    AND entry_id LIKE 'C%%'
+                    AND entry_date <= %s
+            '''
+            cursor.execute(query_bank, (end_last_month,))
+            main_fund_bal = cursor.fetchone()[0] or 0
+
+            # --- FD, Property, and Sundry Balances ---
+            query_fd = """
+                SELECT COALESCE(SUM(fd), 0) AS total 
+                FROM journal_entries 
+                WHERE entry_type = 'Fund' 
+                  AND fd IS NOT NULL 
+                  AND entry_date <= %s
+            """
+            cursor.execute(query_fd, (end_last_month,))
+            total_fd = cursor.fetchone()[0] or 0
+
+            query_prop = """
+                SELECT COALESCE(SUM(property), 0) AS total 
+                FROM journal_entries 
+                WHERE entry_type = 'Fund' 
+                  AND property IS NOT NULL 
+                  AND entry_date <= %s
+            """
+            cursor.execute(query_prop, (end_last_month,))
+            total_prop = cursor.fetchone()[0] or 0
+
+            query_sundry = """
+                SELECT COALESCE(SUM(sundry), 0) AS total 
+                FROM journal_entries 
+                WHERE entry_type = 'Fund' 
+                  AND sundry IS NOT NULL 
+                  AND entry_date <= %s
+            """
+            cursor.execute(query_sundry, (end_last_month,))
+            total_sundry = cursor.fetchone()[0] or 0
+
+            cursor.close()
+            conn.close()
+
             with open(file_path, 'w', newline='', encoding='utf-8') as f:
                 writer = csv.writer(f)
+
+                # Write custom first line with brought forward balances
+                custom_line = [
+                    f"Main Fund: {main_fund_bal:,.2f}",
+                    f"FD: {total_fd:,.2f}",
+                    f"Property: {total_prop:,.2f}",
+                    f"Sundry: {total_sundry:,.2f}"
+                ]
+                writer.writerow(["Brought Forward Balances:"] + custom_line)
+
+                # Write column headers
                 writer.writerow(columns)
+
+                # Write data rows
                 for row_id in tree.get_children():
                     writer.writerow(tree.item(row_id)['values'])
+
             messagebox.showinfo('Export Successful', f'Payments exported to {file_path}')
         except Exception as e:
             messagebox.showerror('Export Failed', f'Error: {e}')

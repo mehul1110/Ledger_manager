@@ -61,6 +61,7 @@ CREATE TABLE IF NOT EXISTS journal_entries (
   fd DECIMAL(15,2) DEFAULT NULL,
   sundry DECIMAL(15,2) DEFAULT NULL,
   property DECIMAL(15,2) DEFAULT NULL,
+  fund DECIMAL(15,2) DEFAULT NULL,
   PRIMARY KEY (entry_id),
   UNIQUE KEY id (id),
   KEY journal_entries_ibfk_1 (account_name),
@@ -137,11 +138,11 @@ CREATE TABLE IF NOT EXISTS property_details (
   item_name VARCHAR(100) NOT NULL,
   description VARCHAR(20) DEFAULT NULL,
   type VARCHAR(50) DEFAULT NULL,
-  purchase_date DATE DEFAULT NULL,
-  value DECIMAL(10,2) DEFAULT NULL,
-  depreciation_rate DECIMAL(5,2) DEFAULT NULL,
+  purchase_date DATE NOT NULL,
+  value DECIMAL(10, 2) NOT NULL,
+  depreciation_rate DECIMAL(5, 2) DEFAULT 0.00,
+  new_rate DECIMAL(10, 2) DEFAULT 0.00, -- Shows the depreciated value
   PRIMARY KEY (id),
-  KEY payment_id_idx (payment_id),
   CONSTRAINT property_details_ibfk_1 FOREIGN KEY (payment_id) REFERENCES payments (payment_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

@@ -64,4 +64,4 @@ Developed with Python and Tkinter for a clean, user-friendly interface."""
     tk.Label(about_frame, text=about_text, font=("Arial", 12), bg="white", justify='left').pack(pady=10)
     
     # Additional info
-    tk.Label(about_frame, text="© 2024 BAHI-KHATA", font=("Arial", 10), bg="white", fg="gray").pack(side='bottom', pady=(20, 0))
+    tk.Label(about_frame, text="© 2025 BAHI-KHATA", font=("Arial", 10), bg="white", fg="gray").pack(side='bottom', pady=(20, 0))

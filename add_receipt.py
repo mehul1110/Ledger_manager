@@ -78,15 +78,18 @@ def add_receipt_to_final_table(conn, cursor, transaction):
     counter_journal_id = f"CERV{id_numeric_part}"
 
     # Create journal entries for the receipt
-    # For receipts: main entry_type = Bank, counter = Fund
-    main_entry_type = 'Bank'
-    counter_entry_type = 'Fund'
+    # For receipts: main entry_type = Fund, counter = Bank
+    # The main entry should debit the main fund (bank/cash).
+    # The counter entry should credit the payer's account.
+    main_entry_type = 'Fund'
+    counter_entry_type = 'Bank'
 
     # Debit the main fund account (main entry)
+    # This entry populates the `amount` column.
     insert_journal_entry(
         db_connection=conn,
         entry_id=receipt_journal_id,
-        account_name=MAIN_FUND_ACCOUNT,
+        account_name=account_name,
         entry_type=main_entry_type,
         amount=amount,
         narration=narration,
@@ -94,22 +97,27 @@ def add_receipt_to_final_table(conn, cursor, transaction):
         entry_date=date,
         fd=None,
         sundry=None,
-        property=None
+        property=None,
+        fund=None  # Explicitly set fund to None for the main entry
     )
 
-    # Credit the account that made the payment (counter entry, always positive amount)
+    # Credit the payer's account (counter entry)
+    # This entry populates the `fund` column.
     insert_journal_entry(
         db_connection=conn,
         entry_id=counter_journal_id,
-        account_name=account_name,
+        account_name=MAIN_FUND_ACCOUNT,
         entry_type=counter_entry_type,
-        amount=amount,
+        amount=None,  # Main amount is None for the counter entry
         narration=narration,
         mop=mop,
         entry_date=date,
         fd=None,
         sundry=None,
-        property=None
+        property=None,
+        fund=amount # The value goes into the 'fund' column for the counter-entry
     )
 
-    print("✅ Receipt processed and recorded in final tables.")
+    return receipt_id
+
+# This is the function that will be called from the GUI or other parts of the application

@@ -106,9 +106,10 @@ def add_payment_to_final_tables(conn, cursor, transaction):
     counter_journal_id = f"CEPV{id_numeric_part}"
 
     # Create journal entries for the payment
-    # For payments: main entry_type = Fund, counter = Bank
-    main_entry_type = 'Fund'
-    counter_entry_type = 'Bank'
+    # For payments: main entry_type = bank, counter = fund
+    # The main entry should debit the payer's account.
+    main_entry_type = 'Bank'
+    counter_entry_type = 'Fund'
     is_sundry = narration in ['Fund lend to other accounts', 'Sundry']
     is_fd = narration == "FD in bank"
     is_property = narration == "Property"
@@ -144,44 +145,37 @@ def add_payment_to_final_tables(conn, cursor, transaction):
     # Credit the main fund account (counter entry)
     # For payments, the main fund is being debited (money going out)
     # We put the amount in specialized columns to categorize the spending
-    # Initialize counter_amount to avoid reference errors
-    counter_amount = None
+    # Initialize all counter values
+    counter_amount = amount # Always populate the main amount for balance calculation
     counter_fd = None
     counter_sundry = None
     counter_property = None
+    counter_fund = None
 
-    # Refine logic for specialized columns in counter entries
+    # For the counter-entry, place the amount in the correct specialized column
     if is_fd:
-        counter_fd = amount  # FD value derived from amount
-        counter_property = None
-        counter_sundry = None
+        counter_fd = amount
     elif is_non_expendable_property:
-        counter_property = amount  # Property value derived from amount
-        counter_fd = None
-        counter_sundry = None
+        counter_property = amount
     elif is_sundry:
-        counter_sundry = amount  # Sundry value derived from amount
-        counter_fd = None
-        counter_property = None
+        counter_sundry = amount
     else:
-        # Regular transactions use the normal amount column
-        counter_amount = amount
-        counter_fd = None
-        counter_sundry = None
-        counter_property = None
+        # For all other non-specialized payments, the value goes into the 'fund' column.
+        counter_fund = amount
     
     insert_journal_entry(
         db_connection=conn,
         entry_id=counter_journal_id,
         account_name=MAIN_FUND_ACCOUNT,
         entry_type=counter_entry_type,
-        amount=counter_amount,
+        amount=None, # Main amount for balance
         narration=narration,
         mop=mop,
         entry_date=date,
         fd=counter_fd,
         sundry=counter_sundry,
-        property=counter_property
+        property=counter_property,
+        fund=counter_fund # Specialized column for categorization
     )
 
     if narration == "FD in bank":

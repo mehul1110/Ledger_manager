@@ -6,22 +6,25 @@ def get_account_balance(account_name, as_of_date):
     Calculates the balance of a specific account as of a given date (exclusive).
     This is a running balance from the beginning of time up to the day before as_of_date.
     The logic is derived from how receipts and payments affect accounts.
-    'Bank' entry_type represents money coming in (credit to the account from user's perspective).
-    'Fund' entry_type represents money going out (debit from the account from user's perspective).
+    'Bank' entry_type represents money going out (a payment from this account).
+    'Fund' entry_type represents money coming in (a receipt into this account).
     """
     conn = get_connection()
     cursor = conn.cursor()
     balance = 0
     try:
-        # This logic should apply to any account that receives payments or makes receipts,
-        # including 'main fund' and all bank accounts.
+        # For any given account:
+        # Receipts are journal entries where the account is credited (entry_type = 'Fund').
+        # Payments are journal entries where the account is debited (entry_type = 'Bank').
+        # Therefore, balance = SUM(receipts) - SUM(payments).
         query = """
             SELECT
-              COALESCE(SUM(CASE WHEN entry_type = 'Bank' THEN amount ELSE 0 END), 0) -
-              COALESCE(SUM(CASE WHEN entry_type = 'Fund' THEN amount ELSE 0 END), 0) AS balance
+              COALESCE(SUM(CASE WHEN entry_type = 'Fund' THEN amount ELSE 0 END), 0) - 
+              COALESCE(SUM(CASE WHEN entry_type = 'Bank' THEN amount ELSE 0 END), 0) AS balance
             FROM journal_entries
             WHERE LOWER(account_name) = %s
               AND entry_date < %s
+              AND entry_id NOT LIKE 'CE%%'
         """
         cursor.execute(query, (account_name.lower(), as_of_date))
         result = cursor.fetchone()
@@ -51,14 +54,15 @@ def generate_monthly_statement(account_name, year, month):
     conn = get_connection()
     cursor = conn.cursor()
     try:
-        # 2. Get transactions for the month
+        # 2. Get transactions for the month, excluding counter-entries
         cursor.execute("""
             SELECT entry_date, narration, remarks,
-                   (CASE WHEN entry_type = 'Bank' THEN amount ELSE 0 END) as credit,
-                   (CASE WHEN entry_type = 'Fund' THEN amount ELSE 0 END) as debit
+                   (CASE WHEN entry_type = 'Fund' THEN amount ELSE 0 END) as credit,
+                   (CASE WHEN entry_type = 'Bank' THEN amount ELSE 0 END) as debit
             FROM journal_entries
             WHERE LOWER(account_name) = %s
               AND entry_date >= %s AND entry_date < %s
+              AND entry_id NOT LIKE 'CE%%'
             ORDER BY entry_date, entry_id
         """, (account_name.lower(), first_day, last_day))
         

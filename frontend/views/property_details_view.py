@@ -65,13 +65,13 @@ def show_property_details_view(app):
 
     columns = [
         "Payment ID", "Item Name", "Description", "Type", "Value",
-        "Purchase Date", "Depreciation Rate"
+        "Purchase Date", "Depreciation Rate", "New Value"
     ]
     tree = ttk.Treeview(table_frame, columns=columns, show='headings', height=15)
     
     for col in columns:
         tree.heading(col, text=col, command=lambda c=col: sort_column(tree, c, False))
-        if col in ["Value", "Depreciation Rate"]:
+        if col in ["Value", "Depreciation Rate", "New Value"]:
             tree.column(col, anchor='e', width=120)
         elif col in ["Purchase Date"]:
             tree.column(col, anchor='center', width=120)
@@ -86,7 +86,7 @@ def show_property_details_view(app):
         # Clear existing rows
         for i in tree.get_children():
             tree.delete(i)
-        # Construct query - select only the columns we want to display (exclude internal id)
+        # Construct query - select all columns needed for display and calculation
         query = (
             "SELECT payment_id, item_name, description, type, value, purchase_date, depreciation_rate "
             "FROM property_details WHERE 1=1"
@@ -104,28 +104,53 @@ def show_property_details_view(app):
             if date_to:
                 query += f" AND purchase_date <= '{date_to.strftime('%Y-%m-%d')}'"
         if type_var.get() != "All":
-            query += f" AND type = '{type_var.get()}'"
-        query += " ORDER BY purchase_date ASC"
-        print(f"[DEBUG] property_details_view executing: {query}")
+            query += f" AND `type` = '{type_var.get()}'"
+        
+        query += " ORDER BY purchase_date DESC"
+
         try:
             conn_data = db_connect.get_connection()
-            cursor_data = conn_data.cursor()
+            cursor_data = conn_data.cursor(dictionary=True)
             cursor_data.execute(query)
             rows = cursor_data.fetchall()
-            for row in rows:
-                # Format the data properly
-                formatted_row = list(row)
-                # Format value with 2 decimal places if it exists
-                if formatted_row[4] is not None:  # value column
-                    formatted_row[4] = f"{float(formatted_row[4]):.2f}"
-                # Format depreciation rate with 2 decimal places if it exists
-                if formatted_row[6] is not None:  # depreciation_rate column
-                    formatted_row[6] = f"{float(formatted_row[6]):.2f}"
-                tree.insert('', 'end', values=formatted_row)
-            cursor_data.close()
-            conn_data.close()
+            
+            from datetime import date, timedelta
+
+            for row_data in rows:
+                purchase_date = row_data.get('purchase_date')
+                value = row_data.get('value')
+                rate = row_data.get('depreciation_rate')
+                description = row_data.get('description')
+                
+                calculated_value = value # Default to original value
+
+                if description and description.strip().lower() == 'non-expendable' and purchase_date and value and rate:
+                    if date.today() > purchase_date + timedelta(days=730):
+                        years_since_purchase = (date.today() - purchase_date).days / 365.25
+                        depreciation_years = years_since_purchase - 2
+                        if depreciation_years > 0:
+                            # Using compound depreciation formula
+                            calculated_value = value * ((1 - (rate / 100)) ** depreciation_years)
+                
+                final_row = [
+                    row_data['payment_id'],
+                    row_data['item_name'],
+                    description,
+                    row_data['type'],
+                    f"{value:,.2f}" if value is not None else "",
+                    purchase_date.strftime('%d-%m-%Y') if purchase_date else '',
+                    f"{rate:.2f}%" if rate is not None else "",
+                    f"{calculated_value:,.2f}" if calculated_value is not None else ""
+                ]
+                
+                tree.insert('', 'end', values=final_row)
+
         except Exception as e:
-            print(f"[ERROR] Failed to fetch data: {e}")
+            messagebox.showerror('Database Error', f'Failed to fetch property details: {e}')
+        finally:
+            if 'conn_data' in locals() and conn_data.is_connected():
+                cursor_data.close()
+                conn_data.close()
 
     def clear_filters():
         start_date_entry.set_date('')
