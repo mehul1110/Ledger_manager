@@ -88,7 +88,7 @@ def show_property_details_view(app):
             tree.delete(i)
         # Construct query - select all columns needed for display and calculation
         query = (
-            "SELECT payment_id, item_name, description, type, value, purchase_date, depreciation_rate "
+            "SELECT id, payment_id, item_name, description, type, value, purchase_date, depreciation_rate, new_rate "
             "FROM property_details WHERE 1=1"
         )
         # Only apply date filter if user selects a date and it is not today's date
@@ -114,24 +114,39 @@ def show_property_details_view(app):
             cursor_data.execute(query)
             rows = cursor_data.fetchall()
             
-            from datetime import date, timedelta
+            from datetime import date, timedelta, datetime
+
+            if not rows:
+                print('DEBUG: No property_details rows fetched for query:', query)
+
 
             for row_data in rows:
                 purchase_date = row_data.get('purchase_date')
                 value = row_data.get('value')
                 rate = row_data.get('depreciation_rate')
                 description = row_data.get('description')
-                
-                calculated_value = value # Default to original value
+                new_rate = row_data.get('new_rate')
 
-                if description and description.strip().lower() == 'non-expendable' and purchase_date and value and rate:
-                    if date.today() > purchase_date + timedelta(days=730):
-                        years_since_purchase = (date.today() - purchase_date).days / 365.25
-                        depreciation_years = years_since_purchase - 2
-                        if depreciation_years > 0:
-                            # Using compound depreciation formula
-                            calculated_value = value * ((1 - (rate / 100)) ** depreciation_years)
-                
+                # Ensure purchase_date is a date object
+                if purchase_date and not isinstance(purchase_date, date):
+                    try:
+                        purchase_date = datetime.strptime(str(purchase_date), '%Y-%m-%d').date()
+                    except Exception:
+                        purchase_date = None
+
+                # Use new_rate from DB if present, else calculate
+                if new_rate is not None and new_rate != 0:
+                    calculated_value = new_rate
+                else:
+                    calculated_value = value # Default to original value
+                    if description and description.strip().lower() == 'non-expendable' and purchase_date and value and rate:
+                        if date.today() > purchase_date + timedelta(days=730):
+                            years_since_purchase = (date.today() - purchase_date).days / 365.25
+                            depreciation_years = years_since_purchase - 2
+                            if depreciation_years > 0:
+                                # Using compound depreciation formula
+                                calculated_value = value * ((1 - (rate / 100)) ** depreciation_years)
+
                 final_row = [
                     row_data['payment_id'],
                     row_data['item_name'],
@@ -142,7 +157,7 @@ def show_property_details_view(app):
                     f"{rate:.2f}%" if rate is not None else "",
                     f"{calculated_value:,.2f}" if calculated_value is not None else ""
                 ]
-                
+
                 tree.insert('', 'end', values=final_row)
 
         except Exception as e:

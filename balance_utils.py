@@ -4,32 +4,38 @@ from datetime import datetime, timedelta
 def get_account_balance(account_name, as_of_date):
     """
     Calculates the balance of a specific account as of a given date (exclusive).
-    This is a running balance from the beginning of time up to the day before as_of_date.
-    The logic is derived from how receipts and payments affect accounts.
-    'Bank' entry_type represents money going out (a payment from this account).
-    'Fund' entry_type represents money coming in (a receipt into this account).
+    Includes the 'System' entry type in the calculation.
     """
     conn = get_connection()
     cursor = conn.cursor()
     balance = 0
     try:
-        # For any given account:
-        # Receipts are journal entries where the account is credited (entry_type = 'Fund').
-        # Payments are journal entries where the account is debited (entry_type = 'Bank').
-        # Therefore, balance = SUM(receipts) - SUM(payments).
+        # Include 'System' entry type in the calculation
         query = """
             SELECT
-              COALESCE(SUM(CASE WHEN entry_type = 'Fund' THEN amount ELSE 0 END), 0) - 
-              COALESCE(SUM(CASE WHEN entry_type = 'Bank' THEN amount ELSE 0 END), 0) AS balance
+              COALESCE(SUM(CASE WHEN entry_type IN ('Fund', 'System') THEN amount ELSE 0 END), 0) - 
+              COALESCE(SUM(CASE WHEN entry_type = 'Bank' THEN amount ELSE 0 END), 0) AS balance,
+              COALESCE(SUM(fd), 0) AS fd_balance,
+              COALESCE(SUM(property), 0) AS property_balance,
+              COALESCE(SUM(sundry), 0) AS sundry_balance,
+              COALESCE(SUM(fund), 0) AS fund_balance,
+              COALESCE(SUM(cash), 0) AS cash_balance
             FROM journal_entries
             WHERE LOWER(account_name) = %s
               AND entry_date < %s
-              AND entry_id NOT LIKE 'CE%%'
+              AND (entry_id NOT LIKE 'CE%%' OR narration = 'Opening Balances')
         """
         cursor.execute(query, (account_name.lower(), as_of_date))
         result = cursor.fetchone()
-        if result and result[0] is not None:
-            balance = result[0]
+        if result:
+            balance = {
+                'main_balance': result[0] or 0,
+                'fd_balance': result[1] or 0,
+                'property_balance': result[2] or 0,
+                'sundry_balance': result[3] or 0,
+                'fund_balance': result[4] or 0,
+                'cash_balance': result[5] or 0
+            }
     except Exception as e:
         print(f"Error calculating balance for {account_name}: {e}")
     finally:
@@ -72,7 +78,7 @@ def generate_monthly_statement(account_name, year, month):
         print(f"\n--- Monthly Statement for '{account_name}' ---")
         print(f"--- For {first_day.strftime('%B %Y')} ---")
         print("-" * 100)
-        print(f"Opening Balance as of {first_day.strftime('%Y-%m-%d')}: {opening_balance:,.2f}")
+        print(f"Opening Balance as of {first_day.strftime('%Y-%m-%d')}: {opening_balance['main_balance']:,.2f}")
         print("-" * 100)
         print(f"{ 'Date' :<12} {'Narration' :<30} {'Remarks' :<30} {'Debit' :>12} {'Credit' :>12}")
         print("=" * 100)
@@ -90,7 +96,7 @@ def generate_monthly_statement(account_name, year, month):
                 print(f"{date.strftime('%Y-%m-%d'):<12} {str(narration or ''):<30} {str(remarks or ''):<30} {debit:,.2f} {credit:,.2f}")
 
         # 4. Calculate Closing Balance
-        closing_balance = opening_balance + total_credit - total_debit
+        closing_balance = opening_balance['main_balance'] + total_credit - total_debit
         
         print("=" * 100)
         print(f"{ '' :<74} {'Totals:':<12} {total_debit:,.2f} {total_credit:,.2f}")

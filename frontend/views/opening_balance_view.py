@@ -65,15 +65,14 @@ def show_opening_balance_view(app, go_back_callback):
             effective_date = datetime.strptime(effective_date_str, '%Y-%m-%d').date()
 
             # --- Filter out zero balances ---
-            balances_to_set = {k: v for k, v in balances.items() if v != 0.0}
-            if not balances_to_set:
+            if all(value == 0.0 for value in balances.values()):
                 messagebox.showinfo("No Balances", "No opening balances to set. All values are zero.")
                 return
 
             # --- Confirmation ---
             confirm = messagebox.askyesno(
                 "Confirm Opening Balances",
-                "This will create permanent opening balance entries. This action should only be performed once.\n\nAre you sure you want to proceed?"
+                "This will create a single opening balance entry. This action should only be performed once.\n\nAre you sure you want to proceed?"
             )
             if not confirm:
                 return
@@ -83,7 +82,7 @@ def show_opening_balance_view(app, go_back_callback):
             cursor = conn.cursor(dictionary=True)
 
             # Check if an opening balance entry already exists
-            cursor.execute("SELECT COUNT(*) as count FROM journal_entries WHERE narration LIKE 'Opening Balance: %%'")
+            cursor.execute("SELECT COUNT(*) as count FROM journal_entries WHERE narration = 'Opening Balances'")
             if cursor.fetchone()['count'] > 0:
                 messagebox.showwarning("Already Exists", "Opening balance entries already exist. You cannot create more. To make changes, please adjust the existing journal entries manually.")
                 cursor.close()
@@ -94,37 +93,24 @@ def show_opening_balance_view(app, go_back_callback):
             cursor.execute("SELECT MAX(id) as max_id FROM journal_entries")
             result = cursor.fetchone()
             last_id = result['max_id'] if result and result['max_id'] is not None else 0
-            
-            # Create a separate journal entry for each non-zero balance
-            i = 1
-            for balance_type, value in balances_to_set.items():
-                narration = f"Opening Balance: {balance_type.replace('_', ' ').title()}"
-                new_entry_id = f"OB{last_id + i:05d}"
-                i += 1
 
-                # Prepare arguments for insert_journal_entry
-                j_amount = value if balance_type == 'amount' else None
-                j_fd = value if balance_type == 'fd' else None
-                j_fund = value if balance_type == 'fund' else None
-                j_property = value if balance_type == 'property_value' else None
-                j_sundry = value if balance_type == 'sundry' else None
-                j_cash = value if balance_type == 'cash' else None
-
-                insert_journal_entry(
-                    db_connection=conn,
-                    entry_id=new_entry_id,
-                    account_name="Opening Balance",
-                    entry_type='System',
-                    amount=j_amount,
-                    narration=narration,
-                    mop=None,
-                    entry_date=effective_date,
-                    fd=j_fd,
-                    sundry=j_sundry,
-                    property_value=j_property,
-                    fund=j_fund,
-                    cash=j_cash
-                )
+            # Create a single journal entry for all balances
+            new_entry_id = f"BBF"
+            insert_journal_entry(
+                db_connection=conn,
+                entry_id=new_entry_id,
+                account_name="Opening Balances",
+                entry_type='System',
+                amount=balances['amount'],
+                narration="Opening Balances",
+                mop=None,
+                entry_date=effective_date,
+                fd=balances['fd'],
+                sundry=balances['sundry'],
+                property_value=balances['property_value'],
+                fund=balances['fund'],
+                cash=balances['cash']
+            )
 
             conn.commit()
             messagebox.showinfo("Success", "Opening balances have been set successfully.")

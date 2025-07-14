@@ -27,15 +27,11 @@ build_exe_options = {
         "openpyxl"
     ],
     "include_files": [
-        # App resources - copy to root for easy access
+        # App resources
         ("frontend/app_icon.ico", "app_icon.ico"),
         ("frontend/bg_image.jpg", "bg_image.jpg"),
         ("frontend/left_logo.jpg", "left_logo.jpg"),
         ("frontend/right_logo.jpg", "right_logo.jpg"),
-        # Also keep images in frontend folder for compatibility
-        ("frontend/bg_image.jpg", "frontend/bg_image.jpg"),
-        ("frontend/left_logo.jpg", "frontend/left_logo.jpg"),
-        ("frontend/right_logo.jpg", "frontend/right_logo.jpg"),
         # Copy the views directory to the top level of the build
         ("frontend/views", "views"),
         # Root-level Python modules that might be missed
@@ -57,7 +53,11 @@ build_exe_options = {
         "fd_approve_maturity.py",
         "fd_maturity_update.py",
         "list_sundry_credits.py",
-        "notification_system.py"
+        "monthly_balance_sheet_simple.py",
+        "monthly_balance_sheet.py",
+        "notification_system.py",
+        # SQL setup script
+        "setup_bahi_khata.sql"
     ],
     "excludes": []
 }

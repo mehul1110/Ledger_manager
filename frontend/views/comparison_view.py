@@ -8,38 +8,29 @@ from datetime import datetime, timedelta
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 from db_connect import get_connection
 
-def get_total_for_field(cursor, field_name, end_date):
-    """Generic function to get the total sum of a field up to a certain date from counter-entries."""
-    query = f"""
-        SELECT COALESCE(SUM({field_name}), 0)
-        FROM journal_entries
-        WHERE {field_name} IS NOT NULL
-          AND entry_date < %s
-          AND entry_id LIKE 'C%%'
-    """
-    cursor.execute(query, (end_date,))
-    result = cursor.fetchone()[0] or 0
-    return result
-
 def get_balance_sheet_data_for_month(year, month):
     """Calculates all necessary balance sheet figures for a given month."""
     conn = get_connection()
-    cursor = conn.cursor()
+    # Use a dictionary cursor to get column names
+    cursor = conn.cursor(dictionary=True)
 
     try:
         first_day_of_month = datetime(year, month, 1)
         next_month_start = (first_day_of_month.replace(day=28) + timedelta(days=4)).replace(day=1)
 
-        # 1. Main Fund/Bank Balance (Brought Forward) - from NORMAL entries
-        query_brought_forward = """
+        # Brought Forward Bank Balance
+        query_brought_forward = '''
             SELECT
-                (SELECT COALESCE(SUM(amount), 0) FROM journal_entries WHERE entry_type = 'Fund' AND entry_id NOT LIKE 'C%%' AND entry_date < %s) - 
-                (SELECT COALESCE(SUM(amount), 0) FROM journal_entries WHERE entry_type = 'Bank' AND entry_id NOT LIKE 'C%%' AND entry_date < %s)
-        """
-        cursor.execute(query_brought_forward, (first_day_of_month, first_day_of_month))
-        brought_forward_bank = cursor.fetchone()[0] or 0
+                (
+                    (SELECT COALESCE(SUM(amount), 0) FROM journal_entries WHERE entry_type IN ('Fund', 'System') AND entry_id NOT LIKE 'C%%' AND entry_date < %s) -
+                    (SELECT COALESCE(SUM(amount), 0) FROM journal_entries WHERE entry_type = 'Bank' AND entry_id NOT LIKE 'C%%' AND entry_date < %s) +
+                    (SELECT COALESCE(SUM(amount), 0) FROM journal_entries WHERE narration = 'Opening Balances' AND entry_type = 'Bank' AND entry_date <= %s)
+                ) as brought_forward
+        '''
+        cursor.execute(query_brought_forward, (first_day_of_month, first_day_of_month, first_day_of_month))
+        brought_forward_bank = cursor.fetchone()['brought_forward'] or 0
 
-        # Monthly movements for Main Fund - from NORMAL entries
+        # Monthly movements
         query_monthly_movements = """
             SELECT
               (SELECT COALESCE(SUM(amount), 0) FROM journal_entries WHERE entry_type = 'Fund' AND entry_id NOT LIKE 'C%%' AND entry_date >= %s AND entry_date < %s) as receipts,
@@ -47,25 +38,63 @@ def get_balance_sheet_data_for_month(year, month):
         """
         cursor.execute(query_monthly_movements, (first_day_of_month, next_month_start, first_day_of_month, next_month_start))
         monthly_movement = cursor.fetchone()
-        monthly_receipts = monthly_movement[0] or 0
-        monthly_payments = monthly_movement[1] or 0
+        monthly_receipts = monthly_movement['receipts'] or 0
+        monthly_payments = monthly_movement['payments'] or 0
         closing_bank_balance = brought_forward_bank + monthly_receipts - monthly_payments
 
-        # 2. Other Asset/Liability Totals (as of end of month) - from COUNTER entries
+        # Other Asset/Liability Totals
+        def get_total_for_field(cursor, field_name, end_date):
+            query = f"""
+                SELECT COALESCE(SUM({field_name}), 0) as total
+                FROM journal_entries
+                WHERE {field_name} IS NOT NULL
+                  AND (entry_date < %s) -- Removed 'OR narration = 'Opening Balances'' to avoid double counting
+                  AND entry_id LIKE 'C%%'
+            """
+            cursor.execute(query, (end_date,))
+            total_from_transactions = cursor.fetchone()['total'] or 0
+
+            # Get opening balance for the specific field
+            query_opening = f"""
+                SELECT COALESCE(SUM({field_name}), 0) as opening_total
+                FROM journal_entries
+                WHERE {field_name} IS NOT NULL
+                  AND narration = 'Opening Balances'
+                  AND entry_date <= %s
+            """
+            cursor.execute(query_opening, (end_date,))
+            opening_balance = cursor.fetchone()['opening_total'] or 0
+            
+            return total_from_transactions + opening_balance
+
         total_fd = get_total_for_field(cursor, 'fd', next_month_start)
         total_property = get_total_for_field(cursor, 'property', next_month_start)
         total_sundry = get_total_for_field(cursor, 'sundry', next_month_start)
-
-        # Fund Balance (Receipts - Payments from counter-entries)
+        
+        # Fund balance needs special handling as it's derived differently
         query_fund = """
             SELECT 
-                (SELECT COALESCE(SUM(fund), 0) FROM journal_entries WHERE entry_id LIKE 'CERV%%' AND entry_date < %s) -
-                (SELECT COALESCE(SUM(fund), 0) FROM journal_entries WHERE entry_id LIKE 'CEPV%%' AND entry_date < %s)
+                (
+                    (SELECT COALESCE(SUM(fund), 0) FROM journal_entries WHERE entry_id LIKE 'CERV%%' AND entry_date < %s) -
+                    (SELECT COALESCE(SUM(fund), 0) FROM journal_entries WHERE entry_id LIKE 'CEPV%%' AND entry_date < %s) +
+                    (SELECT COALESCE(SUM(fund), 0) FROM journal_entries WHERE narration = 'Opening Balances' AND entry_date <= %s)
+                ) AS total_fund
         """
-        cursor.execute(query_fund, (next_month_start, next_month_start))
-        total_fund = (cursor.fetchone()[0] or 0)
+        cursor.execute(query_fund, (next_month_start, next_month_start, next_month_start))
+        total_fund = cursor.fetchone()['total_fund'] or 0
+        
+        total_cash = get_total_for_field(cursor, 'cash', next_month_start)
+
+        print(f"[DEBUG] Data for {year}-{month}: Brought Forward Bank: {brought_forward_bank}, Monthly Receipts: {monthly_receipts}, Monthly Payments: {monthly_payments}, Closing Bank Balance: {closing_bank_balance}")
 
         return {
+            "Brought Forward Bank Balance": brought_forward_bank,
+            "Closing Bank Balance": closing_bank_balance,
+            "FD Balance": total_fd,
+            "Property Balance": total_property,
+            "Sundry Balance": total_sundry,
+            "Fund Balance": total_fund,
+            "Cash Balance": total_cash,
             "brought_forward_bank": brought_forward_bank,
             "monthly_receipts": monthly_receipts,
             "monthly_payments": monthly_payments,
@@ -132,8 +161,8 @@ def show_comparison_view(frame, go_back_callback):
     columns = ('particulars', 'month1', 'month2')
     tree = ttk.Treeview(tree_frame, columns=columns, show='headings')
     tree.heading('particulars', text='Particulars')
-    tree.heading('month1', text='Period 1')
-    tree.heading('month2', text='Period 2')
+    tree.heading('month1', text='Month 1')
+    tree.heading('month2', text='Month 2')
     tree.column('particulars', width=350)
     tree.column('month1', width=180, anchor='e')
     tree.column('month2', width=180, anchor='e')
@@ -155,64 +184,86 @@ def show_comparison_view(frame, go_back_callback):
             tree.delete(item)
 
         try:
+            # Fetch data for both months
             data1 = get_balance_sheet_data_for_month(year1, month1)
             data2 = get_balance_sheet_data_for_month(year2, month2)
         except Exception as e:
             messagebox.showerror("Database Error", f"Failed to fetch data: {e}")
             return
-            
+
+        # Set column headings
         month1_str = datetime(year1, month1, 1).strftime('%b %Y')
         month2_str = datetime(year2, month2, 1).strftime('%b %Y')
         tree.heading('month1', text=f'Amount for {month1_str} (INR)')
         tree.heading('month2', text=f'Amount for {month2_str} (INR)')
 
         # --- DISPLAY ---
+        # Define the order of items to display
+        display_order = [
+            "Brought Forward Bank Balance", "Closing Bank Balance", "FD Balance",
+            "Property Balance", "Sundry Balance", "Fund Balance", "Cash Balance"
+        ]
+
+        # Insert a summary section first
+        tree.insert('', 'end', values=("Summary", "", ""), tags=('subheader',))
+        for particular in display_order:
+            val1 = data1.get(particular, 0)
+            val2 = data2.get(particular, 0)
+            tree.insert('', 'end', values=(particular, f"{val1:,.2f}", f"{val2:,.2f}"))
+
+        tree.insert('', 'end', values=("", "", "")) # Spacer
+
+        # Detailed sections
         tree.insert('', 'end', values=("Main Fund / Bank Balance", "", ""), tags=('subheader',))
-        
         tree.insert('', 'end', values=(
-            "Brought Forward Balance", 
-            f"{data1['brought_forward_bank']:,.2f}", 
+            "Brought Forward Balance",
+            f"{data1['brought_forward_bank']:,.2f}",
             f"{data2['brought_forward_bank']:,.2f}"
         ))
         tree.insert('', 'end', values=(
-            f"Add: Receipts", 
-            f"{data1['monthly_receipts']:,.2f}", 
+            f"Add: Receipts",
+            f"{data1['monthly_receipts']:,.2f}",
             f"{data2['monthly_receipts']:,.2f}"
         ))
         tree.insert('', 'end', values=(
-            f"Less: Payments", 
-            f"{data1['monthly_payments']:,.2f}", 
+            f"Less: Payments",
+            f"{data1['monthly_payments']:,.2f}",
             f"{data2['monthly_payments']:,.2f}"
         ))
         tree.insert('', 'end', values=(
-            "Closing Bank Balance", 
-            f"{data1['closing_bank_balance']:,.2f}", 
+            "Closing Bank Balance",
+            f"{data1['closing_bank_balance']:,.2f}",
             f"{data2['closing_bank_balance']:,.2f}"
         ), tags=('total',))
 
         tree.insert('', 'end', values=("", "", ""))
         tree.insert('', 'end', values=("Other Assets & Liabilities", "", ""), tags=('subheader',))
-        
+
         tree.insert('', 'end', values=(
-            "Total Fixed Deposits (FDs)", 
-            f"{data1['total_fd']:,.2f}", 
+            "Total Fixed Deposits (FDs)",
+            f"{data1['total_fd']:,.2f}",
             f"{data2['total_fd']:,.2f}"
         ))
         tree.insert('', 'end', values=(
-            "Total Property Value", 
-            f"{data1['total_property']:,.2f}", 
+            "Total Property Value",
+            f"{data1['total_property']:,.2f}",
             f"{data2['total_property']:,.2f}"
         ))
         tree.insert('', 'end', values=(
-            "Total Sundry Credits/Debits", 
-            f"{data1['total_sundry']:,.2f}", 
+            "Total Sundry Credits/Debits",
+            f"{data1['total_sundry']:,.2f}",
             f"{data2['total_sundry']:,.2f}"
         ))
         tree.insert('', 'end', values=(
-            "Total Fund", 
-            f"{data1['total_fund']:,.2f}", 
+            "Total Fund",
+            f"{data1['total_fund']:,.2f}",
             f"{data2['total_fund']:,.2f}"
         ), tags=('total',))
+        tree.insert('', 'end', values=(
+            "Total Cash",
+            f"{data1['total_cash']:,.2f}",
+            f"{data2['total_cash']:,.2f}"
+        ))
 
         tree.insert('', 'end', values=("", "", "")) # Spacer
 
@@ -232,7 +283,8 @@ def show_comparison_view(frame, go_back_callback):
             ("Change in Total FDs", data1['total_fd'], data2['total_fd']),
             ("Change in Total Property", data1['total_property'], data2['total_property']),
             ("Change in Total Sundry", data1['total_sundry'], data2['total_sundry']),
-            ("Change in Total Fund", data1['total_fund'], data2['total_fund'])
+            ("Change in Total Fund", data1['total_fund'], data2['total_fund']),
+            ("Change in Total Cash", data1['total_cash'], data2['total_cash'])
         ]
 
         for label, val1, val2 in analysis_items:

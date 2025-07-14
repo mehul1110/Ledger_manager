@@ -4,8 +4,8 @@ from journal_utils import insert_journal_entry
 
 MAIN_FUND_ACCOUNT = "main fund"
 NARRATION_OPTIONS = [
-    "Petty", "Maintenance", "Salary", "Property", "FD in bank", "Misc", "Article appreciation amount",
-    "Internet bill", "Fund lend to other accounts", "Printing of happenings", "Cash"
+    "Petty", "Maintenance", "Salary","Petty Cash Expenditure",  "Property", "FD in bank", "Misc", "Article appreciation amount",
+    "Internet bill", "Sundry Debitors","Property Depreciation","FY 2024-25" , "Printing of happenings", "Cash"
 ]
 
 def add_payment(
@@ -110,21 +110,19 @@ def add_payment_to_final_tables(conn, cursor, transaction):
     # The main entry should debit the payer's account.
     main_entry_type = 'Bank'
     counter_entry_type = 'Fund'
-    is_sundry = narration in ['Fund lend to other accounts', 'Sundry']
+    is_sundry = narration in ['Sundry Debitors', 'Sundry']
     is_fd = narration == "FD in bank"
     is_property = narration == "Property"
     is_cash = narration in ["Cash", "Petty Cash withdrawal"]
     is_non_expendable_property = (is_property and description and description.strip().lower() == "non-expendable")
 
-    # For the main entry (debit), the amount always goes in the 'amount' column.
-    # Specialized columns are typically used for the counter-entry to categorize the expense,
-    # but we will fill them here as well for clarity, though they are not used for balance calculations.
-    main_amount = amount
+    # For the main entry (debit), the amount should go in the 'fund' column for Sundry narrations.
+    main_amount = None if is_sundry else amount
     main_fd = None
     main_property = None
     main_sundry = None
     main_cash = None
-    main_fund = None # Fund is for counter-entries
+    main_fund = amount if is_sundry else None
 
     # Debit the account that received the payment
     insert_journal_entry(
@@ -143,14 +141,13 @@ def add_payment_to_final_tables(conn, cursor, transaction):
         fund=main_fund
     )
 
-    # For the counter-entry (credit), the main 'amount' is NULL.
-    # The value is placed in the specific column that categorizes the payment.
+    # For the counter-entry (credit), the value should go in the 'sundry' column for Sundry narrations.
     counter_amount = None
     counter_fd = amount if is_fd else None
     counter_property = amount if is_property else None
     counter_sundry = amount if is_sundry else None
     counter_cash = amount if is_cash else None
-    
+
     # If it's not a specialized category, it goes into the 'fund' column.
     is_specialized = is_fd or is_property or is_sundry or is_cash
     counter_fund = amount if not is_specialized else None
@@ -244,12 +241,10 @@ def add_payment_to_final_tables(conn, cursor, transaction):
 
         principal = float(amount)
         rate = float(fd_interest)
-
-        # Using compound interest formula A = P(1 + r/n)^(nt)
-        # Assuming interest is compounded quarterly (n=4) as is common.
-        n = 4
+        
+        # Using simple interest formula: A = P + (P * r * t)
         r = rate / 100  # Convert annual rate to decimal
-        maturity_amount = round(principal * (1 + r / n)**(n * time_in_years), 2)
+        maturity_amount = round(principal + (principal * r * time_in_years), 2)
 
         narration_full_fd = f"{narration}"
 
@@ -295,6 +290,68 @@ def add_payment_to_final_tables(conn, cursor, transaction):
                     purchase_date = VALUES(purchase_date),
                     depreciation_rate = VALUES(depreciation_rate)
             """, (payment_id, item_name, description, item_type, amount, date))
+
+    # Handle Property Depreciation logic
+    if narration == "Property Depreciation":
+        # Main entry: reduce the property value
+        main_property = amount
+        main_amount = None  # No value in the general amount column
+
+        # Counter entry: no value under any header
+        counter_amount = None
+        counter_fd = None
+        counter_property = None
+        counter_sundry = None
+        counter_cash = None
+        counter_fund = None
+
+        # Insert the main journal entry
+        insert_journal_entry(
+            db_connection=conn,
+            entry_id=payment_journal_id,
+            account_name=name,
+            entry_type=main_entry_type,
+            amount=main_amount,
+            narration=narration,
+            mop=mop,
+            entry_date=date,
+            fd=main_fd,
+            property_value=main_property,
+            sundry=main_sundry,
+            cash=main_cash,
+            fund=main_fund
+        )
+
+        # Insert the counter journal entry
+        insert_journal_entry(
+            db_connection=conn,
+            entry_id=counter_journal_id,
+            account_name=MAIN_FUND_ACCOUNT,
+            entry_type=counter_entry_type,
+            amount=counter_amount,
+            narration=f"Payment to {name}",
+            mop=mop,
+            entry_date=date,
+            fd=counter_fd,
+            property_value=counter_property,
+            sundry=counter_sundry,
+            fund=counter_fund,
+            cash=counter_cash
+        )
+
+        # Ensure property value is reduced correctly in the database
+        if narration == "Property Depreciation":
+            cursor.execute(
+                """
+                UPDATE property_details
+                SET value = value - %s
+                WHERE payment_id = %s
+                """,
+                (amount, payment_id)
+            )
+            conn.commit()
+
+        return
 
     print("✅ Payment processed and recorded in final tables.")
 

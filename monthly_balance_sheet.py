@@ -37,9 +37,9 @@ def show_monthly_balance_sheet(app):
         # --- Main Fund / Bank Balance ---
         query_bank = '''
             SELECT
-                (SELECT COALESCE(SUM(amount), 0) FROM journal_entries WHERE entry_type = 'Fund' AND entry_id NOT LIKE 'C%%' AND entry_date <= %s) - 
-                (SELECT COALESCE(SUM(amount), 0) FROM journal_entries WHERE entry_type = 'Bank' AND entry_id NOT LIKE 'C%%' AND entry_date <= %s)
-                AS total
+                (SELECT COALESCE(SUM(amount), 0) FROM journal_entries WHERE entry_type IN ('Fund', 'System') AND entry_id NOT LIKE 'C%%' AND entry_date <= %s) - 
+                (SELECT COALESCE(SUM(amount), 0) FROM journal_entries WHERE entry_type = 'Bank' AND entry_id NOT LIKE 'C%%' AND entry_date <= %s) +
+                (SELECT COALESCE(SUM(amount), 0) FROM journal_entries WHERE narration = 'Opening Balances')
         '''
         cursor.execute(query_bank, (end_last_month, end_last_month))
         main_fund_bal = cursor.fetchone()['total'] or 0
@@ -52,6 +52,7 @@ def show_monthly_balance_sheet(app):
                 WHERE entry_id LIKE 'C%%' 
                   AND {asset_column} IS NOT NULL 
                   AND entry_date <= %s
+                  OR narration = 'Opening Balances'
             """
             cursor.execute(query, (end_last_month,))
             return cursor.fetchone()['total'] or 0
@@ -65,7 +66,8 @@ def show_monthly_balance_sheet(app):
         query_fund = """
             SELECT 
                 (SELECT COALESCE(SUM(fund), 0) FROM journal_entries WHERE entry_id LIKE 'CERV%%' AND entry_date <= %s) -
-                (SELECT COALESCE(SUM(fund), 0) FROM journal_entries WHERE entry_id LIKE 'CEPV%%' AND entry_date <= %s)
+                (SELECT COALESCE(SUM(fund), 0) FROM journal_entries WHERE entry_id LIKE 'CEPV%%' AND entry_date <= %s) +
+                (SELECT COALESCE(SUM(fund), 0) FROM journal_entries WHERE narration = 'Opening Balances')
             AS total_fund
         """
         cursor.execute(query_fund, (end_last_month, end_last_month))

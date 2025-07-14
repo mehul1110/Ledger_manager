@@ -84,7 +84,7 @@ def show_journal_entries_view(app):
         "mop": "Mode of Payment",
         "amount": "Bank",
         "fd": "FD",
-        "sundry": "Sundry",
+        "sundry": "Sundry Dr",
         "property": "Property",
         "fund": "EME Journal Fund",
         "cash": "Cash"
@@ -212,6 +212,17 @@ def show_journal_entries_view(app):
                         COALESCE(SUM(CASE WHEN entry_type IN ('Bank', 'System') THEN fund ELSE -fund END), 0) as total
                     FROM journal_entries
                     WHERE fund IS NOT NULL AND entry_date <= %s
+                """
+            # For 'Cash', handle specific narrations for addition and subtraction.
+            elif column_name == 'cash':
+                query = """
+                    SELECT 
+                        COALESCE(SUM(CASE 
+                            WHEN narration IN ('Cash Withdrawal', 'Petty Cash Withdrawal') THEN cash 
+                            WHEN narration = 'Petty Cash Expenditure' THEN -cash 
+                            ELSE 0 END), 0) as total
+                    FROM journal_entries
+                    WHERE cash IS NOT NULL AND entry_date <= %s
                 """
             # For all other columns (assets), we just sum the values.
             else:
